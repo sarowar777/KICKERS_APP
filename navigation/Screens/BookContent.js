@@ -589,17 +589,22 @@ export function BookContent() {
                 borderColor: 'red',
                 top: 100,
                 height: 120,
+                width:360,
                 flexDirection: 'row',
+                gap:20,
+                alignSelf:'center',
+                
+                justifyContent:'center'
+                
               }}>
               <TouchableOpacity onPress={handleReset}>
                 <View
                   style={{
                     borderWidth: 2,
                     borderColor: '#E9E9E9',
-                    width: 180,
+                    width: 160,
                     height: 80,
-                    alignSelf: 'center,',
-                    left: 10,
+                    alignSelf: 'center',
                     top: 20,
                     borderRadius: 20,
                   }}>
@@ -621,10 +626,8 @@ export function BookContent() {
                   style={{
                     borderWidth: 0,
                     borderColor: 'black',
-                    width: 180,
+                    width: 160,
                     height: 80,
-                    alignSelf: 'center,',
-                    left: 30,
                     top: 20,
                     borderRadius: 20,
                     backgroundColor: '#26A764',

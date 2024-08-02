@@ -343,6 +343,7 @@ export default function CreateGameScreen({navigation}) {
               borderWidth: 0,
               borderColor: 'red',
               height: 40,
+              width:200,
               alignItems: 'center',
               left: 35,
             }}>
@@ -354,7 +355,7 @@ export default function CreateGameScreen({navigation}) {
                   borderWidth: 2,
                   borderColor: 'black',
                   width: 25,
-                  left: 30,
+                  left: 25,
                   borderRadius: 25,
                 }}>
                 {selectedRadio == 2 ? (
@@ -390,6 +391,7 @@ export default function CreateGameScreen({navigation}) {
               borderWidth: 0,
               borderColor: 'red',
               height: 40,
+              width:200,
               alignItems: 'center',
               left: 35,
             }}>
@@ -428,6 +430,7 @@ export default function CreateGameScreen({navigation}) {
               borderWidth: 0,
               borderColor: 'red',
               height: 40,
+              width:200,
               alignItems: 'center',
               left: 35,
             }}>
@@ -439,7 +442,7 @@ export default function CreateGameScreen({navigation}) {
                   borderWidth: 2,
                   borderColor: 'black',
                   width: 25,
-                  left: 30,
+                  left: 15,
                   borderRadius: 25,
                 }}>
                 {selectedRadio1 == 2 ? (

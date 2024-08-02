@@ -71,8 +71,8 @@ export default function TopGameCarousel({list}) {
                   />
                   {item.location}
                 </Text>
-                <Text style={{color: 'black', marginBottom: 5}}>
-                  <Icon name="futbol-o" size={12} color={'orange'} style={{}} />
+                <Text style={{color: 'black', marginBottom: 5,left:1}}>
+                  <Icon name="futbol-o" size={11} color={'orange'} style={{}} />
                   {item.description}
                 </Text>
               </View>

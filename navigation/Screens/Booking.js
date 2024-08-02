@@ -11,7 +11,7 @@ export default function Booking({navigation}) {
     setSearchText('');
   };
   return (
-    <View style={{flex: 1,backgroundColor:'#E6E6E6'}}>
+    <View style={{flex: 1, backgroundColor: '#E6E6E6'}}>
       <View
         style={{
           borderBottomWidth: 2,

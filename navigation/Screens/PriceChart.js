@@ -1,4 +1,4 @@
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {View, Text, Image, TouchableOpacity,StyleSheet} from 'react-native';
 import React from 'react';
 
 
@@ -9,8 +9,8 @@ export default function PriceChart({navigation}) {
         <Image
           source={require('../Screens/images/left.png')}
           style={{
-            height: 40,
-            width: 40,
+            height: 30,
+            width: 30,
             left: 15,
             top: 20,
             resizeMode: 'cover',
@@ -18,13 +18,12 @@ export default function PriceChart({navigation}) {
         />
       </TouchableOpacity>
       <View
-        style={{borderWidth: 0, top: 25, height: 100, flexDirection: 'row'}}>
+        style={{borderWidth: 0, top: 25, height: 100, flexDirection: 'row',justifyContent:'center',gap:50}}>
         <Text
           style={{
             color: 'black',
             fontSize: 26,
             fontWeight: 'bold',
-            left: 10,
             top: 25,
           }}>
           Price Chart
@@ -35,11 +34,11 @@ export default function PriceChart({navigation}) {
               height: 60,
               width: 160,
               borderWidth: 0,
+              
+              justifyContent:'center',
               top: 20,
-              alignSelf: 'center',
               backgroundColor: '#01B460',
               borderRadius: 15,
-              left: 80,
             }}>
             <Text
               style={{
@@ -47,7 +46,6 @@ export default function PriceChart({navigation}) {
                 color: 'white',
                 fontSize: 18,
                 fontWeight: 'bold',
-                top: 15,
               }}>
               BOOK NOW!
             </Text>
@@ -65,7 +63,7 @@ export default function PriceChart({navigation}) {
             borderColor: '#D9D9D9',
             borderRadius: 10,
             height: 60,
-            width: 370,
+            width: 360,
             alignSelf: 'center',
             top: 20,
           }}>
@@ -80,7 +78,7 @@ export default function PriceChart({navigation}) {
           </Text>
         </View>
       </View>
-      <View style={{borderWidth: 0, top: 30, height: 500}}>
+      <View style={{borderWidth: 0, top: 30, flex:1}}>
         <Text
           style={{
             color: '#1178B2',
@@ -101,13 +99,13 @@ export default function PriceChart({navigation}) {
           }}>
           Sunday-Friday
         </Text>
-        <View style={{borderBottomWidth:2,borderColor:'#D9D9D9',top:25,height:70,flexDirection:'row'}}>
-           <Text style={{color:'black',fontSize:16,fontWeight:'bold',top:20,left:20}}>07:00 AM - 02:00 PM</Text>
-           <Text style={{color:'black',fontSize:16,fontWeight:'bold',top:20,left:80}}>NPR 1500 / hour</Text>
+        <View style={styles.dayPrices}>
+           <Text style={styles.priceText}>07:00 AM - 02:00 PM</Text>
+           <Text style={styles.priceText}>NPR 1500 / hour</Text>
         </View>
-        <View style={{borderBottomWidth:2,borderColor:'#D9D9D9',top:25,height:70,flexDirection:'row'}}>
-           <Text style={{color:'black',fontSize:16,fontWeight:'bold',top:20,left:20}}>02:00 PM - 08:00 PM</Text>
-           <Text style={{color:'black',fontSize:16,fontWeight:'bold',top:20,left:80}}>NPR 2000 / hour</Text>
+        <View style={styles.dayPrices}>
+           <Text style={styles.priceText}>02:00 PM - 08:00 PM</Text>
+           <Text style={styles.priceText}>NPR 2000 / hour</Text>
         </View>
         <Text
           style={{
@@ -119,11 +117,19 @@ export default function PriceChart({navigation}) {
           }}>
           Saturday
         </Text>
-        <View style={{borderBottomWidth:2,borderColor:'#D9D9D9',top:45,height:70,flexDirection:'row'}}>
-           <Text style={{color:'black',fontSize:16,fontWeight:'bold',top:20,left:20}}>06:00 AM - 08:00 PM</Text>
-           <Text style={{color:'black',fontSize:16,fontWeight:'bold',top:20,left:80}}>NPR 2000 / hour</Text>
+        <View style={{borderBottomWidth:2,borderColor:'#D9D9D9',top:45,height:70,flexDirection:'row',justifyContent:'center',gap:30}}>
+           <Text style={styles.priceText}>06:00 AM - 08:00 PM</Text>
+           <Text style={styles.priceText}>NPR 2000 / hour</Text>
         </View>
       </View>
     </View>
   );
 }
+const styles=StyleSheet.create({
+  dayPrices:{
+    borderBottomWidth:2,borderColor:'#D9D9D9',top:25,height:70,flexDirection:'row',justifyContent:'center',gap:30
+  },
+  priceText:{
+    color:'black',fontSize:16,fontWeight:'bold',top:20
+  }
+})
