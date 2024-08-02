@@ -41,7 +41,7 @@ export default function MatchList({list}) {
                   width: 90,
                   borderWidth: 0,
                   top: -75,
-                  left: 230,
+                  left: 200,
 
                   backgroundColor: '#DE2A2A',
                   borderRadius: 6,
@@ -101,8 +101,8 @@ export default function MatchList({list}) {
               <Text style={{color: 'black', marginBottom: 5,left:2}}>
               <Icon name="book" size={12} color={'orange'} style={{}} />
                 
-              <Text style={{color: 'black', marginBottom: 5,left:5}}>
-                 Booking:
+              <Text style={{color: 'black', marginBottom: 5,left:8}}>
+                 Match:
                 </Text>
                 {item.booking}
               </Text>

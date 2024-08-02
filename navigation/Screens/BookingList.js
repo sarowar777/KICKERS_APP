@@ -26,63 +26,70 @@ export default function BookingList({list, navigation}) {
       showsVerticalScrollIndicator={false}
       renderItem={({item, index}) => {
         return (
-          
-            <View style={[styles.card, shadow.dark]}>
-              <View style={{flexDirection: 'row'}}>
+          <View style={[styles.card, shadow.dark]}>
+            <View
+              style={{
+                flexDirection: 'row',
+                borderWidth: 0,
+                flex: 2,
+                top: 20,
+                justifyContent: 'center',
+                gap: 0,
+              }}>
+              <View
+                style={{
+                  borderWidth: 0,
+                  borderColor: 'red',
+                  flex: 8,
+
+                  left: 15,
+                }}>
+                <View style={{flexDirection: 'row'}}>
+                  <Icon name="map-marker" size={20} style={{color: 'black'}} />
+                  <Text style={{color: 'black', left: 10}}>{item.title}</Text>
+                </View>
+                <View style={{flexDirection: 'row', top: 10}}>
+                  <Icon name="calendar" size={15} style={{color: 'black'}} />
+                  <Text style={{color: 'black', left: 4}}>{item.date}</Text>
+                </View>
+                <View style={{flexDirection: 'row', top: 20}}>
+                  <Icon name="clock-o" size={19} style={{color: 'black'}} />
+                  <Text style={{color: 'black', left: 7}}>{item.time}</Text>
+                </View>
+                <View style={{flexDirection: 'row', top: 30}}>
+                  <Image
+                    source={require('../Screens/images/field.png')}
+                    style={{height: 18, width: 19, resizeMode: 'cover'}}
+                  />
+                  <Text style={{color: 'black', left: 5}}>{item.type}</Text>
+                </View>
+                <View style={{flexDirection: 'row', top: 40}}>
+                  <Text style={{color: 'black'}}>Booking Status:</Text>
+                  <Text style={{color: 'black', left: 2, fontWeight: 'bold'}}>
+                    {item.status}
+                  </Text>
+                </View>
+              </View>
+              <View style={{flex: 1}}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('BookingDetails')}>
+                  <Image
+                    source={require('../Screens/images/angle-right.png')}
+                    style={{height: 20, width: 20}}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={{flex: 1}}>
+              <TouchableOpacity>
                 <View
                   style={{
                     borderWidth: 0,
-                    borderColor: 'red',
-                    height: 120,
-                    width: 170,
-                    left: 20,
-                    top: 20,
-                  }}>
-                  <View style={{flexDirection: 'row'}}>
-                    <Icon
-                      name="map-marker"
-                      size={20}
-                      style={{color: 'black'}}
-                    />
-                    <Text style={{color: 'black', left: 10}}>{item.title}</Text>
-                  </View>
-                  <View style={{flexDirection: 'row', top: 10}}>
-                    <Icon name="calendar" size={20} style={{color: 'black'}} />
-                    <Text style={{color: 'black', left: 10}}>{item.date}</Text>
-                  </View>
-                  <View style={{flexDirection: 'row', top: 20}}>
-                    <Icon name="clock-o" size={20} style={{color: 'black'}} />
-                    <Text style={{color: 'black', left: 10}}>{item.time}</Text>
-                  </View>
-                  <View style={{flexDirection: 'row', top: 30}}>
-                    <Image source={require('../Screens/images/field.png')} style={{height:20,width:20,resizeMode:'cover'}}/>
-                    <Text style={{color: 'black', left: 10}}>{item.type}</Text>
-                  </View>
-                  <View style={{flexDirection: 'row', top: 40}}>
-                    <Text style={{color:"black"}}>Booking Status:</Text>
-                    <Text style={{color: 'black', left: 10,fontWeight:'bold'}}>{item.status}</Text>
-                  </View>
-                  <View style={{flexDirection: 'row', top: 50}}>
-                  <Text style={{color:"black"}}>Payment method:</Text>
-                    <Text style={{color: 'black', left: 10,fontWeight:'bold'}}>{item.method}</Text>
-                  </View>
-                 
-                
-                </View>
-                <TouchableOpacity onPress={()=>navigation.navigate("BookingDetails")}>
-                  <Image source={require('../Screens/images/angle-right.png')} style={{height:20,width:20,left:130,top:15}}/>
-                </TouchableOpacity>
-               
-                
-              </View>
-              <TouchableOpacity> 
-              <View
-                  style={{
-                    borderWidth: 0,
-                    borderRadius:6,
+                    borderRadius: 6,
                     height: 40,
-                    top: 100,
-                    left: 120,
+                    // top: 100,
+                    alignSelf: 'center',
+                    // left: 120,
                     width: 100,
                     backgroundColor: '#C11919',
                   }}>
@@ -97,9 +104,9 @@ export default function BookingList({list, navigation}) {
                     Cancel
                   </Text>
                 </View>
-                </TouchableOpacity>
+              </TouchableOpacity>
             </View>
-         
+          </View>
         );
       }}
     />
@@ -108,11 +115,12 @@ export default function BookingList({list, navigation}) {
 const styles = StyleSheet.create({
   card: {
     width: CARD_WIDTH,
-    height: 280,
+    height: 250,
     marginVertical: 10,
     backgroundColor: '#FEFEFE',
     borderRadius: 16,
-    alignSelf:'center'
+    alignSelf: 'center',
+    gap: 45,
   },
 
   titleBox: {

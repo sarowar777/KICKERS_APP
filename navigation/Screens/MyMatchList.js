@@ -53,7 +53,7 @@ export default function MyMatchList({list,navigation}) {
                 
               </View>
               <TouchableOpacity>
-              <View style={{borderWidth:0,height:40,top:10,left:40,width:100,backgroundColor:'#01B460',borderRadius:6}}>
+              <View style={{borderWidth:0,height:40,top:10,left:30,width:100,backgroundColor:'#01B460',borderRadius:6}}>
               <Text
               style={{
                 alignSelf: 'center',

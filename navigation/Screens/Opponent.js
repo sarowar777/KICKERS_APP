@@ -1,9 +1,9 @@
-import {View, Text, TouchableOpacity,Modal} from 'react-native';
-import React,{useState} from 'react';
+import {View, Text, TouchableOpacity, Modal} from 'react-native';
+import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import OpponentList from './OpponentList';
-import { BOOKINGS, TOP_GAME } from '../data/constList';
+import {BOOKINGS, TOP_GAME} from '../data/constList';
 
 export default function Opponent({navigation}) {
   const [searchText, setSearchText] = useState('');
@@ -58,11 +58,11 @@ export default function Opponent({navigation}) {
     const formattedHours = hours < 10 ? '0' + hours : hours;
     const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
     const period = hours >= 12 ? 'PM' : 'AM';
-    const formattedTime = formattedHours + ':' + formattedMinutes + ' ' + period;
+    const formattedTime =
+      formattedHours + ':' + formattedMinutes + ' ' + period;
     setSelectedEndTime(formattedTime);
     hideEndTimePicker();
   };
-  
 
   {
     /* date picker */
@@ -97,7 +97,7 @@ export default function Opponent({navigation}) {
     // Show date picker modal when clicked again
     showDatePicker();
   };
-  
+
   const handleReset = () => {
     setSelectedDate('Select Date');
     setSelectedStartTime('Start Time');
@@ -112,13 +112,14 @@ export default function Opponent({navigation}) {
             borderColor: '#D9D9D9',
             backgroundColor: '#FEFEFE',
             top: 15,
-            width: 370,
+            width: 350,
             height: 60,
             alignSelf: 'center',
             borderRadius: 10,
             flexDirection: 'row',
           }}>
-          <TouchableOpacity onPress={()=>navigation.navigate("CreateGameScreen")}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('CreateGameScreen')}>
             <View
               style={{
                 flexDirection: 'row',
@@ -137,28 +138,38 @@ export default function Opponent({navigation}) {
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setIsAvailModal(true)}>
-            <View style={{flexDirection:'row',borderWidth:0,height:40,width:100,top:10,left:20}}>
-            <Icon
+            <View
+              style={{
+                flexDirection: 'row',
+                borderWidth: 0,
+                height: 40,
+                width: 100,
+                top: 10,
+                left: 20,
+              }}>
+              <Icon
                 name="filter"
                 size={20}
                 style={{color: 'black', top: 5, left: 15}}></Icon>
-                <Text style={{color: 'black', left: 20, top: 5}}>
-                Filter
-              </Text>
+              <Text style={{color: 'black', left: 20, top: 5}}>Filter</Text>
             </View>
-            
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setIsModalVisible(true)}>
-            <View style={{flexDirection:'row',borderWidth:0,height:40,width:100,top:10,left:30}}>
-            <Icon
+            <View
+              style={{
+                flexDirection: 'row',
+                borderWidth: 0,
+                height: 40,
+                width: 100,
+                top: 10,
+                left: 30,
+              }}>
+              <Icon
                 name="sort"
                 size={20}
                 style={{color: 'black', top: 5, left: 15}}></Icon>
-                <Text style={{color: 'black', left: 20, top: 5}}>
-                Sort
-              </Text>
+              <Text style={{color: 'black', left: 20, top: 5}}>Sort</Text>
             </View>
-            
           </TouchableOpacity>
         </View>
       </View>
@@ -405,7 +416,7 @@ export default function Opponent({navigation}) {
                 </View>
               </TouchableOpacity>
 
-              <TouchableOpacity >
+              <TouchableOpacity>
                 <View
                   style={{
                     borderWidth: 0,
@@ -486,7 +497,7 @@ export default function Opponent({navigation}) {
               <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18}}>
                 Sort By
               </Text>
-              
+
               <View
                 style={{
                   flexDirection: 'row',

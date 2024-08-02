@@ -17,91 +17,88 @@ const CARD_WIDTH_SPACING = CARD_WIDTH + spacing.l;
 export default function OpponentList({list}) {
   return (
     <FlatList
-    data={list}
-    snapToInterval={CARD_WIDTH_SPACING}
-    decelerationRate="fast"
-    showsHorizontalScrollIndicator={false}
-    keyExtractor={i => i.id}
-    style={{borderWidth: 0, borderColor: 'red', flex: 1, marginBottom: 70}}
-    showsVerticalScrollIndicator={false}
-    renderItem={({item, index}) => {
-      return (
-        
-        <View style={[styles.card, shadow.dark]}>
-        <Image source={item.image} style={styles.image} />
-        <Text style={styles.nameUser}>{item.nameUser}</Text>
-        <TouchableOpacity>
-          <View
-            style={{
-              height: 40,
-              width: 90,
-              borderWidth: 0,
-              top: -75,
-              left:230,
-            
-              
-              backgroundColor: '#01B460',
-              borderRadius: 6,
-            }}>
-            <Text
+      data={list}
+      snapToInterval={CARD_WIDTH_SPACING}
+      decelerationRate="fast"
+      showsHorizontalScrollIndicator={false}
+      keyExtractor={i => i.id}
+      style={{borderWidth: 0, borderColor: 'red', flex: 1, marginBottom: 70}}
+      showsVerticalScrollIndicator={false}
+      renderItem={({item, index}) => {
+        return (
+          <View style={[styles.card, shadow.dark]}>
+            <Image source={item.image} style={styles.image} />
+            <Text style={styles.nameUser}>{item.nameUser}</Text>
+            <TouchableOpacity>
+              <View
+                style={{
+                  height: 40,
+                  width: 90,
+                  borderWidth: 0,
+                  top: -75,
+                  left: 200,
+
+                  backgroundColor: '#01B460',
+                  borderRadius: 6,
+                }}>
+                <Text
+                  style={{
+                    alignSelf: 'center',
+                    color: 'white',
+                    fontSize: 12,
+                    fontWeight: 'bold',
+                    top: 10,
+                  }}>
+                  Join
+                </Text>
+              </View>
+            </TouchableOpacity>
+            <View
               style={{
-                alignSelf: 'center',
-                color: 'white',
-                fontSize: 12,
-                fontWeight: 'bold',
-                top: 10,
+                borderWidth: 0,
+                borderColor: 'black',
+                top: -20,
+                height: 130,
+                left: 25,
               }}>
-              Join
-            </Text>
+              <Text style={{color: 'black', marginBottom: 5}}>
+                <Icon
+                  name="calendar"
+                  size={12}
+                  color={'orange'}
+                  style={{left: 10}}
+                />
+                {item.date}
+              </Text>
+
+              <Text style={{color: 'black', marginBottom: 5}}>
+                <Icon
+                  name="home"
+                  size={14}
+                  color={'orange'}
+                  style={{left: 10}}
+                />
+                {item.futsal}
+              </Text>
+              <Text style={{color: 'black', marginBottom: 5}}>
+                <Icon
+                  name="map-marker"
+                  size={15}
+                  color={'orange'}
+                  style={{left: 14}}
+                />
+                {item.location}
+              </Text>
+              <Text style={{color: 'black', marginBottom: 5}}>
+                <Icon name="futbol-o" size={12} color={'orange'} style={{}} />
+                {item.description}
+              </Text>
+            </View>
           </View>
-        </TouchableOpacity>
-        <View
-          style={{
-            borderWidth: 0,
-            borderColor: 'black',
-            top: -20,
-            height: 130,
-            left: 25,
-          }}>
-          <Text style={{color: 'black', marginBottom: 5}}>
-            <Icon
-              name="calendar"
-              size={12}
-              color={'orange'}
-              style={{left: 10}}
-            />
-            {item.date}
-          </Text>
-          
-          <Text style={{color: 'black', marginBottom: 5}}>
-            <Icon
-              name="home"
-              size={14}
-              color={'orange'}
-              style={{left: 10}}
-            />
-            {item.futsal}
-          </Text>
-          <Text style={{color: 'black', marginBottom: 5}}>
-            <Icon
-              name="map-marker"
-              size={14}
-              color={'orange'}
-              style={{left: 10}}
-            />
-            {item.location}
-          </Text>
-          <Text style={{color: 'black', marginBottom: 5}}>
-            <Icon name="futbol-o" size={12} color={'orange'} style={{}} />
-            {item.description}
-          </Text>
-        </View>
-      </View>
-       
-      );
-    }}
-  />
-  )
+        );
+      }}
+    />
+  );
 }
 const styles = StyleSheet.create({
   card: {
@@ -112,7 +109,7 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderRadius: 15,
     backgroundColor: '#FEFEFE',
-    alignSelf:'center'
+    alignSelf: 'center',
   },
 
   image: {
