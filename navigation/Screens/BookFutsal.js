@@ -208,7 +208,7 @@ export default function BookFutsal({navigation}) {
         }}>
         <Text style={{left: 30, top: 20, color: '#434343'}}>Slot Date</Text>
         <TouchableOpacity onPress={handleDateSelection}>
-        <View style={[styles.datePickerContainer, { borderColor: isDateAvailable ? 'green' : 'red' }]}>
+        <View style={[styles.datePickerContainer]}>
             <Text style={{top: 10, left: 15, color: '#434343'}}>
               {selectedDate}
             </Text>

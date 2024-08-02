@@ -37,13 +37,16 @@ export default function TopGameCarousel({list}) {
                   borderWidth: 0,
                   borderColor: 'black',
                   top: 15,
+                  width:280,
                   height: 130,
                   left: 25,
+                  
+                  
                 }}>
                 <Text style={{color: 'black', marginBottom: 5}}>
                   <Icon
                     name="calendar"
-                    size={12}
+                    size={11}
                     color={'orange'}
                     style={{left: 10}}
                   />
@@ -53,18 +56,18 @@ export default function TopGameCarousel({list}) {
                 <Text style={{color: 'black', marginBottom: 5}}>
                   <Icon
                     name="home"
-                    size={14}
+                    size={13}
                     color={'orange'}
-                    style={{left: 10}}
+                    style={{left: 13}}
                   />
                   {item.futsal}
                 </Text>
-                <Text style={{color: 'black', marginBottom: 5}}>
+                <Text style={{color: 'black', marginBottom: 5,left:4}}>
                   <Icon
                     name="map-marker"
-                    size={14}
+                    size={15}
                     color={'orange'}
-                    style={{left: 10}}
+                    style={{left: 20}}
                   />
                   {item.location}
                 </Text>

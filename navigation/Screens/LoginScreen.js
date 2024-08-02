@@ -1,17 +1,19 @@
-import {View, SafeAreaView, Text, Image, TouchableOpacity,Alert} from 'react-native';
+import {
+  View,
+  SafeAreaView,
+  Text,
+  Image,
+  TouchableOpacity,
+  Alert,
+  TextInput,
+  ActivityIndicator,
+  StyleSheet,
+} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {GestureHandlerRootView, TextInput} from 'react-native-gesture-handler';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {
-  GoogleSignin,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
-import firebase from '@react-native-firebase/app';
-import '@react-native-firebase/auth';
-import '@react-native-firebase/firestore';
-import auth from '@react-native-firebase/auth';
 
 export default function LoginScreen(props) {
   const [passwordVisible, setPasswordVisible] = useState(true);
@@ -22,83 +24,24 @@ export default function LoginScreen(props) {
 
   // ... login logic
 
-  const handleRegister = () => {
-    navigation.navigate('RegistrationScreen'); // Use navigation to navigate
-  };
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginSuccessVisible, setLoginSuccessVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = async () => {
-    // Trim leading and trailing white spaces from email and password
-    const trimmedEmail = email.trim();
-    const trimmedPassword = password.trim();
-  
-    // Check if email and password are not empty
-    if (!trimmedEmail || !trimmedPassword) {
-      Alert.alert('Error', 'Email and password cannot be empty');
-      return;
-    }
-  
-    try {
-      const userCredential = await firebase.auth().signInWithEmailAndPassword(trimmedEmail, trimmedPassword);
-      // Login successful
-     
-      setLoginSuccessVisible(true);
-      setTimeout(() => {
-        setLoginSuccessVisible(false);
-        navigation.navigate('MainTabs');
-      }, 3000); // Hide success message after 3 seconds and navigate to MainTabs
-    
-    } catch (error) {
-      // Log error for debugging
-      // console.error('Login error:', error);
-  
-      // Handle login failure
-      if (error.code === 'auth/user-not-found') {
-        // Incorrect email
-        Alert.alert('Error', 'Incorrect email');
-      } else if (error.code === 'auth/wrong-password') {
-        // Incorrect password
-        Alert.alert('Error', 'Incorrect password');
-      } else {
-        // Other errors
-        // console.error('Login error:', error);
-        Alert.alert('Error', 'Login failed. Please check email and password before login again.');
-      }
-    }
-  };
-  
+  const handleLogin = () => {
+    setLoading(true);
+   
+    setTimeout(() => {
+      setLoading(false);
+      (false);
+      // Example: show login success message
+      navigation.navigate("MainTabs")
 
-  useEffect(() => {
-    GoogleSignin.configure({
-      webClientId:
-        '672940773095-std79pjesercjnmshq7l968fs2kfc536.apps.googleusercontent.com',
-      offlineAccess: true,
-      hostedDomain: '',
-      forceConsentPrompt: true,
-    });
-  }, []);
-  const handleGoogleSignIn = async () => {
-    try {
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        // User cancelled the sign-in flow.
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        // Sign-in operation is already in progress.
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        // Play services not available or outdated.
-      } else {
-        // Other errors
-      }
-    }
+    }, 1000);
   };
   return (
-    <SafeAreaView
-      style={{flex: 1, justifyContent: 'center', backgroundColor: '#E6E6E6'}}>
+    <SafeAreaView style={styles.mainContainer}>
       <View style={{paddingHorizontal: 25}}>
         <View>
           <Image
@@ -123,17 +66,19 @@ export default function LoginScreen(props) {
             borderBottomColor: '#ccc',
             borderBottomWidth: 1,
             marginBottom: 25,
+            
+            
           }}>
           <Icon
             name="envelope"
             size={20}
-            style={{marginRight: 5, color: 'black'}}
+            style={{marginRight: 5,padding:5, color: 'black'}}
           />
           <GestureHandlerRootView>
             <TextInput
               placeholder="Email"
               placeholderTextColor={'black'}
-              style={{height: 35, top: -5, paddingVertical: 0, color: 'black'}}
+              style={styles.textInputs}
               keyboardType="email-address"
               value={email}
               onChangeText={setEmail}
@@ -151,13 +96,13 @@ export default function LoginScreen(props) {
           <Icon
             name="lock"
             size={25}
-            style={{marginRight: 5, color: 'black'}}
+            style={{marginRight: 5,padding:5, color: 'black'}}
           />
           <GestureHandlerRootView>
             <TextInput
               placeholder="Password"
               placeholderTextColor={'black'}
-              style={{height: 35, top: -5, paddingVertical: 0, color: 'black'}}
+              style={styles.textInputs}
               secureTextEntry={passwordVisible}
               value={password}
               onChangeText={setPassword}
@@ -183,6 +128,7 @@ export default function LoginScreen(props) {
             height: 50,
             alignContent: 'center',
           }}
+        
           onPress={handleLogin}>
           <Text
             style={{
@@ -194,6 +140,8 @@ export default function LoginScreen(props) {
             Login
           </Text>
         </TouchableOpacity>
+
+        {loading && <ActivityIndicator size="large" color="green" />}
 
         <TouchableOpacity style={{alignItems: 'center', marginBottom: 20}}>
           <Text style={{color: 'black', bottom: 10, fontSize: 12}}>
@@ -213,7 +161,6 @@ export default function LoginScreen(props) {
             gap: -50,
           }}>
           <TouchableOpacity
-            onPress={handleGoogleSignIn}
             style={{
               borderColor: '#ddd',
               // borderWidth:2,
@@ -261,29 +208,28 @@ export default function LoginScreen(props) {
             top: 30,
           }}>
           <Text style={{color: 'black'}}>New to the app?</Text>
-          <TouchableOpacity onPress={handleRegister}>
+          <TouchableOpacity
+            onPress={() => props.navigation.navigate('RegistrationScreen')}>
             <Text style={{color: '#FF7F32'}}>Register</Text>
           </TouchableOpacity>
         </View>
       </View>
-      {/* Login success message */}
-      {loginSuccessVisible && (
-        
-        <View
-          style={{
-            position: 'absolute',
-             
-            left: 0,
-            right: 0,
-            alignItems: 'center',
-          }}>
-          <Text style={{ backgroundColor: 'rgba(0, 255, 0, 0.8)', padding: 10, borderRadius: 5 }}>
-            Login successful
-          </Text>
-        </View>
-        
       
-      )}
     </SafeAreaView>
   );
 }
+const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: '#E6E6E6',
+  },
+  textInputs: {
+    height: 38,
+    margin:0,
+    color: 'black',
+   
+    width:310
+    
+  },
+});

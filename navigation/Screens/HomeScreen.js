@@ -7,33 +7,15 @@ import {
   Image,
   SectionHeader,
 } from 'react-native';
-import React,{useEffect,useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import TopFutsalCarousel from './TopFutsalCarousel';
 import {TOP_FUTSAL, TOP_GAME} from '../data/constList';
 import TopGameCarousel from './TopGameCarousel';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import firestore from '@react-native-firebase/firestore';
 export default function HomeScreen({navigation}) {
-  // const[myData,setMyData]=useState(null);
-  // useEffect(() => {
-  
-  // getDatabase();
-   
-  // }, [])
-  // const getDatabase = async () => {
-  //   try {
-  //     const snapshot = await firestore().collection("Futsal_List").doc("RE92YlRP1TaqhmMD4xzN").get();
-  //     const data = snapshot.data(); // Extract the data from the snapshot
-  //     console.log("Fetched data:", data); // Log the fetched data
-  //   } catch (err) {
-  //     console.log("Error fetching data:", err);
-  //   }
-  // }
-  
   return (
     <SafeAreaView
       style={{
@@ -67,7 +49,8 @@ export default function HomeScreen({navigation}) {
                 START PLAYING!
               </Text>
             </View>
-            <TouchableOpacity onPress={()=>navigation.navigate("CreateGameScreen")}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('CreateGameScreen')}>
               <View
                 style={{
                   borderWidth: 1,
@@ -76,11 +59,11 @@ export default function HomeScreen({navigation}) {
                   top: 30,
                   width: 90,
                   alignItems: 'center',
+
+                  paddingVertical: 2,
                   borderRadius: 10,
                 }}>
-                <Text style={{color: 'black', alignSelf: 'center'}}>
-                  Create
-                </Text>
+                <Text style={{color: 'black'}}>Create</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -118,7 +101,7 @@ export default function HomeScreen({navigation}) {
             </Text>
           </View>
           <View style={styles.line}></View>
-          <TouchableOpacity onPress={()=>navigation.navigate("Calendar")}>
+          <TouchableOpacity onPress={() => navigation.navigate('Calendar')}>
             <Text
               style={{
                 color: 'black',
@@ -155,7 +138,7 @@ export default function HomeScreen({navigation}) {
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={{top: 40, borderColor: 'black', borderRadius: 2, height: 350}}>
-          <TopFutsalCarousel list={TOP_FUTSAL} navigation={navigation}/>
+          <TopFutsalCarousel list={TOP_FUTSAL} navigation={navigation} />
         </ScrollView>
         <View
           style={{

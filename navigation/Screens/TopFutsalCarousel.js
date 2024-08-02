@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import React,{useEffect,useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {sizes, spacing, shadow, colors} from '../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import firestore from '@react-native-firebase/firestore';
@@ -14,23 +14,24 @@ const CARD_WIDTH = sizes.width - 80;
 const CARD_HEIGHT = 200;
 const CARD_WIDTH_SPACING = CARD_WIDTH + spacing.l;
 
-export default function TopFutsalCarousel({list,navigation}) {
-  const[myData,setMyData]=useState(null);
+export default function TopFutsalCarousel({list, navigation}) {
+  const [myData, setMyData] = useState(null);
   useEffect(() => {
-  
-  getDatabase();
-   
-  }, [])
+    getDatabase();
+  }, []);
   const getDatabase = async () => {
     try {
-      const snapshot = await firestore().collection("Futsal_List").doc("Vks0zqqLKiXf6Okx1f5X").get();
+      const snapshot = await firestore()
+        .collection('Futsal_List')
+        .doc('Vks0zqqLKiXf6Okx1f5X')
+        .get();
       const data = snapshot.data(); // Extract the data from the snapshot
       setMyData(data);
-      console.log("Fetched data:", data.Address); // Log the fetched data
+      console.log('Fetched data:', data.Address); // Log the fetched data
     } catch (err) {
-      console.log("Error fetching data:", err);
+      console.log('Error fetching data:', err);
     }
-  }
+  };
   return (
     <FlatList
       data={list}
@@ -42,11 +43,10 @@ export default function TopFutsalCarousel({list,navigation}) {
       renderItem={({item, index}) => {
         return (
           <TouchableOpacity
-          onPress={()=>navigation.navigate('FutsalInfo')}
+            onPress={() => navigation.navigate('FutsalInfo')}
             style={{
               marginLeft: spacing.l,
               marginRight: index === list.length - 1 ? spacing.l : 0,
-              
             }}>
             <View style={[styles.card, shadow.dark]}>
               {/* <FavoriteButton style={styles.favorite} /> */}
@@ -55,9 +55,16 @@ export default function TopFutsalCarousel({list,navigation}) {
               </View>
               <View style={styles.titleBox}>
                 <Text style={styles.title}>{item.title}</Text>
-               
 
-                <Text style={styles.location}><Icon name="map-marker" size={12} color={'orange'} style={{left:10}} />{item.location}</Text>
+                <Text style={styles.location}>
+                  <Icon
+                    name="map-marker"
+                    size={12}
+                    color={'orange'}
+                    style={{left: 10}}
+                  />
+                  {item.location}
+                </Text>
                 <View style={{flexDirection: 'row', top: 3, marginBottom: 4}}>
                   <Image
                     source={require('../Screens/images/stars.png')}
@@ -89,9 +96,11 @@ export default function TopFutsalCarousel({list,navigation}) {
 
 const styles = StyleSheet.create({
   card: {
+    
     width: CARD_WIDTH,
     height: CARD_HEIGHT,
     marginVertical: 10,
+    
   },
   imageBox: {
     width: CARD_WIDTH,
@@ -113,16 +122,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     color: colors.white,
-    
   },
   location: {
     fontSize: 10,
     color: colors.white,
-    
   },
   description: {
     fontSize: 10,
     fontWeight: 'bold',
+    color: colors.white,
     //
   },
 });

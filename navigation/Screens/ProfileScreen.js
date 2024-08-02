@@ -1,13 +1,13 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const ProfileScreen = () => {
   // Dummy user data
   const user = {
-    name: "Sarowar Malla",
-    email: "sarowarmalla@gmail.com",
-    phone: "9862250992",
+    name: 'Sarowar Malla',
+    email: 'sarowarmalla@gmail.com',
+    phone: '9862250992',
     bookingsCompleted: 2,
     matchesCompleted: 5,
     profilePicture: require('../Screens/images/saro.jpg'), // Replace with actual path to profile picture
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 5,
-    color:'black'
+    color: 'black',
   },
   email: {
     fontSize: 16,
@@ -77,16 +77,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 20,
-   
   },
   statItem: {
     alignItems: 'center',
-    
   },
   statNumber: {
     fontSize: 20,
     fontWeight: 'bold',
-    color:'black'
+    color: 'black',
   },
   statLabel: {
     fontSize: 14,
@@ -98,7 +96,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10,
     marginBottom: 10,
-    top:10
+    top: 10,
   },
   editButtonText: {
     color: '#FFFFFF',
@@ -110,7 +108,7 @@ const styles = StyleSheet.create({
     padding: 15,
     alignItems: 'center',
     borderRadius: 10,
-    top:20
+    top: 20,
   },
 });
 

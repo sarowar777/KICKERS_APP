@@ -4,17 +4,15 @@ import {
   Text,
   Image,
   TouchableOpacity,
+  StyleSheet,
   ScrollView,
-  Modal
+  TextInput,
+  Modal,
 } from 'react-native';
 import React, {useState, useRef} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {GestureHandlerRootView, TextInput} from 'react-native-gesture-handler';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 //firebase config key
-
-import firebase from '@react-native-firebase/app';
-import '@react-native-firebase/auth';
-import '@react-native-firebase/firestore';
 
 export default function RegistrationScreen(props) {
   const [registrationSuccess, setRegistrationSuccess] = useState(false); // Define registration success state
@@ -35,54 +33,6 @@ export default function RegistrationScreen(props) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(null);
-
-  const registerUser = () => {
-    if (!fullName || !email || !phoneNumber || !password || !confirmPassword) {
-      setError('Please fill in all fields');
-      return;
-    }
-  
-    if (password !== confirmPassword) {
-      setError("Passwords don't match");
-      return;
-    }
-  
-    // Check if the phone number is already registered
-    firebase.firestore().collection('users')
-      .where('phoneNumber', '==', phoneNumber)
-      .get()
-      .then(querySnapshot => {
-        if (!querySnapshot.empty) {
-          setError('Phone number is already registered for another account');
-        } else {
-          // Proceed with user registration
-          firebase
-            .auth()
-            .createUserWithEmailAndPassword(email, password)
-            .then(userCredential => {
-              const user = userCredential.user;
-              firebase.firestore().collection('users').doc(user.uid).set({
-                fullName,
-                email,
-                phoneNumber,
-              });
-              setRegistrationSuccess(true); // Set registration success message visibility
-              setTimeout(() => {
-                setRegistrationSuccess(false);
-                navigation.navigate('LoginScreen'); // Navigate to LoginScreen after showing success message
-              }, 3000); // Show success message for 3 seconds
-            })
-            .catch(error => {
-              setError(error.message); // Set error message if registration fails
-            });
-        }
-      })
-      .catch(error => {
-        setError(error.message); // Handle error
-      });
-  };
-  
-  
 
   return (
     <SafeAreaView
@@ -175,7 +125,7 @@ export default function RegistrationScreen(props) {
             <TextInput
               placeholder="Full Name"
               placeholderTextColor={'black'}
-              style={{height: 35, top: -5, paddingVertical: 0, color: 'black'}}
+              style={styles.textInputs}
               onChangeText={text => setFullName(text)} // Update fullName state
             />
           </GestureHandlerRootView>
@@ -197,7 +147,7 @@ export default function RegistrationScreen(props) {
             <TextInput
               placeholder="Email"
               placeholderTextColor={'black'}
-              style={{height: 35, top: -5, paddingVertical: 0, color: 'black'}}
+              style={styles.textInputs}
               keyboardType="email-address"
               onChangeText={text => setEmail(text)} // Update email state
             />
@@ -220,7 +170,7 @@ export default function RegistrationScreen(props) {
             <TextInput
               placeholder="Phone Number"
               placeholderTextColor={'black'}
-              style={{height: 35, top: -5, paddingVertical: 0, color: 'black'}}
+              style={styles.textInputs}
               keyboardType="numeric"
               maxLength={10}
               onChangeText={text => setPhoneNumber(text)} // Update phoneNumber state
@@ -244,7 +194,7 @@ export default function RegistrationScreen(props) {
             <TextInput
               placeholder="Password"
               placeholderTextColor={'black'}
-              style={{height: 35, top: -5, paddingVertical: 0, color: 'black'}}
+              style={styles.textInputs}
               secureTextEntry={passwordVisible}
               onChangeText={text => setPassword(text)} // Update password state
             />
@@ -275,13 +225,7 @@ export default function RegistrationScreen(props) {
             <TextInput
               placeholder="Confirm Password"
               placeholderTextColor={'black'}
-              style={{
-                height: 35,
-                top: -5,
-                paddingVertical: 0,
-                width: 150,
-                color: 'black',
-              }}
+              style={styles.textInputs}
               secureTextEntry={cpasswordVisible}
               onChangeText={text => setConfirmPassword(text)} // Update confirmPassword state
             />
@@ -298,7 +242,6 @@ export default function RegistrationScreen(props) {
         </View>
 
         <TouchableOpacity
-          onPress={registerUser}
           style={{
             backgroundColor: '#FF7F32',
             paddingTop: 10,
@@ -307,7 +250,13 @@ export default function RegistrationScreen(props) {
             height: 50,
             alignContent: 'center',
           }}>
-          <Text style={{textAlign: 'center', fontWeight: '700', fontSize: 18,color:'white'}}>
+          <Text
+            style={{
+              textAlign: 'center',
+              fontWeight: '700',
+              fontSize: 18,
+              color: 'white',
+            }}>
             Register
           </Text>
         </TouchableOpacity>
@@ -327,16 +276,29 @@ export default function RegistrationScreen(props) {
             <Text style={{color: '#FF7F32', top: -30}}>Login</Text>
           </TouchableOpacity>
         </View>
-       {/* Modal for registration success */}
-       <Modal
+        {/* Modal for registration success */}
+        <Modal
           visible={registrationSuccess}
           animationType="slide"
-          transparent={true}
-        >
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
-            <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10, alignItems: 'center' }}>
-             
-              <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>Registration Successful!</Text>
+          transparent={true}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            }}>
+            <View
+              style={{
+                backgroundColor: 'white',
+                padding: 20,
+                borderRadius: 10,
+                alignItems: 'center',
+              }}>
+              <Text
+                style={{fontSize: 20, fontWeight: 'bold', marginBottom: 10}}>
+                Registration Successful!
+              </Text>
               <Text>Your account has been successfully registered.</Text>
             </View>
           </View>
@@ -345,3 +307,13 @@ export default function RegistrationScreen(props) {
     </SafeAreaView>
   );
 }
+const styles = StyleSheet.create({
+  textInputs: {
+    height: 38,
+    top: -5,
+    paddingVertical: 0,
+    color: 'black',
+    borderWidth:0,
+    width:290
+  },
+});
