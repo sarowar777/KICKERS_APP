@@ -16,8 +16,8 @@ export default function BookingDetails({navigation}) {
         <Image
           source={require('../Screens/images/left.png')}
           style={{
-            height: 40,
-            width: 40,
+            height: 30,
+            width: 30,
             left: 15,
             top: 20,
             resizeMode: 'cover',
@@ -107,34 +107,8 @@ export default function BookingDetails({navigation}) {
          
 
       </View>
-      <Text style={{color:'black',left:300,top:50,fontSize:18}}>NPR 3000</Text>
-      <View style={{ borderWidth: 2,
-         borderColor: '#D9D9D9',
-         top: 90,
-         height: 150}}>
-           <Text
-            style={{
-              color: 'black',
-              fontWeight: 'bold',
-              left: 20,
-              top: 10,
-              fontSize: 16,
-            }}>
-            Bill Summary
-          </Text>
-          <View style={{flexDirection: 'row', top: 40}}>
-              <Text style={{color: 'black',left:25}}>Total Amount:</Text>
-              <Text style={{color: 'black',fontWeight:'bold', left: 30,}}>
-                NPR 3000
-              </Text>
-              </View>
-              <View style={{flexDirection: 'row', top: 60}}>
-              <Text style={{color: 'black',left:25}}>Booking Method:</Text>
-              <Text style={{color: 'white', left: 30,backgroundColor:'green',width:45,borderRadius:2}}>
-                esewa
-              </Text>
-            </View>
-      </View>
+      <Text style={{color:'black',left:280,top:50,fontSize:18}}>NPR 3000</Text>
+   
       <TouchableOpacity>
           <View
             style={{

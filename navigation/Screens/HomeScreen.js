@@ -101,7 +101,7 @@ export default function HomeScreen({navigation}) {
             </Text>
           </View>
           <View style={styles.line}></View>
-          <TouchableOpacity onPress={() => navigation.navigate('Calendar')}>
+          <TouchableOpacity onPress={() => navigation.navigate('PlayScreen')}>
             <Text
               style={{
                 color: 'black',

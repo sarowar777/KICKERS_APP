@@ -25,9 +25,11 @@ import FutsalInfo from './Screens/FutsalInfo';
 import BookFutsal from './Screens/BookFutsal';
 import CreateGameScreen from './Screens/CreateGameScreen';
 import BookingDetails from './Screens/BookingDetails';
+import RolesScreen from './Screens/RolesScreen'
 import FutsalListScreen from './Screens/FutsalListScreen';
 import Booking from './Screens/Booking';
 import { BOOKINGS } from './data/constList';
+import Calendar from './Screens/Calendar';
 
 
 const {width, height} = Dimensions.get('window');
@@ -61,7 +63,13 @@ export default function MainContainer() {
             backgroundColor: '#FEFEFE', // Customize your header background color
           },
         }}>
-         
+          <Stack.Screen
+          name="RolesScreen"
+          component={RolesScreen}
+          options={{headerShown: false}}
+
+        />
+
         <Stack.Screen
           name="LoginScreen"
           component={LoginScreen}
@@ -76,7 +84,7 @@ export default function MainContainer() {
         />
        
 
-
+       <Stack.Screen name="Calendar" component={Calendar} options={{ headerShown: false }} />
         <Stack.Screen name="FutsalInfo" component={FutsalInfo} options={{ headerShown: false }} />
         <Stack.Screen name="PriceChart" component={PriceChart} options={{ headerShown: false }} />
         <Stack.Screen name="BookFutsal"  component={BookFutsal} options={{ headerShown: false }} />
@@ -94,13 +102,7 @@ export default function MainContainer() {
 
 function SplashScreenWithImage() {
   return (
-    // <View style={styles.container}>
-    //   <Image
-    //     source={require('../assets/pictures/screen.png')} // Adjust the path to your splash image
-    //     style={styles.image}
-    //     resizeMode="cover"
-    //   />
-    // </View>
+    
     <SafeAreaView
       style={{
         flex: 1,
