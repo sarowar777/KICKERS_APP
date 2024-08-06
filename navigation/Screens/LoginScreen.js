@@ -9,44 +9,60 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, { useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 export default function LoginScreen(props) {
   const [passwordVisible, setPasswordVisible] = useState(true);
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
-  const {navigation} = props; // or: const { navigation } = props;
-
-  // ... login logic
+  const { navigation, route } = props;
+  const { role } = route.params;
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loginSuccessVisible, setLoginSuccessVisible] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     setLoading(true);
-   
-    setTimeout(() => {
-      setLoading(false);
-      (false);
-      // Example: show login success message
-      navigation.navigate("MainTabs")
 
-    }, 1000);
+    try {
+      const response = await fetch('http://192.168.1.67:8001/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Save the token if needed, and navigate to the main tabs
+        // For example: await AsyncStorage.setItem('token', result.token);
+        navigation.navigate("MainTabs");
+      } else {
+        Alert.alert('Login Failed', result.message || 'Invalid email or password');
+      }
+    } catch (error) {
+      console.error('Login Error:', error);
+      Alert.alert('Login Error', 'Something went wrong. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
   };
+
   return (
     <SafeAreaView style={styles.mainContainer}>
-      <View style={{paddingHorizontal: 25}}>
+      <View style={{ paddingHorizontal: 25 }}>
         <View>
           <Image
             source={require('../Screens/images/kickers.png')}
-            style={{width: 250, height: 250, alignSelf: 'center'}}
+            style={{ width: 250, height: 250, alignSelf: 'center' }}
           />
         </View>
 
@@ -66,13 +82,11 @@ export default function LoginScreen(props) {
             borderBottomColor: '#ccc',
             borderBottomWidth: 1,
             marginBottom: 25,
-            
-            
           }}>
           <Icon
             name="envelope"
             size={20}
-            style={{marginRight: 5,padding:5, color: 'black'}}
+            style={{ marginRight: 5, padding: 5, color: 'black' }}
           />
           <GestureHandlerRootView>
             <TextInput
@@ -96,7 +110,7 @@ export default function LoginScreen(props) {
           <Icon
             name="lock"
             size={25}
-            style={{marginRight: 5,padding:5, color: 'black'}}
+            style={{ marginRight: 5, padding: 5, color: 'black' }}
           />
           <GestureHandlerRootView>
             <TextInput
@@ -110,7 +124,7 @@ export default function LoginScreen(props) {
           </GestureHandlerRootView>
           <TouchableOpacity
             onPress={togglePasswordVisibility}
-            style={{position: 'absolute', right: 10, alignSelf: 'center'}}>
+            style={{ position: 'absolute', right: 10, alignSelf: 'center' }}>
             <Icon
               name={passwordVisible ? 'eye-slash' : 'eye'}
               size={20}
@@ -128,7 +142,6 @@ export default function LoginScreen(props) {
             height: 50,
             alignContent: 'center',
           }}
-        
           onPress={handleLogin}>
           <Text
             style={{
@@ -143,12 +156,12 @@ export default function LoginScreen(props) {
 
         {loading && <ActivityIndicator size="large" color="green" />}
 
-        <TouchableOpacity style={{alignItems: 'center', marginBottom: 20}}>
-          <Text style={{color: 'black', bottom: 10, fontSize: 12}}>
+        <TouchableOpacity style={{ alignItems: 'center', marginBottom: 20 }}>
+          <Text style={{ color: 'black', bottom: 10, fontSize: 12 }}>
             Forgot Password?
           </Text>
         </TouchableOpacity>
-        <Text style={{alignSelf: 'center', color: 'black'}}>
+        <Text style={{ alignSelf: 'center', color: 'black' }}>
           Or, login with..
         </Text>
 
@@ -163,40 +176,34 @@ export default function LoginScreen(props) {
           <TouchableOpacity
             style={{
               borderColor: '#ddd',
-              // borderWidth:2,
-              // borderRadius:10,
               paddingHorizontal: 38,
               paddingVertical: 10,
             }}>
             <Image
               source={require('../Screens/images/google.png')}
-              style={{height: 26, width: 26}}
+              style={{ height: 26, width: 26 }}
             />
           </TouchableOpacity>
           <TouchableOpacity
             style={{
               borderColor: '#ddd',
-              // borderWidth:2,
-              // borderRadius:10,
               paddingHorizontal: 38,
               paddingVertical: 10,
             }}>
             <Image
               source={require('../Screens/images/facebook.png')}
-              style={{height: 26, width: 26}}
+              style={{ height: 26, width: 26 }}
             />
           </TouchableOpacity>
           <TouchableOpacity
             style={{
               borderColor: '#ddd',
-              // borderWidth:2,
-              // borderRadius:10,
               paddingHorizontal: 38,
               paddingVertical: 10,
             }}>
             <Image
               source={require('../Screens/images/twitter.png')}
-              style={{height: 26, width: 26}}
+              style={{ height: 26, width: 26 }}
             />
           </TouchableOpacity>
         </View>
@@ -207,17 +214,17 @@ export default function LoginScreen(props) {
             marginBottom: 80,
             top: 30,
           }}>
-          <Text style={{color: 'black'}}>New to the app?</Text>
+          <Text style={{ color: 'black' }}>New to the app?</Text>
           <TouchableOpacity
-            onPress={() => props.navigation.navigate('RegistrationScreen')}>
-            <Text style={{color: '#FF7F32'}}>Register</Text>
+            onPress={() => props.navigation.navigate('RegistrationScreen', { role })}>
+            <Text style={{ color: '#FF7F32' }}>Register</Text>
           </TouchableOpacity>
         </View>
       </View>
-      
     </SafeAreaView>
   );
 }
+
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
@@ -226,10 +233,8 @@ const styles = StyleSheet.create({
   },
   textInputs: {
     height: 38,
-    margin:0,
+    margin: 0,
     color: 'black',
-   
-    width:310
-    
+    width: 310,
   },
 });

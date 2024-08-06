@@ -3,22 +3,23 @@ import React, { useEffect } from 'react';
 
 export default function RolesScreen(props) {
   const { navigation } = props;
+  
 
-  const getApiData = async () => {
-    const url = "http://192.168.1.67:8001/test"; // Use your local IP address
-    try {
-      let response = await fetch(url);
-      response = await response.json();
-      console.warn(response);
-      console.warn("Connected");
-    } catch (error) {
-      console.error("Fetch error: ", error);
-    }
-  };
+  // const getApiData = async () => {
+  //   const url = "http://192.168.1.67:8001/login"; // Use your local IP address
+  //   try {
+  //     let response = await fetch(url);
+  //     response = await response.json();
+  //     console.warn(response);
+  //     console.warn("Connected");
+  //   } catch (error) {
+  //     console.error("Fetch error: ", error);
+  //   }
+  // };
 
-  useEffect(() => {
-    getApiData();
-  }, []);
+  // useEffect(() => {
+  //   getApiData();
+  // }, []);
 
   return (
     <View style={styles.container}>
