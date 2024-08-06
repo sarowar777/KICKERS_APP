@@ -13,7 +13,7 @@ import {TOP_FUTSAL, TOP_GAME} from '../data/constList';
 import TopGameCarousel from './TopGameCarousel';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {NavigationContainer, useNavigation} from '@react-navigation/native';
+
 
 export default function HomeScreen({navigation}) {
   return (
@@ -55,15 +55,16 @@ export default function HomeScreen({navigation}) {
                 style={{
                   borderWidth: 1,
                   left: 130,
-                  height: 30,
+                  height: 40,
                   top: 30,
                   width: 90,
-                  alignItems: 'center',
-
+                  // alignItems: 'center',
+                  justifyContent:"center",
+                 
                   paddingVertical: 2,
                   borderRadius: 10,
                 }}>
-                <Text style={{color: 'black'}}>Create</Text>
+                <Text style={{color: 'black',alignSelf:'center'}}>Create</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -101,7 +102,7 @@ export default function HomeScreen({navigation}) {
             </Text>
           </View>
           <View style={styles.line}></View>
-          <TouchableOpacity onPress={() => navigation.navigate('PlayScreen')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Play')}>
             <Text
               style={{
                 color: 'black',

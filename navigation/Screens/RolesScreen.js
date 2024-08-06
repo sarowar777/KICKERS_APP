@@ -1,40 +1,54 @@
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import React from 'react';
-import {} from 'react-native-gesture-handler';
-import {colors} from '../constants/theme';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React, { useEffect } from 'react';
 
 export default function RolesScreen(props) {
-  const {navigation} = props;
+  const { navigation } = props;
+
+  const getApiData = async () => {
+    const url = "http://192.168.1.67:8001/test"; // Use your local IP address
+    try {
+      let response = await fetch(url);
+      response = await response.json();
+      console.warn(response);
+      console.warn("Connected");
+    } catch (error) {
+      console.error("Fetch error: ", error);
+    }
+  };
+
+  useEffect(() => {
+    getApiData();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.imageBox}>
         <Image
           source={require('../Screens/images/kickers.png')}
-          style={styles.img}></Image>
+          style={styles.img}
+        />
       </View>
 
       <View style={styles.texts}>
-        <Text style={{color: 'black', fontSize: 22,alignSelf:'center',fontWeight:'bold'}}>
+        <Text style={{ color: 'black', fontSize: 22, alignSelf: 'center', fontWeight: 'bold' }}>
           Choose Your Role
         </Text>
-       
-        
       </View>
 
       <View style={styles.buttonBox}>
         <TouchableOpacity
           style={[styles.role, styles.player]}
-          onPress={() => navigation.navigate('LoginScreen')}>
-          <Text
-            style={{color: 'white', alignSelf: 'center', fontWeight: 'bold'}}>
+          onPress={() => navigation.navigate('RegistrationScreen', { role: 1 })}
+        >
+          <Text style={{ color: 'white', alignSelf: 'center', fontWeight: 'bold' }}>
             Player
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.role, styles.owner]}
-          onPress={() => navigation.navigate('LoginScreen')}>
-          <Text
-            style={{color: 'black', alignSelf: 'center', fontWeight: 'bold'}}>
+          onPress={() => navigation.navigate('RegistrationScreen', { role: 2 })}
+        >
+          <Text style={{ color: 'black', alignSelf: 'center', fontWeight: 'bold' }}>
             Futsal Owner
           </Text>
         </TouchableOpacity>
@@ -59,15 +73,13 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     height: 350,
     width: 300,
-    
   },
   buttonBox: {
     flex: 1,
     borderWidth: 0,
     borderColor: 'red',
     alignSelf: 'center',
-    // justifyContent: 'center',
-    rowGap:25
+    rowGap: 25,
   },
   role: {
     borderRadius: 8,
@@ -87,9 +99,7 @@ const styles = StyleSheet.create({
   texts: {
     flex: 0.2,
     alignSelf: 'center',
-    // justifyContent: 'center',
-    borderWidth:0,
-    marginBottom:30
-    
+    borderWidth: 0,
+    marginBottom: 30,
   },
 });
