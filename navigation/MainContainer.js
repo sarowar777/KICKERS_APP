@@ -31,6 +31,8 @@ import Booking from './Screens/Booking';
 import { BOOKINGS } from './data/constList';
 import Calendar from './Screens/Calendar';
 
+import FutsalRegistrationScreen from '../FutsalScreen/FutsalRegistrationScreen';
+
 
 const {width, height} = Dimensions.get('window');
 //for bottom tab navigation
@@ -90,6 +92,9 @@ export default function MainContainer() {
     
         <Stack.Screen name="CreateGameScreen" component={CreateGameScreen} options={{ headerShown: false }} />
         <Stack.Screen name="BookingDetails" list={BOOKINGS} component={BookingDetails} options={{ headerShown: false }} />
+
+        <Stack.Screen name="FutsalRegistration"  component={FutsalRegistrationScreen} options={{ headerShown: false }} />
+
         <Stack.Screen name="MainTabs" component={MainTabs} />
         
       </Stack.Navigator>

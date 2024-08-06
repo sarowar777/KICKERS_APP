@@ -26,12 +26,14 @@ export default function LoginScreen(props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  
+
 
   const handleLogin = async () => {
     setLoading(true);
 
     try {
-      const response = await fetch('http://192.168.1.67:8001/login', {
+      const response = await fetch('http://192.168.1.69:8001/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -40,11 +42,18 @@ export default function LoginScreen(props) {
       });
 
       const result = await response.json();
+    
 
       if (response.ok) {
         // Save the token if needed, and navigate to the main tabs
         // For example: await AsyncStorage.setItem('token', result.token);
-        navigation.navigate("MainTabs");
+        const { dataToSend } = result;
+
+        if (dataToSend.role === 'futsal admin') {
+          navigation.navigate('FutsalRegistration', { ...dataToSend });
+        } else if (dataToSend.role === 'user') {
+          navigation.navigate('MainTabs', { ...dataToSend });
+        }
       } else {
         Alert.alert('Login Failed', result.message || 'Invalid email or password');
       }

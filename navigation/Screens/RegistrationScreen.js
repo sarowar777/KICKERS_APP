@@ -73,7 +73,10 @@ export default function RegistrationScreen(props) {
       setcPasswordError(false);
     }
   };
-
+  // const googleLogin=async()=>{
+  //   const url="http://192.168.1.67:8001/auth/google";
+  //   console.warn("hello")
+  // }
   const saveData = async () => {
     // Reset all error states and general error message
     setFullNameError(false);
@@ -120,7 +123,7 @@ export default function RegistrationScreen(props) {
     if (hasError) return;
 
     // Proceed with registration if no errors
-    const url = 'http://192.168.1.67:8001/register';
+    const url = 'http://192.168.1.69:8001/register';
     try {
       let response = await fetch(url, {
         method: 'POST',
@@ -152,7 +155,7 @@ export default function RegistrationScreen(props) {
     if (registrationSuccess) {
       const timer = setTimeout(() => {
         setRegistrationSuccess(false);
-        navigation.navigate('LoginScreen',{role});
+        navigation.navigate('LoginScreen', {role});
       }, 2000);
       return () => clearTimeout(timer); // Cleanup the timer on component unmount
     }
@@ -183,6 +186,48 @@ export default function RegistrationScreen(props) {
 
         {/* Social Media Login Buttons */}
         {/* (Your code for social media buttons) */}
+        <View
+          style={{
+            flexDirection: 'row',
+            alignSelf: 'center',
+            top: -20,
+            justifyContent: 'space-between',
+            gap: -50,
+          }}>
+          <TouchableOpacity
+            style={{
+              borderColor: '#ddd',
+              paddingHorizontal: 38,
+              paddingVertical: 10,
+            }}>
+            <Image
+              source={require('../Screens/images/google.png')}
+              style={{height: 26, width: 26}}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              borderColor: '#ddd',
+              paddingHorizontal: 38,
+              paddingVertical: 10,
+            }}>
+            <Image
+              source={require('../Screens/images/facebook.png')}
+              style={{height: 26, width: 26}}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              borderColor: '#ddd',
+              paddingHorizontal: 38,
+              paddingVertical: 10,
+            }}>
+            <Image
+              source={require('../Screens/images/twitter.png')}
+              style={{height: 26, width: 26}}
+            />
+          </TouchableOpacity>
+        </View>
 
         <Text style={{alignSelf: 'center', color: 'black', top: -10}}>
           Or, login with..
@@ -385,16 +430,23 @@ export default function RegistrationScreen(props) {
             <View
               style={{
                 backgroundColor: 'white',
-                width:250,
+                width: 250,
                 padding: 20,
                 borderRadius: 10,
                 alignItems: 'center',
               }}>
               <Text
-                style={{fontSize: 20, fontWeight: 'bold', marginBottom: 10,color:'black'}}>
+                style={{
+                  fontSize: 20,
+                  fontWeight: 'bold',
+                  marginBottom: 10,
+                  color: 'black',
+                }}>
                 Registration Successful!
               </Text>
-              <Text style={{color:'black'}}>Your account has been successfully registered.</Text>
+              <Text style={{color: 'black'}}>
+                Your account has been successfully registered.
+              </Text>
             </View>
           </View>
         </Modal>
