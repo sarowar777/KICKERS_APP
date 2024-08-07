@@ -9,29 +9,14 @@ import {
 import React, {useEffect, useState} from 'react';
 import {sizes, spacing, shadow, colors} from '../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import firestore from '@react-native-firebase/firestore';
+
 const CARD_WIDTH = sizes.width - 80;
 const CARD_HEIGHT = 200;
 const CARD_WIDTH_SPACING = CARD_WIDTH + spacing.l;
 
 export default function TopFutsalCarousel({list, navigation}) {
   const [myData, setMyData] = useState(null);
-  useEffect(() => {
-    getDatabase();
-  }, []);
-  const getDatabase = async () => {
-    try {
-      const snapshot = await firestore()
-        .collection('Futsal_List')
-        .doc('Vks0zqqLKiXf6Okx1f5X')
-        .get();
-      const data = snapshot.data(); // Extract the data from the snapshot
-      setMyData(data);
-      console.log('Fetched data:', data.Address); // Log the fetched data
-    } catch (err) {
-      console.log('Error fetching data:', err);
-    }
-  };
+ 
   return (
     <FlatList
       data={list}
