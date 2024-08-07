@@ -13,6 +13,7 @@ import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
+
 export default function RegistrationScreen(props) {
   const {navigation, route} = props;
   const {role} = route.params; // Retrieve the role parameter
@@ -123,7 +124,7 @@ export default function RegistrationScreen(props) {
     if (hasError) return;
 
     // Proceed with registration if no errors
-    const url = 'http://192.168.1.69:8001/register';
+    const url = 'http://192.168.1.64:8001/register';
     try {
       let response = await fetch(url, {
         method: 'POST',

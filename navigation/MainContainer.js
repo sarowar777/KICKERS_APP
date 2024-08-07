@@ -32,7 +32,9 @@ import { BOOKINGS } from './data/constList';
 import Calendar from './Screens/Calendar';
 
 import FutsalRegistrationScreen from '../FutsalScreen/FutsalRegistrationScreen';
-
+import FutsalBookingsScreen from '../FutsalScreen/FutsalBookingsScreen';
+import FutsalSlotScreen from '../FutsalScreen/FutsalSlotScreen';
+import FutsalProfileScreen from '../FutsalScreen/FutsalProfileScreen';
 
 const {width, height} = Dimensions.get('window');
 //for bottom tab navigation
@@ -94,8 +96,10 @@ export default function MainContainer() {
         <Stack.Screen name="BookingDetails" list={BOOKINGS} component={BookingDetails} options={{ headerShown: false }} />
 
         <Stack.Screen name="FutsalRegistration"  component={FutsalRegistrationScreen} options={{ headerShown: false }} />
+        
 
         <Stack.Screen name="MainTabs" component={MainTabs} />
+        <Stack.Screen name="FutsalScreens" component={FutsalScreens} />
         
       </Stack.Navigator>
     </NavigationContainer>
@@ -328,6 +332,121 @@ function MainTabs() {
   );
 }
 
+ const FutsalScreens=()=>{
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          position: 'absolute',
+          backgroundColor: '#FEFEFE',
+          bottom: 1,
+          height: 65,
+        },
+        headerShown: false,
+      }}>
+      <Tab.Screen
+        name="Bookings"
+        component={FutsalBookingsScreen}
+        options={{
+          tabBarIcon: ({focused}) => (
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                top: 10,
+              }}>
+              <Image
+                source={require('../assets/pictures/book.png')}
+                resizeMode="contain"
+                style={{
+                  width: 25,
+                  height: 25,
+                  bottom: 5,
+                  tintColor: focused ? '#08C208' : '#748c94',
+                }}
+              />
+              <Text
+                style={{
+                  color: focused ? '#08C208' : '#748c94',
+                  fontSize: 16,
+                  bottom: 5,
+                }}>
+                Bookings
+              </Text>
+            </View>
+          ),
+        }}
+      />
+       <Tab.Screen
+        name="Slot"
+        component={FutsalSlotScreen}
+        options={{
+          tabBarIcon: ({focused}) => (
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                top: 10,
+              }}>
+              <Image
+                source={require('../assets/pictures/clock.png')}
+                resizeMode="contain"
+                style={{
+                  width: 25,
+                  height: 25,
+                  bottom: 5,
+                  tintColor: focused ? '#08C208' : '#748c94',
+                }}
+              />
+              <Text
+                style={{
+                  color: focused ? '#08C208' : '#748c94',
+                  fontSize: 16,
+                  bottom: 5,
+                }}>
+                Slots
+              </Text>
+            </View>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={FutsalProfileScreen}
+        options={{
+          tabBarIcon: ({focused}) => (
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                top: 10,
+              }}>
+              <Image
+                source={require('../assets/pictures/circle-user.png')}
+                resizeMode="contain"
+                style={{
+                  width: 25,
+                  height: 25,
+                  bottom: 5,
+                  tintColor: focused ? '#08C208' : '#748c94',
+                }}
+              />
+              <Text
+                style={{
+                  color: focused ? '#08C208' : '#748c94',
+                  fontSize: 16,
+                  bottom: 5,
+                }}>
+                Profile
+              </Text>
+            </View>
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+ }
 //style
 const styles = StyleSheet.create({
   container: {
