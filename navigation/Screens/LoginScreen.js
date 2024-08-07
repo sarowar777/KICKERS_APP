@@ -204,17 +204,7 @@ export default function LoginScreen(props) {
               style={{ height: 26, width: 26 }}
             />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              borderColor: '#ddd',
-              paddingHorizontal: 38,
-              paddingVertical: 10,
-            }}>
-            <Image
-              source={require('../Screens/images/twitter.png')}
-              style={{ height: 26, width: 26 }}
-            />
-          </TouchableOpacity>
+          
         </View>
         <View
           style={{

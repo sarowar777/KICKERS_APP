@@ -332,7 +332,7 @@ export default function BookFutsal({navigation}) {
                       borderWidth: 0,
                       borderColor: 'black',
                       width: 18,
-                      backgroundColor: '#08C208',
+                      backgroundColor: '#F95609',
                       borderRadius: 18,
                       top: 1.5,
                       alignSelf: 'center',
@@ -370,7 +370,7 @@ export default function BookFutsal({navigation}) {
                       borderWidth: 0,
                       borderColor: 'black',
                       width: 18,
-                      backgroundColor: '#08C208',
+                      backgroundColor: '#F95609',
                       borderRadius: 18,
                       top: 1.5,
                       alignSelf: 'center',
@@ -562,7 +562,7 @@ export default function BookFutsal({navigation}) {
                   top: 10,
                   justifyContent: 'center',
                   backgroundColor: '#F95609',
-                  borderRadius: 15,
+                  borderRadius: 10,
                 }}>
                 <Text
                   style={{

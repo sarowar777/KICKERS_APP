@@ -81,15 +81,15 @@ export default function BookingList({list, navigation}) {
               </View>
             </View>
             <View style={{flex: 1}}>
-              <TouchableOpacity>
+              <TouchableOpacity style={{width:100,alignSelf:'center'}}>
                 <View
                   style={{
                     borderWidth: 0,
-                    borderRadius: 6,
+                    borderRadius: 10,
                     height: 40,
-                    // top: 100,
+                   
                     alignSelf: 'center',
-                    // left: 120,
+                    justifyContent:'center',
                     width: 100,
                     backgroundColor: '#C11919',
                   }}>
@@ -97,9 +97,9 @@ export default function BookingList({list, navigation}) {
                     style={{
                       alignSelf: 'center',
                       color: 'white',
-                      fontSize: 12,
+                      fontSize: 14,
                       fontWeight: 'bold',
-                      top: 10,
+                     
                     }}>
                     Cancel
                   </Text>

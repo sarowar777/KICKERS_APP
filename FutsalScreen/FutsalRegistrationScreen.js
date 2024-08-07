@@ -147,7 +147,7 @@ export default function FutsalRegistrationScreen(props) {
                         borderWidth: 0,
                         borderColor: 'black',
                         width: 18,
-                        backgroundColor: '#08C208',
+                        backgroundColor: '#F95609',
                         borderRadius: 18,
                         top: 1.5,
                         alignSelf: 'center',
@@ -185,7 +185,7 @@ export default function FutsalRegistrationScreen(props) {
                         borderWidth: 0,
                         borderColor: 'black',
                         width: 18,
-                        backgroundColor: '#08C208',
+                        backgroundColor: '#F95609',
                         borderRadius: 18,
                         top: 1.5,
                         alignSelf: 'center',
@@ -301,10 +301,10 @@ export default function FutsalRegistrationScreen(props) {
             
             
           </View>
-          <View style={[styles.formBtn]}>
+          <View style={[styles.addBtn]}>
             <TouchableOpacity onPress={addInput}>
               <View style={styles.button}>
-                <Text style={styles.buttonText}>Add Input</Text>
+                <Text style={styles.buttonText}>Add</Text>
               </View>
             </TouchableOpacity>
           </View> 
@@ -373,7 +373,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
    
     height: 50,
-    width: 200,
+    width: 120,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
@@ -382,11 +382,18 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 16,
+    fontWeight:'bold'
   },
   formBtn:{
     borderWidth:0,
     alignSelf:'center',
     justifyContent:'center',
-    marginTop:10
+    marginTop:20
+  },
+  addBtn:{
+    borderWidth:0,
+    alignSelf:'center',
+    justifyContent:'center',
+    
   }
 });

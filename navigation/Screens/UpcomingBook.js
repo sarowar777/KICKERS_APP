@@ -29,7 +29,7 @@ export default function UpcomingBook({list, navigation}) {
           <View style={[styles.card, shadow.dark]}>
             <View
               style={{
-                flexDirection: 'row',
+              
                 borderWidth: 0,
                 height: 120,
                 width: 300,
@@ -44,60 +44,47 @@ export default function UpcomingBook({list, navigation}) {
                   borderColor: 'red',
                   height: 110,
                   width: 170,
+                  left:20
                 }}>
                 <View style={{flexDirection: 'row'}}>
                   <Icon name="map-marker" size={20} style={{color: 'black'}} />
                   <Text style={{color: 'black', left: 10}}>{item.title}</Text>
                 </View>
-                <View style={{flexDirection: 'row', top: 20}}>
+                <View style={{flexDirection: 'row', top: 10}}>
                   <Icon name="calendar" size={16} style={{color: 'black'}} />
                   <Text style={{color: 'black', left: 4}}>{item.date}</Text>
                 </View>
-                <View style={{flexDirection: 'row', top: 40}}>
+                <View style={{flexDirection: 'row', top: 20}}>
                   <Icon name="clock-o" size={20} style={{color: 'black'}} />
                   <Text style={{color: 'black', left: 8}}>{item.time}</Text>
                 </View>
+                <View style={{flexDirection: 'row', top: 30}}>
+                  <Icon name="book" size={20} style={{color: 'black'}} />
+                  <Text style={{color: 'black', left: 8}}> {item.description}</Text>
+                </View>
               </View>
-              <View
-                style={{
-                  borderWidth: 0,
-                  height: 40,
-                  // top: 20,
-                  // left: 40,
-                  width: 100,
-                  backgroundColor: '#F95609',
-                }}>
-                <Text
-                  style={{
-                    alignSelf: 'center',
-                    color: 'white',
-                    fontSize: 12,
-                    fontWeight: 'bold',
-                    top: 10,
-                  }}>
-                  {item.description}
-                </Text>
-              </View>
+             
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity style={{width:100,alignSelf:'center', top: 30,}}>
               <View
                 style={{
                   height: 40,
                   width: 100,
                   borderWidth: 0,
-                  top: 25,
-                  alignSelf: 'center',
+                 
+                  // alignSelf: 'center',
+                  justifyContent:'center',
 
                   backgroundColor: '#C11919',
-                  borderRadius: 6,
+                  borderRadius: 10,
                 }}>
                 <Text
                   style={{
                     alignSelf: 'center',
                     color: 'white',
-                    fontSize: 12,
+                    fontSize: 14,
                     fontWeight: 'bold',
-                    top: 10,
+                    
                   }}>
                   Cancel
                 </Text>
@@ -113,7 +100,7 @@ export default function UpcomingBook({list, navigation}) {
 const styles = StyleSheet.create({
   card: {
     width: CARD_WIDTH,
-    height: 200,
+    height: 210,
     marginVertical: 10,
     backgroundColor: '#FEFEFE',
     borderRadius: 16,

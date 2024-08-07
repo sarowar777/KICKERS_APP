@@ -32,37 +32,30 @@ export default function MatchList({list}) {
         const isBookingAccepted = item.booking === ' Accepted';
         return (
           <View style={[styles.card, shadow.dark]}>
-            <Image source={item.image} style={styles.image} />
+            <View style={{flexDirection:'row',gap:70}}>
+              <View style={{flex:6}}>
+              <Image source={item.image} style={styles.image} />
             <Text style={styles.nameUser}>{item.nameUser}</Text>
-            <TouchableOpacity>
-              <View
-                style={{
-                  height: 40,
-                  width: 90,
-                  borderWidth: 0,
-                  top: -75,
-                  left: 200,
-
-                  backgroundColor: '#DE2A2A',
-                  borderRadius: 6,
-                }}>
-                <Text
-                  style={{
-                    alignSelf: 'center',
-                    color: 'white',
-                    fontSize: 12,
-                    fontWeight: 'bold',
-                    top: 10,
-                  }}>
-                  Cancel
-                </Text>
               </View>
-            </TouchableOpacity>
+              {isBookingAccepted && 
+              <TouchableOpacity style={{borderWidth:0,width:50,height:50,flex:1,top:12}} onPress={() => handleCall(item.phone)}>
+                  <Icon
+                    name="phone"
+                    size={25}
+                    color={'#01B460'}
+                   
+                  /> 
+              </TouchableOpacity>
+      }
+            </View>
+            
+            
+         
             <View
               style={{
                 borderWidth: 0,
                 borderColor: 'black',
-                top: -20,
+                top: 0,
                 height: 130,
                 left: 25,
               }}>
@@ -102,46 +95,36 @@ export default function MatchList({list}) {
               <Icon name="book" size={12} color={'orange'} style={{}} />
                 
               <Text style={{color: 'black', marginBottom: 5,left:8}}>
-                 Match:
+                  Match:
                 </Text>
                 {item.booking}
               </Text>
-              {isBookingAccepted && 
-              <TouchableOpacity onPress={() => handleCall(item.phone)}>
-                <View
-                  style={{
-                    borderWidth: 0,
-                    width: 100,
-                    height: 38,
-                    alignSelf: 'center',
-                    right: 30,
-                    flexDirection: 'row',
-                    top: 10,
-                    alignItems: 'center',
-                    backgroundColor: '#01B460',
-                    borderRadius: 10,
-                  }}>
-                  <Icon
-                    name="phone"
-                    size={20}
-                    color={'white'}
-                    style={{left: 5, top: -2}}
-                  />
-                  <Text
-                    style={{
-                      color: 'white',
-                      fontWeight: 'bold',
-                      marginBottom: 5,
-                      left: 10,
-                      fontSize: 14,
-                      top: 0,
-                    }}>
-                    Call Now
-                  </Text>
-                </View>
-              </TouchableOpacity>
-      }
+             
             </View>
+            <TouchableOpacity style={{width:90,alignSelf:'center',marginTop:20}}>
+              <View
+                style={{
+                  height: 40,
+                  width: 100,
+                  borderWidth: 0,
+                  alignSelf:'center',
+                  justifyContent:'center',
+  
+                  backgroundColor: '#DE2A2A',
+                  borderRadius: 10,
+                }}>
+                <Text
+                  style={{
+                    alignSelf: 'center',
+                    color: 'white',
+                    fontSize: 14,
+                    fontWeight: 'bold',
+                    
+                  }}>
+                  Cancel
+                </Text>
+              </View>
+            </TouchableOpacity>
           </View>
         );
       }}
@@ -164,14 +147,14 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 100,
-    top: 30,
+    top: 12,
     left: 20,
     resizeMode: 'cover',
   },
   nameUser: {
     color: 'black',
     left: 90,
-    top: -5,
+    top: -25,
     fontWeight: 'bold',
     fontSize: 16,
   },

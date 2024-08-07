@@ -214,12 +214,12 @@ function MainTabs() {
                   width: 25,
                   height: 25,
                   bottom: 5,
-                  tintColor: focused ? '#08C208' : '#748c94',
+                  tintColor: focused ? 'orange' : '#748c94',
                 }}
               />
               <Text
                 style={{
-                  color: focused ? '#08C208' : '#748c94',
+                  color: focused ? 'orange' : '#748c94',
                   fontSize: 16,
                   bottom: 5,
                 }}>
@@ -247,12 +247,12 @@ function MainTabs() {
                   width: 25,
                   height: 25,
                   bottom: 5,
-                  tintColor: focused ? '#08C208' : '#748c94',
+                  tintColor: focused ? 'orange' : '#748c94',
                 }}
               />
               <Text
                 style={{
-                  color: focused ? '#08C208' : '#748c94',
+                  color: focused ? 'orange' : '#748c94',
                   fontSize: 16,
                   bottom: 5,
                 }}>
@@ -280,12 +280,12 @@ function MainTabs() {
                   width: 25,
                   height: 25,
                   bottom: 5,
-                  tintColor: focused ? '#08C208' : '#748c94',
+                  tintColor: focused ? 'orange' : '#748c94',
                 }}
               />
               <Text
                 style={{
-                  color: focused ? '#08C208' : '#748c94',
+                  color: focused ? 'orange' : '#748c94',
                   fontSize: 16,
                   bottom: 5,
                 }}>
@@ -313,12 +313,12 @@ function MainTabs() {
                   width: 25,
                   height: 25,
                   bottom: 5,
-                  tintColor: focused ? '#08C208' : '#748c94',
+                  tintColor: focused ? 'orange' : '#748c94',
                 }}
               />
               <Text
                 style={{
-                  color: focused ? '#08C208' : '#748c94',
+                  color: focused ? 'orange' : '#748c94',
                   fontSize: 16,
                   bottom: 5,
                 }}>
@@ -363,12 +363,12 @@ function MainTabs() {
                   width: 25,
                   height: 25,
                   bottom: 5,
-                  tintColor: focused ? '#08C208' : '#748c94',
+                  tintColor: focused ? 'orange' : '#748c94',
                 }}
               />
               <Text
                 style={{
-                  color: focused ? '#08C208' : '#748c94',
+                  color: focused ? 'orange' : '#748c94',
                   fontSize: 16,
                   bottom: 5,
                 }}>
@@ -396,12 +396,12 @@ function MainTabs() {
                   width: 25,
                   height: 25,
                   bottom: 5,
-                  tintColor: focused ? '#08C208' : '#748c94',
+                  tintColor: focused ? 'orange' : '#748c94',
                 }}
               />
               <Text
                 style={{
-                  color: focused ? '#08C208' : '#748c94',
+                  color: focused ? 'orange' : '#748c94',
                   fontSize: 16,
                   bottom: 5,
                 }}>
@@ -429,12 +429,12 @@ function MainTabs() {
                   width: 25,
                   height: 25,
                   bottom: 5,
-                  tintColor: focused ? '#08C208' : '#748c94',
+                  tintColor: focused ? 'orange' : '#748c94',
                 }}
               />
               <Text
                 style={{
-                  color: focused ? '#08C208' : '#748c94',
+                  color: focused ? 'orange' : '#748c94',
                   fontSize: 16,
                   bottom: 5,
                 }}>

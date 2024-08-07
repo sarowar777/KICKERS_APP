@@ -12,6 +12,7 @@ import {
 import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+ 
 
 
 export default function RegistrationScreen(props) {
@@ -32,6 +33,7 @@ export default function RegistrationScreen(props) {
   const [phoneNumberError, setPhoneNumberError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [cPasswordError, setcPasswordError] = useState(false);
+  const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -74,10 +76,6 @@ export default function RegistrationScreen(props) {
       setcPasswordError(false);
     }
   };
-  // const googleLogin=async()=>{
-  //   const url="http://192.168.1.67:8001/auth/google";
-  //   console.warn("hello")
-  // }
   const saveData = async () => {
     // Reset all error states and general error message
     setFullNameError(false);
@@ -142,8 +140,8 @@ export default function RegistrationScreen(props) {
 
       let result = await response.json();
       if (result) {
-        console.warn('Data added');
-        setRegistrationSuccess(true); // Show the success modal
+        // console.warn('Data added');
+        setIsConfirmationVisible(true) // Show the success modal
       }
     } catch (error) {
       // Handle any errors that occur during the fetch
@@ -153,14 +151,14 @@ export default function RegistrationScreen(props) {
   };
   // Redirect to login screen after 2 seconds of showing the success modal
   useEffect(() => {
-    if (registrationSuccess) {
+    if (isConfirmationVisible) {
       const timer = setTimeout(() => {
-        setRegistrationSuccess(false);
+        setIsConfirmationVisible(false);
         navigation.navigate('LoginScreen', {role});
       }, 2000);
       return () => clearTimeout(timer); // Cleanup the timer on component unmount
     }
-  }, [registrationSuccess]);
+  }, [isConfirmationVisible]);
   return (
     <SafeAreaView
       style={{flex: 1, justifyContent: 'center', backgroundColor: '#E6E6E6'}}>
@@ -187,52 +185,7 @@ export default function RegistrationScreen(props) {
 
         {/* Social Media Login Buttons */}
         {/* (Your code for social media buttons) */}
-        <View
-          style={{
-            flexDirection: 'row',
-            alignSelf: 'center',
-            top: -20,
-            justifyContent: 'space-between',
-            gap: -50,
-          }}>
-          <TouchableOpacity
-            style={{
-              borderColor: '#ddd',
-              paddingHorizontal: 38,
-              paddingVertical: 10,
-            }}>
-            <Image
-              source={require('../Screens/images/google.png')}
-              style={{height: 26, width: 26}}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              borderColor: '#ddd',
-              paddingHorizontal: 38,
-              paddingVertical: 10,
-            }}>
-            <Image
-              source={require('../Screens/images/facebook.png')}
-              style={{height: 26, width: 26}}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              borderColor: '#ddd',
-              paddingHorizontal: 38,
-              paddingVertical: 10,
-            }}>
-            <Image
-              source={require('../Screens/images/twitter.png')}
-              style={{height: 26, width: 26}}
-            />
-          </TouchableOpacity>
-        </View>
-
-        <Text style={{alignSelf: 'center', color: 'black', top: -10}}>
-          Or, login with..
-        </Text>
+  
 
         {/* Full Name Input */}
         <View
@@ -414,43 +367,50 @@ export default function RegistrationScreen(props) {
             <Text style={{color: '#FF7F32', top: -30}}>Login</Text>
           </TouchableOpacity>
         </View>
-
-        {/* Success Modal */}
-        <Modal
-          visible={registrationSuccess}
-          animationType="slide"
-          transparent={true}
-          style={{}}>
-          <View
+        <Text style={{alignSelf: 'center', color: 'black', top: -50}}>
+          Or, login with..
+        </Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignSelf: 'center',
+            top: -40,
+            justifyContent: 'space-between',
+            gap: -50,
+          }}>
+          <TouchableOpacity
             style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              borderColor: '#ddd',
+              paddingHorizontal: 38,
+              paddingVertical: 10,
             }}>
-            <View
-              style={{
-                backgroundColor: 'white',
-                width: 250,
-                padding: 20,
-                borderRadius: 10,
-                alignItems: 'center',
-              }}>
-              <Text
-                style={{
-                  fontSize: 20,
-                  fontWeight: 'bold',
-                  marginBottom: 10,
-                  color: 'black',
-                }}>
-                Registration Successful!
-              </Text>
-              <Text style={{color: 'black'}}>
-                Your account has been successfully registered.
-              </Text>
-            </View>
-          </View>
-        </Modal>
+            <Image
+              source={require('../Screens/images/google.png')}
+              style={{height: 26, width: 26}}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              borderColor: '#ddd',
+              paddingHorizontal: 38,
+              paddingVertical: 10,
+            }}>
+            <Image
+              source={require('../Screens/images/facebook.png')}
+              style={{height: 26, width: 26}}
+            />
+          </TouchableOpacity>
+        </View>
+
+        {isConfirmationVisible && (
+        <View style={styles.confirmationContainer}>
+          <Text style={styles.confirmationText}>
+            Registration Completed !!
+          </Text>
+        </View>
+      )}
+
+        
       </ScrollView>
     </SafeAreaView>
   );
@@ -469,5 +429,19 @@ const styles = StyleSheet.create({
     color: 'red',
     marginLeft: 2,
     top: -10,
+  },
+  confirmationContainer: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    right: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    padding: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  confirmationText: {
+    color: 'white',
+    fontSize: 16,
   },
 });

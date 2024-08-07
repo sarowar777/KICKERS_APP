@@ -27,7 +27,7 @@ export default function MyMatchList({list, navigation}) {
       renderItem={({item, index}) => {
         return (
           <View style={[styles.card, shadow.dark]}>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{flexDirection: 'row',flex:2.5}}>
               <View
                 style={{
                   borderWidth: 0,
@@ -56,54 +56,60 @@ export default function MyMatchList({list, navigation}) {
                   </Text>
                 </View>
               </View>
-              <TouchableOpacity>
+             
+            </View>
+            <View style={{flex:1,flexDirection:'row',borderWidth:0,gap:20,alignSelf:'center'}}>
+            <TouchableOpacity style={{width:100,justifyContent:'center',alignSelf:'center'}}>
                 <View
                   style={{
                     borderWidth: 0,
                     height: 40,
-                    top: 10,
-                    left: 30,
                     width: 100,
                     backgroundColor: '#01B460',
-                    borderRadius: 6,
+                    borderRadius: 10,
+                    alignSelf:'center',
+                    justifyContent:'center'
+
                   }}>
                   <Text
                     style={{
                       alignSelf: 'center',
                       color: 'white',
-                      fontSize: 12,
+                      fontSize: 14,
                       fontWeight: 'bold',
-                      top: 10,
+                      
                     }}>
                     EDIT
                   </Text>
                 </View>
               </TouchableOpacity>
-            </View>
-            <TouchableOpacity>
+              <TouchableOpacity style={{width:100,alignSelf:'center',justifyContent:'center'}}>
               <View
                 style={{
                   height: 40,
                   width: 100,
                   borderWidth: 0,
-                  top: 60,
+                  
                   alignSelf: 'center',
+                  justifyContent:'center',
 
                   backgroundColor: '#C11919',
-                  borderRadius: 6,
+                  borderRadius: 10,
                 }}>
                 <Text
                   style={{
                     alignSelf: 'center',
                     color: 'white',
-                    fontSize: 12,
+                    fontSize: 14,
                     fontWeight: 'bold',
-                    top: 10,
+                    
                   }}>
                   Delete
                 </Text>
               </View>
             </TouchableOpacity>
+            </View>
+           
           </View>
         );
       }}
@@ -114,7 +120,7 @@ export default function MyMatchList({list, navigation}) {
 const styles = StyleSheet.create({
   card: {
     width: CARD_WIDTH,
-    height: 250,
+    height: 260,
     marginVertical: 10,
     backgroundColor: '#FEFEFE',
     borderRadius: 16,

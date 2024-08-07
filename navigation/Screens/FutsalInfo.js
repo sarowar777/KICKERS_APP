@@ -302,8 +302,8 @@ export default function FutsalInfo({navigation}) {
                 justifyContent: 'center',
                 top: 45,
                 alignSelf: 'center',
-                backgroundColor: '#01B460',
-                borderRadius: 15,
+                backgroundColor: '#F95609',
+                borderRadius: 10,
               }}>
               <Text
                 style={{
@@ -311,7 +311,7 @@ export default function FutsalInfo({navigation}) {
                   color: 'white',
                   fontSize: 18,
                   fontWeight: 'bold',
-                  // top: 15,
+                  
                 }}>
                 BOOK NOW!
               </Text>

@@ -121,7 +121,7 @@ const BookingScreen = () => {
       <Calendar
         onDayPress={day => setSelectedDate(day.dateString)}
         markedDates={{
-          [selectedDate]: {selected: true, marked: true, selectedColor: 'blue'},
+          [selectedDate]: {selected: true, marked: true, selectedColor: '#F95609'},
         }}
       />
       <View>
@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
     color: '#888',
   },
   cancel: {
-    borderRadius: 12,
+    borderRadius: 10,
     borderWidth: 0,
     height: 40,
     width: 100,

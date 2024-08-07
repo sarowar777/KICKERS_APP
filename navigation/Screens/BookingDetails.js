@@ -119,13 +119,13 @@ export default function BookingDetails({navigation}) {
              alignSelf:'center',
               
               backgroundColor: '#C11919',
-              borderRadius: 6,
+              borderRadius: 10,
             }}>
             <Text
               style={{
                 alignSelf: 'center',
                 color: 'white',
-                fontSize: 12,
+                fontSize: 14,
                 fontWeight: 'bold',
                 top: 10,
               }}>

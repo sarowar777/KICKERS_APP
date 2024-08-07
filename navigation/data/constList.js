@@ -61,7 +61,7 @@ export const TOP_GAME = [
     description:
       ' 5a side | Loosers Pay | 1500Rs ',
       phone:9823158427,
-      booking:' Pending'
+      booking:' Accepted'
   },
   {
     id: 2,
@@ -145,7 +145,7 @@ export const BOOKINGS = [
     date: ' 22 Mar,2024',
     time: '10:00 AM-11:00 AM',
     type: '5a side',
-    status:'Pending',
+    status:'Confirmed',
     method:'khalti',
     description:
       'Match',
@@ -157,7 +157,7 @@ export const BOOKINGS = [
     date: ' 22 Mar,2024',
     time: '09:00 AM-10:00 AM',
     type: '7a side',
-    status:'Pending',
+    status:'Confirmed',
     method:'esewa',
     description:
       'Booking',

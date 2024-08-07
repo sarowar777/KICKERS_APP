@@ -37,8 +37,8 @@ export default function PriceChart({navigation}) {
               
               justifyContent:'center',
               top: 20,
-              backgroundColor: '#01B460',
-              borderRadius: 15,
+              backgroundColor: '#F95609',
+              borderRadius: 10,
             }}>
             <Text
               style={{

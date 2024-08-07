@@ -21,7 +21,7 @@ export default function Calendar() {
             borderRadius: 10,
             width: 100,
             top: 20,
-            left: 10,
+            left: 20,
             height: 50,
             backgroundColor: '#08C208',
           }}>
@@ -35,26 +35,7 @@ export default function Calendar() {
             Upcoming
           </Text>
         </View>
-        <View
-          style={{
-            borderWidth: 1,
-            borderRadius: 10,
-            width: 100,
-            top: 20,
-            left: 20,
-            height: 50,
-            backgroundColor: '#FEFEFE',
-          }}>
-          <Text
-            style={{
-              color: 'black',
-              alignSelf: 'center',
-              fontWeight: 'bold',
-              top: 12,
-            }}>
-            Past
-          </Text>
-        </View>
+    
       </View>
       <View style={{flex: 1, backgroundColor: '#E6E6E6', borderWidth: 0}}>
         <UpcomingBook list={TOP_BOOKING} />

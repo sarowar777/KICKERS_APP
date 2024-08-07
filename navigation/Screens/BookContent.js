@@ -238,7 +238,7 @@ export function BookContent() {
         </TouchableOpacity>
       </View>
       <View style={{left: 30}}>
-        <Text style={{color: '#08C208', fontWeight: 'bold', fontSize: 18}}>
+        <Text style={{color: '#F95609', fontWeight: 'bold', fontSize: 18}}>
           Venues(128)
         </Text>
       </View>
