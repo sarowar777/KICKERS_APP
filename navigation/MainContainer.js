@@ -35,6 +35,7 @@ import FutsalRegistrationScreen from '../FutsalScreen/FutsalRegistrationScreen';
 import FutsalBookingsScreen from '../FutsalScreen/FutsalBookingsScreen';
 import FutsalSlotScreen from '../FutsalScreen/FutsalSlotScreen';
 import FutsalProfileScreen from '../FutsalScreen/FutsalProfileScreen';
+import EditProfileScreen from './Screens/EditProfileScreen';
 
 const {width, height} = Dimensions.get('window');
 //for bottom tab navigation
@@ -96,7 +97,7 @@ export default function MainContainer() {
         <Stack.Screen name="BookingDetails" list={BOOKINGS} component={BookingDetails} options={{ headerShown: false }} />
 
         <Stack.Screen name="FutsalRegistration"  component={FutsalRegistrationScreen} options={{ headerShown: false }} />
-        
+        <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
 
         <Stack.Screen name="MainTabs" component={MainTabs} />
         <Stack.Screen name="FutsalScreens" component={FutsalScreens} />
@@ -183,7 +184,8 @@ function CustomHeader({navigation}) {
 }
 
 //function bottom
-function MainTabs() {
+function MainTabs({route}) {
+  const {token}=route.params;
   return (
     <Tab.Navigator
       screenOptions={{
@@ -199,6 +201,7 @@ function MainTabs() {
       <Tab.Screen
         name="Home"
         component={HomeScreen}
+        initialParams={{ token }}
         options={{
           tabBarIcon: ({focused}) => (
             <View
@@ -232,6 +235,7 @@ function MainTabs() {
       <Tab.Screen
         name="Book"
         component={BookScreen}
+        initialParams={{ token }}
         options={{
           tabBarIcon: ({focused}) => (
             <View
@@ -265,6 +269,7 @@ function MainTabs() {
       <Tab.Screen
         name="Play"
         component={PlayScreen}
+        initialParams={{ token }}
         options={{
           tabBarIcon: ({focused}) => (
             <View
@@ -298,6 +303,7 @@ function MainTabs() {
       <Tab.Screen
         name="User"
         component={ProfileScreen}
+        initialParams={{ token }}
         options={{
           tabBarIcon: ({focused}) => (
             <View
@@ -332,7 +338,8 @@ function MainTabs() {
   );
 }
 
- const FutsalScreens=()=>{
+ const FutsalScreens=({ route })=>{
+  const { token } = route.params;
   return (
     <Tab.Navigator
       screenOptions={{
@@ -348,6 +355,7 @@ function MainTabs() {
       <Tab.Screen
         name="Bookings"
         component={FutsalBookingsScreen}
+        initialParams={{ token }}
         options={{
           tabBarIcon: ({focused}) => (
             <View
@@ -381,6 +389,7 @@ function MainTabs() {
        <Tab.Screen
         name="Slot"
         component={FutsalSlotScreen}
+        initialParams={{ token }}
         options={{
           tabBarIcon: ({focused}) => (
             <View
@@ -414,6 +423,7 @@ function MainTabs() {
       <Tab.Screen
         name="Profile"
         component={FutsalProfileScreen}
+        initialParams={{ token }}
         options={{
           tabBarIcon: ({focused}) => (
             <View

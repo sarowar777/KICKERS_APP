@@ -12,6 +12,7 @@ import {
 import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {SERVER_URL} from '@env';
  
 
 
@@ -122,7 +123,7 @@ export default function RegistrationScreen(props) {
     if (hasError) return;
 
     // Proceed with registration if no errors
-    const url = 'http://192.168.1.64:8001/register';
+    const url = SERVER_URL + '/register';
     try {
       let response = await fetch(url, {
         method: 'POST',

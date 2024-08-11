@@ -13,8 +13,6 @@ import {
 
 import {SwiperFlatList} from 'react-native-swiper-flatlist';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import PriceChart from './PriceChart';
-import {} from 'react-native-gesture-handler';
 
 export default function FutsalInfo({navigation}) {
   const openMap = () => {
@@ -64,13 +62,13 @@ export default function FutsalInfo({navigation}) {
           style={{
             borderBottomWidth: 2,
             borderBottomColor: '#D9D9D9',
-            height: 245,
+            height: 210,
           }}>
           <Text
             name="title"
             style={{
               color: 'black',
-              fontSize: 18,
+              fontSize: 20,
               fontWeight: 'bold',
               left: 15,
               top: 25,
@@ -92,7 +90,7 @@ export default function FutsalInfo({navigation}) {
             <Icon
               name="clock-o"
               size={22}
-              style={{color: 'black', left: 10}}></Icon>
+              style={{color: 'grey', left: 10}}></Icon>
             <Text style={{color: 'black', left: 20, fontWeight: 'bold'}}>
               06:00 AM - 08:00 PM
             </Text>
@@ -127,13 +125,13 @@ export default function FutsalInfo({navigation}) {
               top: 40,
               height: 30,
               width: 320,
-              left: 20,
+              left: 14,
               flexDirection: 'row',
             }}>
             <Icon
-              name="map-marker"
-              size={22}
-              style={{color: 'black', left: 13}}></Icon>
+              name="home"
+              size={20}
+              style={{color: 'orange', left: 13}}></Icon>
             <Text style={{color: 'black', left: 23, fontWeight: 'bold'}}>
                Lamingtan Marg 4, Kathmandu 44600
             </Text>
@@ -151,7 +149,7 @@ export default function FutsalInfo({navigation}) {
             <Icon
               name="phone"
               size={22}
-              style={{color: 'black', left: 10}}></Icon>
+              style={{color: 'green', left: 10}}></Icon>
             <Text style={{color: 'black', left: 22, fontWeight: 'bold'}}>
               01-4535832
             </Text>
@@ -159,33 +157,34 @@ export default function FutsalInfo({navigation}) {
           <TouchableOpacity onPress={openMap}>
             <View
               style={{
-                borderWidth: 2,
+                borderWidth: 0,
                 borderColor: '#7F7F7F',
-                top: 55,
-                height: 50,
-                width: 200,
-                left: 60,
+                top: 50,
+                height: 30,
+                width: 120,
+                left: 25,
                 flexDirection: 'row',
               }}>
               <Image
                 source={require('../Screens/images/mapg.png')}
                 style={{
                   resizeMode: 'cover',
-                  height: 30,
-                  width: 30,
-                  top: 5,
+                  height: 20,
+                  width: 20,
+               
                   left: 4,
                 }}
               />
               <Text
                 style={{
                   color: 'black',
-                  alignSelf: 'center',
-                  left: 10,
-                  fontSize: 18,
+                  // alignSelf: 'center',
+                  left: 15,
+                  fontSize: 14,
                   fontWeight: 'bold',
+                  // textDecorationLine:'underline'
                 }}>
-                Show in Map
+                Map
               </Text>
             </View>
           </TouchableOpacity>
@@ -198,7 +197,7 @@ export default function FutsalInfo({navigation}) {
             top: 0,
             height: 290,
             width: 390,
-            left: 10,
+            flex:1,
             marginBottom: 10,
           }}>
           <Text
@@ -217,29 +216,53 @@ export default function FutsalInfo({navigation}) {
               borderColor: 'blue',
               top: 25,
               height: 50,
+              width:350,
               flexDirection: 'row',
+              alignSelf:'center',
+              justifyContent:'center',
+              gap:20
             }}>
             <View
               style={{
                 backgroundColor: '#D9D9D9',
                 height: 30,
                 width: 150,
-                alignItems: 'center',
-                left: 35,
-                top: 10,
+                flexDirection:'row',
+                alignSelf:'center',
+                justifyContent:'center',
+                gap:5,
+                alignItems:'center'
               }}>
-              <Text style={{color: 'black', top: 3}}>Parking</Text>
+                <Image
+                source={require('../../assets/pictures/parking-area.png')}
+                style={{
+                  resizeMode: 'cover',
+                  height: 22,
+                  width: 22,
+                 
+                }}/>
+              <Text style={{color: 'black',alignSelf:'center',fontSize:13,top:3}}>Parking</Text>
             </View>
             <View
               style={{
                 backgroundColor: '#D9D9D9',
                 height: 30,
                 width: 150,
-                alignItems: 'center',
-                left: 55,
-                top: 10,
+                flexDirection:'row',
+                alignSelf:'center',
+                justifyContent:'center',
+                gap:5,
+                alignItems:'center'
               }}>
-              <Text style={{color: 'black', top: 3}}>Restroom</Text>
+                <Image
+                source={require('../../assets/pictures/shower.png')}
+                style={{
+                  resizeMode: 'cover',
+                  height: 22,
+                  width: 22,
+                 
+                }}/>
+              <Text style={{color: 'black',alignSelf:'center',fontSize:13,top:3}}>Shower</Text>
             </View>
           </View>
           <View
@@ -248,29 +271,53 @@ export default function FutsalInfo({navigation}) {
               borderColor: 'blue',
               top: 25,
               height: 50,
+              width:350,
               flexDirection: 'row',
+              alignSelf:'center',
+              justifyContent:'center',
+              gap:20
             }}>
             <View
               style={{
                 backgroundColor: '#D9D9D9',
                 height: 30,
                 width: 150,
-                alignItems: 'center',
-                left: 35,
-                top: 10,
+                flexDirection:'row',
+                alignSelf:'center',
+                justifyContent:'center',
+                gap:5,
+                alignItems:'center'
               }}>
-              <Text style={{color: 'black', top: 3}}>Restaurant</Text>
+                <Image
+                source={require('../../assets/pictures/fast-food.png')}
+                style={{
+                  resizeMode: 'cover',
+                  height: 22,
+                  width: 22,
+                 
+                }}/>
+              <Text style={{color: 'black',alignSelf:'center',fontSize:13,top:3}}>Restaurant</Text>
             </View>
             <View
               style={{
                 backgroundColor: '#D9D9D9',
                 height: 30,
                 width: 150,
-                alignItems: 'center',
-                left: 55,
-                top: 10,
+                flexDirection:'row',
+                alignSelf:'center',
+                justifyContent:'center',
+                gap:5,
+                alignItems:'center'
               }}>
-              <Text style={{color: 'black', top: 3}}>Swimming Pool</Text>
+                <Image
+                source={require('../../assets/pictures/swimming.png')}
+                style={{
+                  resizeMode: 'cover',
+                  height: 22,
+                  width: 22,
+                 
+                }}/>
+              <Text style={{color: 'black',alignSelf:'center',fontSize:13,top:3}}>Swimming</Text>
             </View>
           </View>
           <View
@@ -279,20 +326,36 @@ export default function FutsalInfo({navigation}) {
               borderColor: 'blue',
               top: 25,
               height: 50,
+              width:350,
               flexDirection: 'row',
+              alignSelf:'center',
+              justifyContent:'center',
+              gap:20
             }}>
             <View
               style={{
                 backgroundColor: '#D9D9D9',
                 height: 30,
                 width: 150,
-                alignItems: 'center',
-                left: 35,
-                top: 10,
+                flexDirection:'row',
+                alignSelf:'center',
+                justifyContent:'center',
+                gap:5,
+                alignItems:'center'
               }}>
-              <Text style={{color: 'black', top: 3}}>Gym</Text>
+                <Image
+                source={require('../../assets/pictures/treadmill.png')}
+                style={{
+                  resizeMode: 'cover',
+                  height: 22,
+                  width: 22,
+                 
+                }}/>
+              <Text style={{color: 'black',alignSelf:'center',fontSize:13,top:3}}>Gym</Text>
             </View>
+           
           </View>
+         
           <TouchableOpacity onPress={() => navigation.navigate('BookFutsal')}>
             <View
               style={{

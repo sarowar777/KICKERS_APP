@@ -1,37 +1,67 @@
-import React from 'react';
-import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { SERVER_URL } from '@env';
 
-const ProfileScreen = () => {
-  // Dummy user data
-  const user = {
-    name: 'Sarowar Malla',
-    email: 'sarowarmalla@gmail.com',
-    phone: '9862250992',
-    bookingsCompleted: 2,
-    matchesCompleted: 5,
-    profilePicture: require('../Screens/images/saro.jpg'), // Replace with actual path to profile picture
+const ProfileScreen = (props) => {
+  const { navigation, route } = props;
+  const [user, setUser] = useState(null);
+
+  const getProfile = async () => {
+    const { token } = route.params; // Get the token from route params
+    try {
+      const url = `${SERVER_URL}/profile`;
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setUser({
+        ...data.result,
+        profilePicture: data.result.profilePicture 
+          ? { uri: data.result.profilePicture } 
+          : require('../../assets/pictures/circle-user.png'), // Set the default picture
+      });
+    } catch (error) {
+      console.error("Error fetching profile data:", error);
+    }
   };
+
+  useEffect(() => {
+    getProfile();
+  }, []);
+
+  if (!user) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading...</Text>
+      </View>
+    ); // Show a loading state while the data is being fetched
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.profileHeader}>
-        <Image source={user.profilePicture} style={styles.profilePicture} />
+        <Image 
+          source={typeof user.profilePicture === 'string' 
+            ? { uri: user.profilePicture } 
+            : user.profilePicture} 
+          style={styles.profilePicture} 
+        />
         <Text style={styles.name}>{user.name}</Text>
         <Text style={styles.email}>{user.email}</Text>
         <Text style={styles.phone}>{user.phone}</Text>
       </View>
-      <View style={styles.statsContainer}>
-        <View style={styles.statItem}>
-          <Text style={styles.statNumber}>{user.bookingsCompleted}</Text>
-          <Text style={styles.statLabel}>Bookings Completed</Text>
-        </View>
-        <View style={styles.statItem}>
-          <Text style={styles.statNumber}>{user.matchesCompleted}</Text>
-          <Text style={styles.statLabel}>Matches Completed</Text>
-        </View>
-      </View>
-      <TouchableOpacity style={styles.editButton}>
+      <TouchableOpacity onPress={() => navigation.navigate('EditProfileScreen', { user })}  
+      style={styles.editButton}>
         <Text style={styles.editButtonText}>Edit Profile</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.logoutButton}>
@@ -71,23 +101,6 @@ const styles = StyleSheet.create({
   },
   phone: {
     fontSize: 16,
-    color: '#666666',
-  },
-  statsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  statItem: {
-    alignItems: 'center',
-  },
-  statNumber: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'black',
-  },
-  statLabel: {
-    fontSize: 14,
     color: '#666666',
   },
   editButton: {

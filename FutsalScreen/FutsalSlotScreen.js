@@ -12,41 +12,79 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {Calendar} from 'react-native-calendars';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const FutsalSlotScreen = () => {
+
+import {SERVER_URL} from '@env';
+
+const FutsalSlotScreen = ({route}) => {
   const [slots, setSlots] = useState([]);
   const [selectedDate, setSelectedDate] = useState('');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
-  const [futsalType, setFutsalType] = useState('5A Side');
+  const [futsalType, setFutsalType] = useState('5ASide');
   const [price, setPrice] = useState('');
   const [isStartPickerVisible, setStartPickerVisible] = useState(false);
   const [isEndPickerVisible, setEndPickerVisible] = useState(false);
   const [isFormVisible, setFormVisible] = useState(false);
   const [currentSlotId, setCurrentSlotId] = useState(null);
+  const showStartPicker = () => setStartPickerVisible(true);
+  const hideStartPicker = () => setStartPickerVisible(false);
+  const showEndPicker = () => setEndPickerVisible(true);
+  const hideEndPicker = () => setEndPickerVisible(false);
+  
 
-  const handleSaveSlot = () => {
+ 
+
+
+  const {token} = route.params;
+
+  const handleSaveSlot = async () => {
     if (!selectedDate || !startTime || !endTime || !price) {
       alert('Please fill all fields');
       return;
     }
 
-    const newSlot = {
-      id: currentSlotId ? currentSlotId : Math.random().toString(),
-      date: selectedDate,
-      startTime: startTime,
-      endTime: endTime,
-      futsalType: futsalType,
-      price: price,
+   
+
+    // Assume futsalId is available in the route parameters or elsewhere
+    const futsalId = 5; // Update with actual futsalId
+
+    const slotData = {
+      timeSlots: [
+        {
+          date: selectedDate, // Ensure this is in the correct format
+          startTime: startTime, // Ensure this is in the correct format
+          endTime: endTime, // Ensure this is in the correct format
+          futsalType: futsalType,
+          price: price,
+        },
+      ],
+      futsalId: futsalId,
     };
 
-    if (currentSlotId) {
-      setSlots(slots.map(slot => (slot.id === currentSlotId ? newSlot : slot)));
-    } else {
-      setSlots([...slots, newSlot]);
-    }
+    const url = `${SERVER_URL}/add-time-slot`;
 
-    resetForm();
-    setFormVisible(false);
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // Include token here
+        },
+        body: JSON.stringify(slotData),
+      });
+
+      const responseText = await response.text();
+
+      if (response.ok) {
+        const result = JSON.parse(responseText); // Parse if JSON is expected
+        console.log('Time Slot added successfully:', result);
+        // You might need to navigate or update UI here
+      } else {
+        console.error('Failed to add time slot:', responseText);
+      }
+    } catch (error) {
+      console.error('Error submitting Slot:', error);
+    }
   };
 
   const resetForm = () => {
@@ -81,6 +119,31 @@ const FutsalSlotScreen = () => {
     return `${formattedHours}:${formattedMinutes} ${ampm}`;
   };
 
+  const handleConfirmStartTime = (date) => {
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12;
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+  
+    const formattedTime = `${formattedHours}:${formattedMinutes} ${ampm}`;
+    setStartTime(formattedTime);
+    hideStartPicker();
+  };
+  
+  const handleConfirmEndTime = (date) => {
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12;
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+  
+    const formattedTime = `${formattedHours}:${formattedMinutes} ${ampm}`;
+    setEndTime(formattedTime);
+    hideEndPicker();
+  };
+  
+
   return (
     <View style={styles.container}>
       {isFormVisible ? (
@@ -95,18 +158,35 @@ const FutsalSlotScreen = () => {
               },
             }}
           />
+            <View style={styles.pickerContainer}>
+  <TouchableOpacity onPress={showStartPicker}>
+    <Text style={styles.input}>
+      {startTime ? `Start Time: ${startTime}` : 'Select Start Time'}
+    </Text>
+  </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => setStartPickerVisible(true)}>
-            <Text style={styles.input}>
-              {startTime ? `Start Time: ${startTime}` : 'Select Start Time'}
-            </Text>
-          </TouchableOpacity>
+  <TouchableOpacity onPress={showEndPicker}>
+    <Text style={styles.input}>
+      {endTime ? `End Time: ${endTime}` : 'Select End Time'}
+    </Text>
+  </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => setEndPickerVisible(true)}>
-            <Text style={styles.input}>
-              {endTime ? `End Time: ${endTime}` : 'Select End Time'}
-            </Text>
-          </TouchableOpacity>
+  <DateTimePickerModal
+    isVisible={isStartPickerVisible}
+    mode="time"
+    onConfirm={handleConfirmStartTime}
+    onCancel={hideStartPicker}
+  />
+
+  <DateTimePickerModal
+    isVisible={isEndPickerVisible}
+    mode="time"
+    onConfirm={handleConfirmEndTime}
+    onCancel={hideEndPicker}
+  />
+</View>
+
+          
 
           <View style={styles.picker}>
             <Text style={styles.label}>Futsal Type:</Text>
@@ -287,6 +367,17 @@ const styles = StyleSheet.create({
     marginTop: 10,
     flexDirection: 'row',
     gap: 15,
+  },
+  pickerContainer: {
+    marginVertical: 10,
+  },
+  input: {
+    fontSize: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    marginVertical: 10,
+    paddingVertical: 5,
+    color: 'black',
   },
 });
 

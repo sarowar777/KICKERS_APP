@@ -12,8 +12,7 @@ import {
 import React, { useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {SERVER_URL} from '@env'
 
 export default function LoginScreen(props) {
   const [passwordVisible, setPasswordVisible] = useState(true);
@@ -33,7 +32,7 @@ export default function LoginScreen(props) {
     setLoading(true);
 
     try {
-      const response = await fetch('http://192.168.1.64:8001/login', {
+      const response = await fetch(SERVER_URL+ '/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -42,17 +41,22 @@ export default function LoginScreen(props) {
       });
 
       const result = await response.json();
-    
+     
 
       if (response.ok) {
         // Save the token if needed, and navigate to the main tabs
         // For example: await AsyncStorage.setItem('token', result.token);
-        const { dataToSend } = result;
-
+        const { token,dataToSend } = result;
+        
         if (dataToSend.role === 'futsal admin') {
-          navigation.navigate('FutsalRegistration', { ...dataToSend });
+          if(dataToSend.futsal === null){
+            navigation.navigate('FutsalRegistration', { token,...dataToSend });
+          } else{
+            navigation.navigate('FutsalScreens', { token,...dataToSend });
+          }
+          
         } else if (dataToSend.role === 'user') {
-          navigation.navigate('MainTabs', { ...dataToSend });
+          navigation.navigate('MainTabs', { token, ...dataToSend });
         }
       } else {
         Alert.alert('Login Failed', result.message || 'Invalid email or password');

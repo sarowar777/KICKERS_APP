@@ -5,15 +5,35 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  ActivityIndicator,
   FlatList,
 } from 'react-native';
 import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import {SERVER_URL} from '@env'
 
 export default function FutsalRegistrationScreen(props) {
-  const {navigation}=props;
+  
+  const {navigation,route}=props;
+  const { token } = route.params;
+ 
   const [selectedRadio, setSelectedRadio] = useState(0);
+
+  const [loading, setLoading] = useState(false);
+
+  //data
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const [amenities, setAmenities] = useState('');
+  const [stdPrice, setStdPrice] = useState('');
+  const [pan, setPan] = useState('');
+
+
+
   //timee
   const [isStartTimePickerVisible, setIsStartTimePickerVisible] =
     useState(false);
@@ -34,29 +54,32 @@ export default function FutsalRegistrationScreen(props) {
   const hideEndTimePicker = () => {
     setIsEndTimePickerVisible(false);
   };
-  const handleConfirmStartTime = date => {
+  const handleConfirmStartTime = (date) => {
     const hours = date.getHours();
     const minutes = date.getMinutes();
-    const formattedHours = hours < 10 ? '0' + hours : hours;
-    const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
-    const period = hours >= 12 ? 'PM' : 'AM';
-    const formattedTime =
-      formattedHours + ':' + formattedMinutes + ' ' + period;
-    setSelectedStartTime(formattedTime);
-    hideStartTimePicker();
-  };
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12; // Convert to 12-hour format
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
 
-  const handleConfirmEndTime = date => {
+    const formattedTime = `${formattedHours}:${formattedMinutes} ${ampm}`;
+    setSelectedStartTime(formattedTime);
+    setStartTime(date.toISOString()); // Save full ISO string for Prisma
+    hideStartTimePicker();
+};
+
+const handleConfirmEndTime = (date) => {
     const hours = date.getHours();
     const minutes = date.getMinutes();
-    const formattedHours = hours < 10 ? '0' + hours : hours;
-    const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
-    const period = hours >= 12 ? 'PM' : 'AM';
-    const formattedTime =
-      formattedHours + ':' + formattedMinutes + ' ' + period;
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12; // Convert to 12-hour format
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+
+    const formattedTime = `${formattedHours}:${formattedMinutes} ${ampm}`;
     setSelectedEndTime(formattedTime);
+    setEndTime(date.toISOString()); // Save full ISO string for Prisma
     hideEndTimePicker();
-  };
+};
+
 
   //ameneties
   const [inputs, setInputs] = useState([{key: '', value: ''}]);
@@ -75,7 +98,66 @@ export default function FutsalRegistrationScreen(props) {
     newInputs.splice(index, 1);
     setInputs(newInputs);
   };
-
+  const handleSubmit = async () => {
+    setLoading(true);
+    // Check if any required field is empty
+    if (
+      !name ||
+      !phone ||
+      !address ||
+      !selectedRadio ||
+      !startTime ||
+      !endTime ||
+      !inputs.length ||
+      !stdPrice ||
+      !pan
+    ) {
+      alert('Please fill out all fields.');
+      return;
+    }
+  
+    const url = SERVER_URL+'/add-futsal-info';
+  
+    const data = {
+      name,
+      phone,
+      address,
+      type: selectedRadio === 1 ? 'FiveA' : 'SevenA',
+      startTime,
+      endTime,
+      amenities: inputs.map(input => input.value),
+      stdPrice,
+      pan,
+    };
+  
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`, // Include token here
+        },
+        body: JSON.stringify(data),
+      });
+  
+      const responseText = await response.text();
+      console.log('Response text:', responseText);
+  
+      if (response.ok) {
+        const result = JSON.parse(responseText); // Parse if JSON is expected
+        console.log('Futsal information added successfully:', result);
+        navigation.navigate('FutsalScreens',{token});
+      } else {
+        console.error('Failed to add futsal information:', responseText);
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }finally {
+      setLoading(false);
+    }
+  };
+  
+  
   return (
     <ScrollView style={styles.container}>
       <Text
@@ -95,7 +177,7 @@ export default function FutsalRegistrationScreen(props) {
         <View style={styles.form}>
           <View style={styles.formField}>
             <Text style={styles.formText}>Futsal Name</Text>
-            <TextInput style={styles.formTextInput} />
+            <TextInput style={styles.formTextInput} value={name} onChangeText={text => setName(text)}/>
           </View>
           <View style={styles.formField}>
             <Text style={styles.formText}>Pan Number</Text>
@@ -103,19 +185,24 @@ export default function FutsalRegistrationScreen(props) {
               style={styles.formTextInput}
               keyboardType="numeric"
               maxLength={9}
+              value={pan}
+              onChangeText={text => setPan(text)}
             />
           </View>
+          {loading && <ActivityIndicator size="large" color="green" />}
           <View style={styles.formField}>
             <Text style={styles.formText}>Phone Number</Text>
             <TextInput
               style={styles.formTextInput}
               keyboardType="numeric"
               maxLength={10}
+              value={phone}
+              onChangeText={text => setPhone(text)}
             />
           </View>
           <View style={styles.formField}>
             <Text style={styles.formText}>Address</Text>
-            <TextInput style={styles.formTextInput} />
+            <TextInput style={styles.formTextInput} value={address} onChangeText={text => setAddress(text)} />
           </View>
           <View style={styles.formField}>
             <Text style={styles.formText}>Futsal Type</Text>
@@ -310,10 +397,10 @@ export default function FutsalRegistrationScreen(props) {
           </View> 
           <View style={styles.formField}>
             <Text style={styles.formText}>Standard Price</Text>
-            <TextInput style={styles.formTextInput} keyboardType='numeric' />
+            <TextInput style={styles.formTextInput} keyboardType='numeric' value={stdPrice}  onChangeText={text => setStdPrice(text)}/>
           </View> 
           <View style={styles.formBtn}>
-          <TouchableOpacity onPress={()=>navigation.navigate("FutsalScreens")}>
+          <TouchableOpacity onPress={handleSubmit}>
             <View style={styles.button}>
               <Text style={styles.buttonText}>Submit</Text>
             </View>
