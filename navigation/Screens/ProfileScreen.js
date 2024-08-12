@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import { SERVER_URL } from '@env';
 
 const ProfileScreen = (props) => {
@@ -10,7 +12,7 @@ const ProfileScreen = (props) => {
   const getProfile = async () => {
     const { token } = route.params; // Get the token from route params
     try {
-      const url = `${SERVER_URL}/profile`;
+      const url = 'http://192.168.1.66:8001/profile';
       const response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -34,6 +36,18 @@ const ProfileScreen = (props) => {
       console.error("Error fetching profile data:", error);
     }
   };
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('token'); // Clear the token from AsyncStorage
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'LoginScreen' }], // Navigate to the login screen
+      });
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
+
 
   useEffect(() => {
     getProfile();
@@ -64,7 +78,7 @@ const ProfileScreen = (props) => {
       style={styles.editButton}>
         <Text style={styles.editButtonText}>Edit Profile</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.logoutButton}>
+      <TouchableOpacity  onPress={handleLogout} style={styles.logoutButton}>
         <Icon name="sign-out" size={20} color="#FFFFFF" />
       </TouchableOpacity>
     </View>

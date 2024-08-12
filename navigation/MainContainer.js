@@ -339,7 +339,7 @@ function MainTabs({route}) {
 }
 
  const FutsalScreens=({ route })=>{
-  const { token } = route.params;
+  const { futsalId,token } = route.params;
   return (
     <Tab.Navigator
       screenOptions={{
@@ -355,7 +355,7 @@ function MainTabs({route}) {
       <Tab.Screen
         name="Bookings"
         component={FutsalBookingsScreen}
-        initialParams={{ token }}
+        initialParams={{ futsalId,token }}
         options={{
           tabBarIcon: ({focused}) => (
             <View
@@ -389,7 +389,7 @@ function MainTabs({route}) {
        <Tab.Screen
         name="Slot"
         component={FutsalSlotScreen}
-        initialParams={{ token }}
+        initialParams={{ futsalId,token }}
         options={{
           tabBarIcon: ({focused}) => (
             <View
@@ -423,7 +423,7 @@ function MainTabs({route}) {
       <Tab.Screen
         name="Profile"
         component={FutsalProfileScreen}
-        initialParams={{ token }}
+        initialParams={{ futsalId,token }}
         options={{
           tabBarIcon: ({focused}) => (
             <View

@@ -123,7 +123,7 @@ export default function RegistrationScreen(props) {
     if (hasError) return;
 
     // Proceed with registration if no errors
-    const url = SERVER_URL + '/register';
+    const url = 'http://192.168.1.64:8001/register';
     try {
       let response = await fetch(url, {
         method: 'POST',

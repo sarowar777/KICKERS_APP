@@ -20,8 +20,7 @@ export default function LoginScreen(props) {
     setPasswordVisible(!passwordVisible);
   };
   const { navigation, route } = props;
-  const { role } = route.params;
-
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -32,7 +31,7 @@ export default function LoginScreen(props) {
     setLoading(true);
 
     try {
-      const response = await fetch(SERVER_URL+ '/login', {
+      const response = await fetch('http://192.168.1.64:8001/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -41,18 +40,20 @@ export default function LoginScreen(props) {
       });
 
       const result = await response.json();
+      
      
 
       if (response.ok) {
         // Save the token if needed, and navigate to the main tabs
         // For example: await AsyncStorage.setItem('token', result.token);
         const { token,dataToSend } = result;
+        const futsalId = dataToSend.futsal?.id; // Extract futsalId
         
         if (dataToSend.role === 'futsal admin') {
           if(dataToSend.futsal === null){
             navigation.navigate('FutsalRegistration', { token,...dataToSend });
           } else{
-            navigation.navigate('FutsalScreens', { token,...dataToSend });
+            navigation.navigate('FutsalScreens', { token,futsalId,...dataToSend });
           }
           
         } else if (dataToSend.role === 'user') {
