@@ -12,7 +12,7 @@ const ProfileScreen = (props) => {
   const getProfile = async () => {
     const { token } = route.params; // Get the token from route params
     try {
-      const url = 'http://192.168.1.66:8001/profile';
+      const url = 'http://192.168.1.64:8001/profile';
       const response = await fetch(url, {
         method: 'GET',
         headers: {

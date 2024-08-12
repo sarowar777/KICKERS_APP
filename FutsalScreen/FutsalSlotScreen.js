@@ -5,6 +5,7 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  Modal,
   TextInput,
   Button,
 } from 'react-native';
@@ -46,9 +47,7 @@ const FutsalSlotScreen = props => {
       alert('Please fill all fields');
       return;
     }
-
-    const futsalID = futsalId; // Update with actual futsalId
-
+  
     const slotData = {
       timeSlots: [
         {
@@ -59,36 +58,39 @@ const FutsalSlotScreen = props => {
           price: price,
         },
       ],
-      futsalId: futsalID,
+      futsalId,
     };
-
-    const url = 'http://192.168.1.64:8001/add-time-slot';
-
+  
+    const url = currentSlotId 
+      ? `http://192.168.1.64:8001/update-time-slot/${currentSlotId}` 
+      : 'http://192.168.1.64:8001/add-time-slot';
+  
     try {
       const response = await fetch(url, {
-        method: 'POST',
+        method: currentSlotId ? 'PUT' : 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(slotData),
       });
-
+  
       const responseText = await response.text();
-
+  
       if (response.ok) {
         const result = JSON.parse(responseText);
-        console.log('Time Slot added successfully:', result);
+        console.log(currentSlotId ? 'Slot updated successfully' : 'Time Slot added successfully', result);
         resetForm();
         setFormVisible(false);
-        // Update UI or navigate here
+        getData(); // Refresh the slot list
       } else {
-        console.error('Failed to add time slot:', responseText);
+        console.error('Failed to save time slot:', responseText);
       }
     } catch (error) {
       console.error('Error submitting Slot:', error);
     }
   };
+  
 
   const resetForm = () => {
     setSelectedDate('');
@@ -139,11 +141,67 @@ const FutsalSlotScreen = props => {
     hideEndPicker();
   };
 
+ 
+  const [filteredSlots, setFilteredSlots] = useState([]);
+  const [filterModalVisible, setFilterModalVisible] = useState(false);
+  const [filterDate, setFilterDate] = useState('');
+  const [filterStartTime, setFilterStartTime] = useState('');
+  const [filterEndTime, setFilterEndTime] = useState('');
+  const [isFilterStartPickerVisible, setFilterStartPickerVisible] = useState(false);
+  const [isFilterEndPickerVisible, setFilterEndPickerVisible] = useState(false);
+
+  // Filter slots
+  const filterSlots = () => {
+    const filtered = slots.filter(slot => {
+      const slotDate = formatDateTime(slot.date).date;
+      const slotStartTime = formatDateTime(slot.startTime).time;
+      const slotEndTime = formatDateTime(slot.endTime).time;
+
+      return (
+        (!filterDate || slotDate === filterDate) &&
+        (!filterStartTime || slotStartTime === filterStartTime) &&
+        (!filterEndTime || slotEndTime === filterEndTime)
+      );
+    });
+
+    setFilteredSlots(filtered);
+    setFilterModalVisible(false);
+  };
+
+  
+
+  // Handlers for Date and Time selection
+  const handleConfirmFilterDate = date => {
+    setFilterDate(format(date, 'yyyy/MM/dd'));
+  };
+
+  const handleConfirmFilterStartTime = date => {
+    setFilterStartTime(formatTime(date));
+    setFilterStartPickerVisible(false);
+  };
+
+  const handleConfirmFilterEndTime = date => {
+    setFilterEndTime(formatTime(date));
+    setFilterEndPickerVisible(false);
+  };
+  
+  // Toggle the filter modal
+  const toggleFilterModal = () => {
+    setFilterModalVisible(!filterModalVisible);
+  };
+   // Clear filters
+   const clearFilters = () => {
+    setFilterDate('');
+    setFilterStartTime('');
+    setFilterEndTime('');
+    setFilteredSlots(slots);
+  };
+
   //conversion
   const formatDateTime = (isoString) => {
     const date = new Date(isoString);
     return {
-      date: format(date, 'yy/MM/dd'),
+      date: format(date, 'yyyy/MM/dd'),
       time: format(date, 'hh:mm a')
     };
   };
@@ -161,12 +219,16 @@ const FutsalSlotScreen = props => {
   
       if (response.ok) {
         const result = await response.json();
-        
+        const filteredSlots = result.result.filter(slot => {
+          const today = new Date();
+          const slotDate = new Date(slot.date);
+          return slotDate >= today; // Only include future or current dates
+        });
 
         // console.warn(result)
-        setSlots(result.result); // Assuming the response is an array of slots
+        setSlots(filteredSlots); // Assuming the response is an array of slots
       } else {
-        console.error('Failed to fetch time slots:', await response.text());
+        // console.error('Failed to fetch time slots:', await response.text());
       }
     } catch (error) {
       console.error('Error fetching slots:', error);
@@ -175,14 +237,90 @@ const FutsalSlotScreen = props => {
   
   useEffect(() => {
     getData();
-  },[]);
+  },[slots]);
   
 
   return (
     <View style={styles.container}>
+     
+        {/* Filter Modal */}
+      <Modal
+        visible={filterModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={toggleFilterModal}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Calendar
+            minDate={format(new Date(), 'yyyy-MM-dd')}
+              onDayPress={day => handleConfirmFilterDate(new Date(day.timestamp))}
+              markedDates={{
+                [filterDate]: {
+                  selected: true,
+                  marked: true,
+                  selectedColor:'#F95609',
+                },
+              }}
+            />
+
+            <View style={styles.pickerContainer}>
+              <TouchableOpacity
+                style={styles.timePicker}
+                onPress={() => setFilterStartPickerVisible(true)}>
+                <Text style={styles.input}>
+                  {filterStartTime
+                    ? `Start Time: ${filterStartTime}`
+                    : 'Select Start Time'}
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.timePicker}
+                onPress={() => setFilterEndPickerVisible(true)}>
+                <Text style={styles.input}>
+                  {filterEndTime
+                    ? `End Time: ${filterEndTime}`
+                    : 'Select End Time'}
+                </Text>
+              </TouchableOpacity>
+
+              <DateTimePickerModal
+                isVisible={isFilterStartPickerVisible}
+                mode="time"
+                onConfirm={handleConfirmFilterStartTime}
+                onCancel={() => setFilterStartPickerVisible(false)}
+              />
+
+              <DateTimePickerModal
+                isVisible={isFilterEndPickerVisible}
+                mode="time"
+                onConfirm={handleConfirmFilterEndTime}
+                onCancel={() => setFilterEndPickerVisible(false)}
+              />
+            </View>
+
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={styles.saveButton}
+                onPress={filterSlots}>
+                <Text style={styles.saveButtonText}>Apply Filter</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.saveButton, styles.cancelButton]}
+                onPress={clearFilters}>
+                <Text style={styles.saveButtonText}>Clear Filter</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+
       {isFormVisible ? (
         <>
+          {/* Form components */}
           <Calendar
+            minDate={format(new Date(), 'yyyy-MM-dd')}
             onDayPress={day => setSelectedDate(day.dateString)}
             markedDates={{
               [selectedDate]: {
@@ -192,7 +330,7 @@ const FutsalSlotScreen = props => {
               },
             }}
           />
-
+  
           <View style={styles.pickerContainer}>
             <TouchableOpacity
               style={styles.timePicker}
@@ -203,7 +341,7 @@ const FutsalSlotScreen = props => {
                   : 'Start Time'}
               </Text>
             </TouchableOpacity>
-
+  
             <TouchableOpacity style={styles.timePicker} onPress={showEndPicker}>
               <Text style={styles.input}>
                 {selectedEndTime
@@ -211,14 +349,14 @@ const FutsalSlotScreen = props => {
                   : 'End Time'}
               </Text>
             </TouchableOpacity>
-
+  
             <DateTimePickerModal
               isVisible={isStartPickerVisible}
               mode="time"
               onConfirm={handleConfirmStartTime}
               onCancel={hideStartPicker}
             />
-
+  
             <DateTimePickerModal
               isVisible={isEndPickerVisible}
               mode="time"
@@ -226,7 +364,7 @@ const FutsalSlotScreen = props => {
               onCancel={hideEndPicker}
             />
           </View>
-
+  
           <View style={styles.picker}>
             <Text style={styles.label}>Futsal Type:</Text>
             <Button
@@ -238,77 +376,93 @@ const FutsalSlotScreen = props => {
             />
           </View>
           <View style={styles.amount}>
-          <Text style={{color: 'black', fontSize: 16, top: 15}}>Amount:</Text>
-          <TextInput
-            style={styles.textinput}
-            placeholder="Enter Price"
-            keyboardType="numeric"
-            value={price}
-            onChangeText={setPrice}
-            color={'black'}
-          />
+            <Text style={{color: 'black', fontSize: 16, top: 15}}>Amount:</Text>
+            <TextInput
+              style={styles.textinput}
+              placeholder="Enter Price"
+              keyboardType="numeric"
+              value={price.toString()}
+              onChangeText={setPrice}
+              color={'black'}
+            />
           </View>
           <View style={styles.bottomButton}>
-          <TouchableOpacity style={styles.saveButton} onPress={handleSaveSlot}>
-            <View style={styles.saveButtonInner}>
-              <Text style={styles.saveButtonText}>Save Slot</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.saveButton,styles.cancel]} onPress={handleCancel}>
-            <View style={styles.saveButtonInner}>
-              <Text style={styles.saveButtonText}>Cancel</Text>
-            </View>
-          </TouchableOpacity>
+            <TouchableOpacity style={styles.saveButton} onPress={handleSaveSlot}>
+              <View style={styles.saveButtonInner}>
+                <Text style={styles.saveButtonText}>Save</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.saveButton, styles.cancel]}
+              onPress={handleCancel}>
+              <View style={styles.saveButtonInner}>
+                <Text style={styles.saveButtonText}>Cancel</Text>
+              </View>
+            </TouchableOpacity>
           </View>
-          
         </>
       ) : (
-        <TouchableOpacity
-          style={styles.updateButton}
-          onPress={() => setFormVisible(true)}>
-          <View style={styles.updateButtonInner}>
-            <Text style={styles.updateButtonText}>Update Slot</Text>
-          </View>
-        </TouchableOpacity>
+        <>
+          {/* Show update button when form is not visible */}
+          <TouchableOpacity
+            style={styles.updateButton}
+            onPress={() => setFormVisible(true)}>
+            <View style={styles.updateButtonInner}>
+              <Text style={styles.updateButtonText}>Update Slot</Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.filterButton} onPress={toggleFilterModal}>
+        <Icon name="filter" size={20} color="black" />
+      </TouchableOpacity>
+  
+          {/* FlatList component */}
+          <FlatList
+            data={slots}
+            keyExtractor={item => item.id.toString()}
+            renderItem={({item}) => {
+              const formattedDate = formatDateTime(item.date).date;
+              const formattedStartTime = formatDateTime(item.startTime).time;
+              const formattedEndTime = formatDateTime(item.endTime).time;
+              return (
+                <View style={styles.slotItem}>
+                  <View>
+                    <Text style={styles.slotText}>Date: {formattedDate}</Text>
+                  </View>
+                  <View>
+                    <Text style={styles.slotText}>
+                      Time: {formattedStartTime} - {formattedEndTime}
+                    </Text>
+                  </View>
+                  <View>
+                    <Text style={styles.slotText}>Type: {item.futsalType}</Text>
+                  </View>
+                  <View>
+                    <Text style={styles.slotText}>Price: {item.price}</Text>
+                  </View>
+  
+                  <View style={styles.buttons}>
+                    <TouchableOpacity onPress={() => handleEditSlot(item)}>
+                      <Icon name="edit" size={20} color="blue" />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleDeleteSlot(item.id)}>
+                      <Icon name="trash" size={20} color="red" />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              );
+            }}
+            ListEmptyComponent={() => (
+              <View style={styles.emptyContainer}>
+                <Text style={styles.emptyText}>No time slots available</Text>
+              </View>
+            )}
+          />
+        </>
       )}
-
-      <FlatList
-        data={slots}
-        keyExtractor={item => item.id.toString()}
-        renderItem={({item}) => {
-          const formattedDate = formatDateTime(item.date).date;
-        const formattedStartTime = formatDateTime(item.startTime).time;
-        const formattedEndTime = formatDateTime(item.endTime).time;
-          return (
-          <View style={styles.slotItem}>
-            <View>
-              <Text style={styles.slotText}> {formattedDate}</Text>
-            </View>
-            <View>
-              <Text style={styles.slotText}>
-              {formattedStartTime} - {formattedEndTime}
-              </Text>
-            </View>
-            <View>
-              <Text style={styles.slotText}>{item.futsalType} </Text>
-            </View>
-            <View>
-              <Text style={styles.slotText}>{item.price}</Text>
-            </View>
-
-            <View style={styles.buttons}>
-              <TouchableOpacity onPress={() => handleEditSlot(item)}>
-                <Icon name="edit" size={20} color="blue" />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleDeleteSlot(item.id)}>
-                <Icon name="trash" size={20} color="red" />
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}}
-      />
     </View>
   );
+  
 };
 
 const styles = StyleSheet.create({
@@ -316,6 +470,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: '#fff',
+    
   },
   
   picker: {
@@ -397,7 +552,8 @@ const styles = StyleSheet.create({
   bottomButton:{
     flexDirection:'row',
     alignSelf:'center',
-    justifyContent:'center',gap:30
+    justifyContent:'center',
+    gap:30
   },
   saveButton: {
     marginTop: 20,
@@ -406,11 +562,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#F95609',
     borderRadius: 10,
     alignItems: 'center',
-    width:150
+    width:130,
+    height:50
   },
   saveButtonText: {
     color: '#fff',
-    fontSize: 18,
+    // fontSize: 14,
     fontWeight:'bold'
   },
   cancel:{
@@ -437,6 +594,39 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  emptyText: {
+    color: 'black',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  filterButton: {
+    alignSelf: 'flex-end',
+    marginBottom: 10,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalContent: {
+    width: '80%',
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 20,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 20,
+  },
+  
 });
 
 export default FutsalSlotScreen;
