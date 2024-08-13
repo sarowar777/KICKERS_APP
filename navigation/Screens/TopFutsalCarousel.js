@@ -16,6 +16,35 @@ const CARD_WIDTH_SPACING = CARD_WIDTH + spacing.l;
 
 export default function TopFutsalCarousel({list, navigation}) {
   const [myData, setMyData] = useState(null);
+
+
+  const getData = async () => {
+    const url = `http://192.168.1.64:8001/getTimeSlot/${futsalId}`;
+  
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+         
+        },
+      });
+  
+      if (response.ok) {
+        const result = await response.json();
+        
+        
+      } else {
+        // console.error('Failed to fetch time slots:', await response.text());
+      }
+    } catch (error) {
+      console.error('Error fetching slots:', error);
+    }
+  };
+  
+  useEffect(() => {
+    getData();
+  },[slots]);
  
   return (
     <FlatList

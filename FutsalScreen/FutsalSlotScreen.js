@@ -28,8 +28,7 @@ const FutsalSlotScreen = props => {
   const [isEndPickerVisible, setEndPickerVisible] = useState(false);
   const [isFormVisible, setFormVisible] = useState(false);
   const [currentSlotId, setCurrentSlotId] = useState(null);
-  const {route, navigation} = props;
-  const {futsalId, token} = route.params;
+ 
 
   const showStartPicker = () => setStartPickerVisible(true);
   const hideStartPicker = () => setStartPickerVisible(false);
@@ -41,6 +40,8 @@ const FutsalSlotScreen = props => {
     resetForm();
         setFormVisible(false);
   }
+  const {route, navigation} = props;
+  const {futsalId, token} = route.params;
 
   const handleSaveSlot = async () => {
     if (!selectedDate || !startTime || !endTime || !price) {
@@ -104,8 +105,8 @@ const FutsalSlotScreen = props => {
 
   const handleEditSlot = slot => {
     setSelectedDate(slot.date);
-    setStartTime(slot.startTime);
-    setEndTime(slot.endTime);
+    setSelectedStartTime(slot.startTime);
+    setSelectedEndTime(slot.endTime);
     setFutsalType(slot.futsalType);
     setPrice(slot.price);
     setCurrentSlotId(slot.id);

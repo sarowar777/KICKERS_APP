@@ -16,7 +16,8 @@ import {SERVER_URL} from '@env'
 export default function FutsalRegistrationScreen(props) {
   
   const {navigation,route}=props;
-  const { token } = route.params;
+  const { token} = route.params;
+   
  
   const [selectedRadio, setSelectedRadio] = useState(0);
 
@@ -98,6 +99,7 @@ const handleConfirmEndTime = (date) => {
     newInputs.splice(index, 1);
     setInputs(newInputs);
   };
+  
   const handleSubmit = async () => {
     setLoading(true);
     // Check if any required field is empty
@@ -116,7 +118,7 @@ const handleConfirmEndTime = (date) => {
       return;
     }
   
-    const url ='http://192.168.1.66:8001/add-futsal-info';
+    const url ='http://192.168.1.64:8001/add-futsal-info';
   
     const data = {
       name,
@@ -141,12 +143,16 @@ const handleConfirmEndTime = (date) => {
       });
   
       const responseText = await response.text();
-      console.log('Response text:', responseText);
+   
   
       if (response.ok) {
         const result = JSON.parse(responseText); // Parse if JSON is expected
+        
         console.log('Futsal information added successfully:', result);
-        navigation.navigate('FutsalScreens',{token});
+        const futsalId =result.result.id;
+        console.log(futsalId);
+      
+        navigation.navigate('FutsalScreens',{token,futsalId});
       } else {
         console.error('Failed to add futsal information:', responseText);
       }

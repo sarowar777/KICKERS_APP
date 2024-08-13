@@ -30,7 +30,7 @@ const ProfileScreen = (props) => {
         ...data.result,
         profilePicture: data.result.profilePicture 
           ? { uri: data.result.profilePicture } 
-          : require('../../assets/pictures/circle-user.png'), // Set the default picture
+          : require('../../assets/pictures/avatar.png'), // Set the default picture
       });
     } catch (error) {
       console.error("Error fetching profile data:", error);

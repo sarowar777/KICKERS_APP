@@ -1,93 +1,195 @@
-// import React, { useState } from 'react';
-// import { View, TextInput, Button, Image, TouchableOpacity, StyleSheet } from 'react-native';
-// import * as ImagePicker from 'expo-image-picker';
+import React, { useState } from 'react';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 
-// const EditProfileScreen = ({ navigation, route }) => {
-//   const { user } = route.params;
-//   const [name, setName] = useState(user.name);
-//   const [email, setEmail] = useState(user.email);
-//   const [phone, setPhone] = useState(user.phone);
-//   const [profilePicture, setProfilePicture] = useState(user.profilePicture);
+export default function EditProfileScreen({ navigation }) {
+  const [profileImage, setProfileImage] = useState(null);
 
-//   const pickImage = async () => {
-//     const result = await ImagePicker.launchImageLibraryAsync({
-//       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-//       allowsEditing: true,
-//       aspect: [4, 3],
-//       quality: 1,
-//     });
+  const pickImage = () => {
+    launchImageLibrary({}, response => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.errorMessage) {
+        console.log('ImagePicker Error: ', response.errorMessage);
+      } else {
+        const source = { uri: response.assets[0].uri, name: response.assets[0].fileName, type: response.assets[0].type };
+        setProfileImage(source);
+      }
+    });
+  };
 
-//     if (!result.canceled) {
-//       setProfilePicture(result.uri);
-//     }
-//   };
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required('Name is required'),
+    email: Yup.string().email('Invalid email').required('Email is required'),
+    phone: Yup.string().required('Phone number is required'),
+  });
 
-//   const saveChanges = () => {
-//     // Handle save changes logic here
-//     navigation.goBack();
-//   };
+  const handleFormSubmit = async (values) => {
+    const formData = new FormData();
+    
+    if (profileImage) {
+      formData.append('profileImage', {
+        uri: profileImage.uri,
+        name: profileImage.name,
+        type: profileImage.type,
+      });
+    }
 
-//   return (
-//     <View style={styles.container}>
-//       <TouchableOpacity onPress={pickImage}>
-//         <Image source={{ uri: profilePicture }} style={styles.profilePicture} />
-//       </TouchableOpacity>
-//       <TextInput
-//         style={styles.input}
-//         placeholder="Name"
-//         value={name}
-//         onChangeText={setName}
-//       />
-//       <TextInput
-//         style={styles.input}
-//         placeholder="Email"
-//         value={email}
-//         onChangeText={setEmail}
-//         keyboardType="email-address"
-//       />
-//       <TextInput
-//         style={styles.input}
-//         placeholder="Phone"
-//         value={phone}
-//         onChangeText={setPhone}
-//         keyboardType="phone-pad"
-//       />
-//       <Button title="Save Changes" onPress={saveChanges} />
-//     </View>
-//   );
-// };
+    formData.append('name', values.name);
+    formData.append('email', values.email);
+    formData.append('phone', values.phone);
 
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     padding: 20,
-//     alignItems: 'center',
-//   },
-//   profilePicture: {
-//     width: 150,
-//     height: 150,
-//     borderRadius: 75,
-//     marginBottom: 20,
-//   },
-//   input: {
-//     width: '100%',
-//     padding: 10,
-//     borderWidth: 1,
-//     borderColor: '#ccc',
-//     borderRadius: 5,
-//     marginBottom: 10,
-//   },
-// });
+    try {
+      const response = await fetch('http://192.168.1.64:8001/profile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        body: formData,
+      });
 
-// export default EditProfileScreen;
+      if (response.ok) {
+        Alert.alert('Profile Updated Successfully');
+      } else {
+        Alert.alert('Failed to update profile');
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      Alert.alert('An error occurred. Please try again.');
+    }
+  };
 
-import { View, Text } from 'react-native'
-import React from 'react'
-
-export default function EditProfileScreen() {
   return (
-    <View>
-      <Text>EditProfileScreen</Text>
-    </View>
-  )
+    <Formik
+      initialValues={{ name: '', email: '', phone: '' }}
+      validationSchema={validationSchema}
+      onSubmit={handleFormSubmit}
+    >
+      {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+        <View style={styles.container}>
+          <Text style={styles.title}>Edit Profile</Text>
+          
+          <TouchableOpacity style={styles.imageContainer} onPress={pickImage}>
+            {profileImage ? (
+              <Image source={{ uri: profileImage.uri }} style={styles.image} />
+            ) : (
+              <View style={styles.imagePlaceholder}>
+                <Icon name="user-circle" size={80} color="#ccc" />
+              </View>
+            )}
+          </TouchableOpacity>
+
+          <View style={styles.formField}>
+            <Text style={styles.label}>Name</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={handleChange('name')}
+              onBlur={handleBlur('name')}
+              value={values.name}
+              placeholder="Enter your name"
+            />
+            {touched.name && errors.name && <Text style={styles.error}>{errors.name}</Text>}
+          </View>
+
+          <View style={styles.formField}>
+            <Text style={styles.label}>Email</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={handleChange('email')}
+              onBlur={handleBlur('email')}
+              value={values.email}
+              placeholder="Enter your email"
+              keyboardType="email-address"
+            />
+            {touched.email && errors.email && <Text style={styles.error}>{errors.email}</Text>}
+          </View>
+
+          <View style={styles.formField}>
+            <Text style={styles.label}>Phone Number</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={handleChange('phone')}
+              onBlur={handleBlur('phone')}
+              value={values.phone}
+              placeholder="Enter your phone number"
+              keyboardType="phone-pad"
+            />
+            {touched.phone && errors.phone && <Text style={styles.error}>{errors.phone}</Text>}
+          </View>
+
+          <TouchableOpacity style={styles.updateButton} onPress={handleSubmit}>
+            <Text style={styles.updateButtonText}>Update</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+    </Formik>
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#fff',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 20,
+    alignSelf: 'center',
+  },
+  imageContainer: {
+    alignSelf: 'center',
+    marginBottom: 20,
+  },
+  image: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+  },
+  imagePlaceholder: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0',
+  },
+  formField: {
+    marginBottom: 15,
+  },
+  label: {
+    fontSize: 16,
+    color: '#555',
+    marginBottom: 5,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    padding: 10,
+    fontSize: 16,
+    color: '#333',
+  },
+  error: {
+    fontSize: 14,
+    color: 'red',
+    marginTop: 5,
+  },
+  updateButton: {
+    backgroundColor: '#F95609',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  updateButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+});

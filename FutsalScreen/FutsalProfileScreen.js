@@ -1,210 +1,470 @@
 import {
   View,
-  SafeAreaView,
   Text,
-  Image,
-  TouchableOpacity,
-  TextInput,
-  StyleSheet,
   ScrollView,
-  Button,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Image,
 } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import ImagePicker from 'react-native-image-crop-picker';
+import React, {useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 
-export default function FutsalProfileScreen({ navigation, route }) {
-  const { email = '', role = '', profilePicture = '', uploadedImages = [] } = route.params || {};
+export default function FutsalProfileScreen(props) {
+  const {navigation, route} = props;
+  const {token} = route.params;
+ 
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [newProfilePicture, setNewProfilePicture] = useState(profilePicture);
-  const [newUploadedImages, setNewUploadedImages] = useState(uploadedImages || []);
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const [amenities, setAmenities] = useState('');
+  const [stdPrice, setStdPrice] = useState('');
+  const [pan, setPan] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [selectedRadio, setSelectedRadio] = useState(0);
+  const [images, setImages] = useState([]);
 
-  const handleLogout = async () => {
-    await AsyncStorage.removeItem('token');
-    navigation.navigate('LoginScreen');
+  // Time Picker Functions
+  const [isStartTimePickerVisible, setIsStartTimePickerVisible] = useState(false);
+  const [isEndTimePickerVisible, setIsEndTimePickerVisible] = useState(false);
+  const [selectedStartTime, setSelectedStartTime] = useState('Start Time');
+  const [selectedEndTime, setSelectedEndTime] = useState('End Time');
+
+  const showStartTimePicker = () => {
+    setIsStartTimePickerVisible(true);
+  };
+  const hideStartTimePicker = () => {
+    setIsStartTimePickerVisible(false);
   };
 
-  const handleImagePicker = () => {
-    ImagePicker.openPicker({
-      multiple: true,
-      mediaType: 'photo',
-    })
-      .then((images) => {
-        setNewUploadedImages(images.map((img) => img.path));
-      })
-      .catch((error) => console.log('Image Picker Error: ', error));
+  const showEndTimePicker = () => {
+    setIsEndTimePickerVisible(true);
   };
 
-  const handleProfilePicture = () => {
-    ImagePicker.openPicker({
-      cropping: true,
-      mediaType: 'photo',
-    })
-      .then((image) => {
-        setNewProfilePicture(image.path);
-      })
-      .catch((error) => console.log('Profile Picture Error: ', error));
+  const hideEndTimePicker = () => {
+    setIsEndTimePickerVisible(false);
   };
 
-  const handleSaveProfile = () => {
-    // Save the updated profile info to backend or AsyncStorage
-    setIsEditing(false);
+  const handleConfirmStartTime = (date) => {
+    const formattedTime = formatTime(date);
+    setSelectedStartTime(formattedTime);
+    setStartTime(date.toISOString());
+    hideStartTimePicker();
   };
 
-  if (!email) {
-    return (
-      <SafeAreaView style={styles.mainContainer}>
-        <Text style={styles.errorText}>Profile data is missing.</Text>
-        <Button title="Go Back" onPress={() => navigation.goBack()} />
-      </SafeAreaView>
+  const handleConfirmEndTime = (date) => {
+    const formattedTime = formatTime(date);
+    setSelectedEndTime(formattedTime);
+    setEndTime(date.toISOString());
+    hideEndTimePicker();
+  };
+
+  const formatTime = (date) => {
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12;
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    return `${formattedHours}:${formattedMinutes} ${ampm}`;
+  };
+
+  // Amenities Handling
+  const [inputs, setInputs] = useState([{key: '', value: ''}]);
+  const addInput = () => {
+    setInputs([...inputs, {key: '', value: ''}]);
+  };
+
+  const handleInputChange = (text, index) => {
+    const newInputs = [...inputs];
+    newInputs[index].value = text;
+    setInputs(newInputs);
+  };
+
+  const removeInput = (index) => {
+    const newInputs = [...inputs];
+    newInputs.splice(index, 1);
+    setInputs(newInputs);
+  };
+
+  // Image Picker
+  const pickImages = () => {
+    launchImageLibrary(
+      {
+        mediaType: 'photo',
+        selectionLimit: 0, // 0 to allow multiple images
+      },
+      (response) => {
+        if (response.assets) {
+          setImages([...images, ...response.assets]);
+        }
+      },
     );
-  }
+  };
+
+  const removeImage = (index) => {
+    const newImages = [...images];
+    newImages.splice(index, 1);
+    setImages(newImages);
+  };
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    if (
+      !name ||
+      !phone ||
+      !address ||
+      !selectedRadio ||
+      !startTime ||
+      !endTime ||
+      !inputs.length ||
+      !stdPrice ||
+      !pan
+    ) {
+      alert('Please fill out all fields.');
+      setLoading(false);
+      return;
+    }
+
+    const url = 'http://192.168.1.64:8001/getFutsalInfo';
+
+    const data = {
+      name,
+      phone,
+      address,
+      type: selectedRadio === 1 ? 'FiveA' : 'SevenA',
+      startTime,
+      endTime,
+      amenities: inputs.map((input) => input.value),
+      stdPrice,
+      pan,
+    };
+
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+      });
+
+      const responseText = await response.text();
+
+      if (response.ok) {
+        const result = JSON.parse(responseText);
+        console.log('Futsal information added successfully:', result);
+        const futsalId = result.result.id;
+        console.log(futsalId);
+        navigation.navigate('FutsalScreens', {token, futsalId});
+      } else {
+        console.error('Failed to add futsal information:', responseText);
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+   //data get
+  const getData = async () => {
+    const { token,futsalId} = route.params;// Get the token from route params
+    const futsalID =futsalId;
+    try {
+      const url = 'http://192.168.1.64:8001/getFutsalInfo';
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token,futsalID}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error("Error fetching profile data:", error);
+    }
+  };
+  useEffect(()=>{
+    getData();
+  })
+  const handleLogout = async () => {
+    try {
+      // Clear the authentication token or any other stored data
+      await AsyncStorage.removeItem('token'); // if you stored the token in AsyncStorage
+  
+      // Navigate back to the login screen (assuming you have a Login screen)
+      navigation.replace('LoginScreen'); 
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
 
   return (
-    <SafeAreaView style={styles.mainContainer}>
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 20 }}>
-        <View style={styles.profileHeader}>
-          <TouchableOpacity onPress={isEditing ? handleProfilePicture : null}>
-            <Image
-              source={{ uri: newProfilePicture || 'https://via.placeholder.com/150' }}
-              style={styles.profileImage}
-            />
-          </TouchableOpacity>
-          <Text style={styles.profileName}>{email}</Text>
-          <Text style={styles.profileRole}>{role}</Text>
+    <ScrollView style={styles.container}>
+      <Text style={styles.header}>Futsal Profile</Text>
+      <View style={styles.form}>
+        <View style={styles.formField}>
+          <Text style={styles.formText}>Futsal Name</Text>
+          <TextInput
+            style={styles.formTextInput}
+            value={name}
+            onChangeText={(text) => setName(text)}
+          />
         </View>
 
-        {isEditing ? (
-          <View>
-            <TextInput
-              placeholder="Email"
-              value={email}
-              editable={false}
-              style={styles.input}
-            />
+        <View style={styles.formField}>
+          <Text style={styles.formText}>Phone Number</Text>
+          <TextInput
+            style={styles.formTextInput}
+            value={phone}
+            keyboardType="phone-pad"
+            onChangeText={(text) => setPhone(text)}
+          />
+        </View>
 
-            <Button title="Upload Images" onPress={handleImagePicker} />
-            <ScrollView horizontal style={styles.imageContainer}>
-              {newUploadedImages.map((image, index) => (
-                <Image key={index} source={{ uri: image }} style={styles.uploadedImages} />
-              ))}
-            </ScrollView>
+        <View style={styles.formField}>
+          <Text style={styles.formText}>Address</Text>
+          <TextInput
+            style={styles.formTextInput}
+            value={address}
+            onChangeText={(text) => setAddress(text)}
+          />
+        </View>
 
-            <TouchableOpacity style={styles.saveButton} onPress={handleSaveProfile}>
-              <Text style={styles.saveButtonText}>Save Profile</Text>
-            </TouchableOpacity>
+        <View style={styles.formField}>
+          <Text style={styles.formText}>Start Time</Text>
+          <TouchableOpacity onPress={showStartTimePicker}>
+            <View style={styles.formTextInput}>
+              <Text style={styles.formTextInputContent}>{selectedStartTime}</Text>
+            </View>
+          </TouchableOpacity>
+          <DateTimePickerModal
+            isVisible={isStartTimePickerVisible}
+            mode="time"
+            onConfirm={handleConfirmStartTime}
+            onCancel={hideStartTimePicker}
+          />
+        </View>
+
+        <View style={styles.formField}>
+          <Text style={styles.formText}>End Time</Text>
+          <TouchableOpacity onPress={showEndTimePicker}>
+            <View style={styles.formTextInput}>
+              <Text style={styles.formTextInputContent}>{selectedEndTime}</Text>
+            </View>
+          </TouchableOpacity>
+          <DateTimePickerModal
+            isVisible={isEndTimePickerVisible}
+            mode="time"
+            onConfirm={handleConfirmEndTime}
+            onCancel={hideEndTimePicker}
+          />
+        </View>
+
+        <View style={styles.formField}>
+          <Text style={styles.formText}>Amenities</Text>
+          {inputs.map((input, index) => (
+            <View key={index} style={styles.amenityInputContainer}>
+              <TextInput
+                style={styles.formTextInput}
+                value={input.value}
+                onChangeText={(text) => handleInputChange(text, index)}
+              />
+              <TouchableOpacity onPress={() => removeInput(index)}>
+                <Text style={styles.removeAmenityButton}>Remove</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+          <TouchableOpacity onPress={addInput}>
+            <Text style={styles.addAmenityButton}>Add Amenity</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.formField}>
+          <Text style={styles.formText}>Standard Price</Text>
+          <TextInput
+            style={styles.formTextInput}
+            value={stdPrice}
+            keyboardType="numeric"
+            onChangeText={(text) => setStdPrice(text)}
+          />
+        </View>
+
+        <View style={styles.formField}>
+          <Text style={styles.formText}>PAN Number</Text>
+          <TextInput
+            style={styles.formTextInput}
+            value={pan}
+            keyboardType="numeric"
+            onChangeText={(text) => setPan(text)}
+          />
+        </View>
+
+        <View style={styles.formField}>
+          <Text style={styles.formText}>Upload Images</Text>
+          <TouchableOpacity style={styles.imageUploadButton} onPress={pickImages}>
+            <Text style={styles.buttonText}>Select Images</Text>
+          </TouchableOpacity>
+          <View style={styles.imagePreviewContainer}>
+            {images.map((image, index) => (
+              <View key={index} style={styles.imageContainer}>
+              <Image source={{uri: image.uri}} style={styles.imagePreview} />
+              <TouchableOpacity style={styles.removeImageButton} onPress={() => removeImage(index)}>
+                <Text style={styles.removeImageText}>Remove</Text>
+              </TouchableOpacity>
+            </View>
+            ))}
           </View>
-        ) : (
-          <View>
-            <Text style={styles.label}>Uploaded Images</Text>
-            <ScrollView horizontal style={styles.imageContainer}>
-              {uploadedImages.map((image, index) => (
-                <Image key={index} source={{ uri: image }} style={styles.uploadedImages} />
-              ))}
-            </ScrollView>
+        </View>
 
-            <TouchableOpacity style={styles.editButton} onPress={() => setIsEditing(true)}>
-              <Text style={styles.editButtonText}>Edit Profile</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.logoutButtonText}>Logout</Text>
-        </TouchableOpacity>
-      </ScrollView>
-    </SafeAreaView>
+        <View style={styles.formBtn}>
+          <TouchableOpacity onPress={handleSubmit}>
+            <View style={styles.button}>
+              <Text style={styles.buttonText}>Submit</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+        <Text style={styles.logoutButtonText}>Logout</Text>
+      </TouchableOpacity>
+        </View>
+        
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  mainContainer: {
+  container: {
     flex: 1,
-    backgroundColor: '#E6E6E6',
+    padding: 20,
+    marginBottom:70
   },
-  profileHeader: {
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  profileImage: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    marginBottom: 10,
-  },
-  profileName: {
+  header: {
+    color: '#F95609',
+    alignSelf: 'center',
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#333',
+    marginVertical: 20,
   },
-  profileRole: {
-    fontSize: 16,
-    color: '#666',
+  form: {
+    backgroundColor: '#FEFEFE',
+    borderRadius: 10,
+    padding: 20,
   },
-  input: {
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    marginBottom: 15,
-    paddingHorizontal: 10,
-  },
-  label: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    color: 'black',
-  },
-  imageContainer: {
-    flexDirection: 'row',
+  formField: {
     marginBottom: 20,
   },
-  uploadedImages: {
+  formText: {
+    color: '#F95609',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  formTextInput: {
+    borderWidth: 1,
+    borderColor: '#CDCDCD',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    fontSize: 16,
+    color: '#000',
+  },
+  formTextInputContent: {
+    fontSize: 16,
+    color: '#000',
+  },
+  imageUploadButton: {
+    backgroundColor: '#F95609',
+    borderRadius: 8,
+    padding: 10,
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  imagePreviewContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop: 10,
+  },
+  imagePreview: {
     width: 100,
     height: 100,
     borderRadius: 10,
     marginRight: 10,
+    marginBottom: 10,
   },
-  editButton: {
-    backgroundColor: '#FF7F32',
-    paddingVertical: 10,
-    borderRadius: 10,
+  formBtn: {
+    // marginTop: 20,
     alignItems: 'center',
+    flexDirection:'row',
+    borderWidth:2
   },
-  editButtonText: {
-    color: '#fff',
-    fontWeight: '700',
-    fontSize: 18,
+  button: {
+    backgroundColor: '#F95609',
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 30,
   },
-  saveButton: {
-    backgroundColor: '#28A745',
-    paddingVertical: 10,
-    borderRadius: 10,
+  amenityInputContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 20,
+    marginBottom: 10,
   },
-  saveButtonText: {
+  removeAmenityButton: {
+    color: '#F95609',
+    marginLeft: 10,
+  },
+  addAmenityButton: {
+    color: '#F95609',
+    marginTop: 10,
+  },
+   imageContainer: {
+    position: 'relative',
+    marginRight: 10,
+    marginBottom: 10,
+  },
+  imagePreview: {
+    width: 100,
+    height: 100,
+    borderRadius: 10,
+  },
+  removeImageButton: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    backgroundColor: 'rgba(255, 69, 58, 0.8)',
+    borderRadius: 15,
+    padding: 5,
+  },
+  removeImageText: {
     color: '#fff',
-    fontWeight: '700',
-    fontSize: 18,
+    fontSize: 10,
   },
   logoutButton: {
-    backgroundColor: '#DC3545',
-    paddingVertical: 10,
-    borderRadius: 10,
+    backgroundColor: '#FF3B30',
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 30,
     alignItems: 'center',
-    marginTop: 30,
+    marginTop: 20,
   },
   logoutButtonText: {
     color: '#fff',
-    fontWeight: '700',
-    fontSize: 18,
-  },
-  errorText: {
-    color: '#DC3545',
-    fontSize: 18,
-    textAlign: 'center',
-    marginTop: 20,
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
