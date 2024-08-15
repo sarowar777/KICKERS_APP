@@ -14,7 +14,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {SERVER_URL} from '@env'
 
+
 export default function LoginScreen(props) {
+
   const [passwordVisible, setPasswordVisible] = useState(true);
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -31,7 +33,7 @@ export default function LoginScreen(props) {
     setLoading(true);
 
     try {
-      const response = await fetch('http://192.168.1.64:8001/login', {
+      const response = await fetch(SERVER_URL+'/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

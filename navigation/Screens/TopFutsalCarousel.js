@@ -9,6 +9,7 @@ import {
 import React, {useEffect, useState} from 'react';
 import {sizes, spacing, shadow, colors} from '../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {SERVER_URL} from '@env'
 
 const CARD_WIDTH = sizes.width - 80;
 const CARD_HEIGHT = 200;
@@ -17,34 +18,8 @@ const CARD_WIDTH_SPACING = CARD_WIDTH + spacing.l;
 export default function TopFutsalCarousel({list, navigation}) {
   const [myData, setMyData] = useState(null);
 
-
-  const getData = async () => {
-    const url = `http://192.168.1.64:8001/getTimeSlot/${futsalId}`;
-  
-    try {
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-         
-        },
-      });
-  
-      if (response.ok) {
-        const result = await response.json();
-        
-        
-      } else {
-        // console.error('Failed to fetch time slots:', await response.text());
-      }
-    } catch (error) {
-      console.error('Error fetching slots:', error);
-    }
-  };
-  
-  useEffect(() => {
-    getData();
-  },[slots]);
+ 
+ 
  
   return (
     <FlatList
@@ -63,7 +38,7 @@ export default function TopFutsalCarousel({list, navigation}) {
               marginRight: index === list.length - 1 ? spacing.l : 0,
             }}>
             <View style={[styles.card, shadow.dark]}>
-              {/* <FavoriteButton style={styles.favorite} /> */}
+          
               <View style={styles.imageBox}>
                 <Image source={item.image} style={styles.image} />
               </View>
@@ -136,6 +111,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     color: colors.white,
+    
   },
   location: {
     fontSize: 10,

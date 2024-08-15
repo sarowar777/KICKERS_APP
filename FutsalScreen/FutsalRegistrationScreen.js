@@ -118,7 +118,7 @@ const handleConfirmEndTime = (date) => {
       return;
     }
   
-    const url ='http://192.168.1.64:8001/add-futsal-info';
+    const url =SERVER_URL+'/add-futsal-info';
   
     const data = {
       name,

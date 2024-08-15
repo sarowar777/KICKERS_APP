@@ -13,9 +13,40 @@ import {TOP_FUTSAL, TOP_GAME} from '../data/constList';
 import TopGameCarousel from './TopGameCarousel';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {SERVER_URL} from '@env'
 
 
-export default function HomeScreen({navigation}) {
+export default function HomeScreen(props) {
+  const {route,navigation}=props;
+  const [user, setUser] = useState(null);
+  const [futsalData, setFutsalData] = useState([]);
+ 
+  const getData = async () => {
+    const { token } = route.params; // Get the token from route params
+    try {
+      const url = SERVER_URL+'/getFutsals';
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setFutsalData(data)
+     
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  useEffect(() => {
+    getData();
+  }, []);
   return (
     <SafeAreaView
       style={{

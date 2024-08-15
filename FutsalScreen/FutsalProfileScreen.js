@@ -11,11 +11,11 @@ import React, {useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {launchImageLibrary} from 'react-native-image-picker';
+import {SERVER_URL} from '@env';
 
 export default function FutsalProfileScreen(props) {
   const {navigation, route} = props;
-  const {token} = route.params;
- 
+  const {token, futsalId} = route.params;
 
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -30,7 +30,8 @@ export default function FutsalProfileScreen(props) {
   const [images, setImages] = useState([]);
 
   // Time Picker Functions
-  const [isStartTimePickerVisible, setIsStartTimePickerVisible] = useState(false);
+  const [isStartTimePickerVisible, setIsStartTimePickerVisible] =
+    useState(false);
   const [isEndTimePickerVisible, setIsEndTimePickerVisible] = useState(false);
   const [selectedStartTime, setSelectedStartTime] = useState('Start Time');
   const [selectedEndTime, setSelectedEndTime] = useState('End Time');
@@ -50,21 +51,21 @@ export default function FutsalProfileScreen(props) {
     setIsEndTimePickerVisible(false);
   };
 
-  const handleConfirmStartTime = (date) => {
+  const handleConfirmStartTime = date => {
     const formattedTime = formatTime(date);
     setSelectedStartTime(formattedTime);
     setStartTime(date.toISOString());
     hideStartTimePicker();
   };
 
-  const handleConfirmEndTime = (date) => {
+  const handleConfirmEndTime = date => {
     const formattedTime = formatTime(date);
     setSelectedEndTime(formattedTime);
     setEndTime(date.toISOString());
     hideEndTimePicker();
   };
 
-  const formatTime = (date) => {
+  const formatTime = date => {
     const hours = date.getHours();
     const minutes = date.getMinutes();
     const ampm = hours >= 12 ? 'PM' : 'AM';
@@ -85,7 +86,7 @@ export default function FutsalProfileScreen(props) {
     setInputs(newInputs);
   };
 
-  const removeInput = (index) => {
+  const removeInput = index => {
     const newInputs = [...inputs];
     newInputs.splice(index, 1);
     setInputs(newInputs);
@@ -98,7 +99,7 @@ export default function FutsalProfileScreen(props) {
         mediaType: 'photo',
         selectionLimit: 0, // 0 to allow multiple images
       },
-      (response) => {
+      response => {
         if (response.assets) {
           setImages([...images, ...response.assets]);
         }
@@ -106,19 +107,18 @@ export default function FutsalProfileScreen(props) {
     );
   };
 
-  const removeImage = (index) => {
+  const removeImage = index => {
     const newImages = [...images];
     newImages.splice(index, 1);
     setImages(newImages);
   };
-
   const handleSubmit = async () => {
     setLoading(true);
     if (
       !name ||
       !phone ||
       !address ||
-      !selectedRadio ||
+      // !selectedRadio ||
       !startTime ||
       !endTime ||
       !inputs.length ||
@@ -130,40 +130,51 @@ export default function FutsalProfileScreen(props) {
       return;
     }
 
-    const url = 'http://192.168.1.64:8001/getFutsalInfo';
+    const url = `${SERVER_URL}/updateFutsalInfo/${futsalId}`;
 
-    const data = {
-      name,
-      phone,
-      address,
-      type: selectedRadio === 1 ? 'FiveA' : 'SevenA',
-      startTime,
-      endTime,
-      amenities: inputs.map((input) => input.value),
-      stdPrice,
-      pan,
-    };
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('phone', phone);
+    formData.append('address', address);
+    // formData.append('type', selectedRadio === 1 ? 'FiveA' : 'SevenA');
+    formData.append('startTime', startTime);
+    formData.append('endTime', endTime);
+    formData.append('stdPrice', stdPrice);
+    formData.append('pan', pan);
+
+    // Append amenities
+    inputs.forEach((input, index) => {
+      formData.append(`amenities[${index}]`, input.value);
+    });
+
+    // Append images
+    images.forEach((image, index) => {
+      formData.append('images', {
+        uri: image.uri,
+        type: image.type,
+        name: image.fileName || `image_${index}.jpg`,
+      });
+    });
 
     try {
       const response = await fetch(url, {
-        method: 'GET',
+        method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(data),
+        body: formData,
       });
 
       const responseText = await response.text();
+      
 
       if (response.ok) {
         const result = JSON.parse(responseText);
-        console.log('Futsal information added successfully:', result);
-        const futsalId = result.result.id;
-        console.log(futsalId);
-        navigation.navigate('FutsalScreens', {token, futsalId});
+        console.log(result.result.FutsalImage);
+        console.log('Futsal information updated successfully:', result);
+        // Navigate or give feedback to the user
       } else {
-        console.error('Failed to add futsal information:', responseText);
+        console.error('Failed to update futsal information:', responseText);
       }
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -171,40 +182,14 @@ export default function FutsalProfileScreen(props) {
       setLoading(false);
     }
   };
-   //data get
-  const getData = async () => {
-    const { token,futsalId} = route.params;// Get the token from route params
-    const futsalID =futsalId;
-    try {
-      const url = 'http://192.168.1.64:8001/getFutsalInfo';
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token,futsalID}`,
-          'Content-Type': 'application/json',
-        },
-      });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error("Error fetching profile data:", error);
-    }
-  };
-  useEffect(()=>{
-    getData();
-  })
   const handleLogout = async () => {
     try {
       // Clear the authentication token or any other stored data
       await AsyncStorage.removeItem('token'); // if you stored the token in AsyncStorage
-  
+
       // Navigate back to the login screen (assuming you have a Login screen)
-      navigation.replace('LoginScreen'); 
+      navigation.replace('LoginScreen');
     } catch (error) {
       console.error('Error logging out:', error);
     }
@@ -219,7 +204,7 @@ export default function FutsalProfileScreen(props) {
           <TextInput
             style={styles.formTextInput}
             value={name}
-            onChangeText={(text) => setName(text)}
+            onChangeText={text => setName(text)}
           />
         </View>
 
@@ -228,8 +213,9 @@ export default function FutsalProfileScreen(props) {
           <TextInput
             style={styles.formTextInput}
             value={phone}
+            maxLength={10}
             keyboardType="phone-pad"
-            onChangeText={(text) => setPhone(text)}
+            onChangeText={text => setPhone(text)}
           />
         </View>
 
@@ -238,7 +224,7 @@ export default function FutsalProfileScreen(props) {
           <TextInput
             style={styles.formTextInput}
             value={address}
-            onChangeText={(text) => setAddress(text)}
+            onChangeText={text => setAddress(text)}
           />
         </View>
 
@@ -246,7 +232,9 @@ export default function FutsalProfileScreen(props) {
           <Text style={styles.formText}>Start Time</Text>
           <TouchableOpacity onPress={showStartTimePicker}>
             <View style={styles.formTextInput}>
-              <Text style={styles.formTextInputContent}>{selectedStartTime}</Text>
+              <Text style={styles.formTextInputContent}>
+                {selectedStartTime}
+              </Text>
             </View>
           </TouchableOpacity>
           <DateTimePickerModal
@@ -277,9 +265,9 @@ export default function FutsalProfileScreen(props) {
           {inputs.map((input, index) => (
             <View key={index} style={styles.amenityInputContainer}>
               <TextInput
-                style={styles.formTextInput}
+                style={styles.amenityInput}
                 value={input.value}
-                onChangeText={(text) => handleInputChange(text, index)}
+                onChangeText={text => handleInputChange(text, index)}
               />
               <TouchableOpacity onPress={() => removeInput(index)}>
                 <Text style={styles.removeAmenityButton}>Remove</Text>
@@ -297,7 +285,7 @@ export default function FutsalProfileScreen(props) {
             style={styles.formTextInput}
             value={stdPrice}
             keyboardType="numeric"
-            onChangeText={(text) => setStdPrice(text)}
+            onChangeText={text => setStdPrice(text)}
           />
         </View>
 
@@ -307,38 +295,42 @@ export default function FutsalProfileScreen(props) {
             style={styles.formTextInput}
             value={pan}
             keyboardType="numeric"
-            onChangeText={(text) => setPan(text)}
+            maxLength={9}
+            onChangeText={text => setPan(text)}
           />
         </View>
 
         <View style={styles.formField}>
           <Text style={styles.formText}>Upload Images</Text>
-          <TouchableOpacity style={styles.imageUploadButton} onPress={pickImages}>
+          <TouchableOpacity
+            style={styles.imageUploadButton}
+            onPress={pickImages}>
             <Text style={styles.buttonText}>Select Images</Text>
           </TouchableOpacity>
           <View style={styles.imagePreviewContainer}>
             {images.map((image, index) => (
               <View key={index} style={styles.imageContainer}>
-              <Image source={{uri: image.uri}} style={styles.imagePreview} />
-              <TouchableOpacity style={styles.removeImageButton} onPress={() => removeImage(index)}>
-                <Text style={styles.removeImageText}>Remove</Text>
-              </TouchableOpacity>
-            </View>
+                <Image source={{uri: image.uri}} style={styles.imagePreview} />
+                <TouchableOpacity
+                  style={styles.removeImageButton}
+                  onPress={() => removeImage(index)}>
+                  <Text style={styles.removeImageText}>Remove</Text>
+                </TouchableOpacity>
+              </View>
             ))}
           </View>
         </View>
 
         <View style={styles.formBtn}>
           <TouchableOpacity onPress={handleSubmit}>
-            <View style={styles.button}>
-              <Text style={styles.buttonText}>Submit</Text>
+            <View style={[styles.logoutButton, styles.button]}>
+              <Text style={styles.buttonText}>Update</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-        <Text style={styles.logoutButtonText}>Logout</Text>
-      </TouchableOpacity>
+            <Text style={styles.logoutButtonText}>Logout</Text>
+          </TouchableOpacity>
         </View>
-        
       </View>
     </ScrollView>
   );
@@ -348,7 +340,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    marginBottom:70
+    marginBottom: 70,
   },
   header: {
     color: '#F95609',
@@ -409,15 +401,25 @@ const styles = StyleSheet.create({
   },
   formBtn: {
     // marginTop: 20,
+    justifyContent: 'center',
     alignItems: 'center',
-    flexDirection:'row',
-    borderWidth:2
+    gap: 20,
+    flexDirection: 'row',
+    marginBottom: 20,
+    // borderWidth:2
   },
   button: {
     backgroundColor: '#F95609',
+  },
+  amenityInput: {
+    width: 250,
+    height: 40,
+    borderWidth: 1,
     borderRadius: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 30,
+    borderColor: '#CDCDCD',
+    color: 'black',
+    fontSize: 16,
+    paddingHorizontal: 13,
   },
   amenityInputContainer: {
     flexDirection: 'row',
@@ -432,7 +434,7 @@ const styles = StyleSheet.create({
     color: '#F95609',
     marginTop: 10,
   },
-   imageContainer: {
+  imageContainer: {
     position: 'relative',
     marginRight: 10,
     marginBottom: 10,
@@ -456,11 +458,11 @@ const styles = StyleSheet.create({
   },
   logoutButton: {
     backgroundColor: '#FF3B30',
-    borderRadius: 8,
+    borderRadius: 10,
     paddingVertical: 12,
     paddingHorizontal: 30,
     alignItems: 'center',
-    marginTop: 20,
+    // marginTop: 20,
   },
   logoutButtonText: {
     color: '#fff',

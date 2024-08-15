@@ -63,8 +63,8 @@ const FutsalSlotScreen = props => {
     };
   
     const url = currentSlotId 
-      ? `http://192.168.1.64:8001/update-time-slot/${currentSlotId}` 
-      : 'http://192.168.1.64:8001/add-time-slot';
+      ? SERVER_URL+`/update-time-slot/${currentSlotId}` 
+      : SERVER_URL+'/add-time-slot';
   
     try {
       const response = await fetch(url, {
@@ -207,7 +207,7 @@ const FutsalSlotScreen = props => {
     };
   };
   const getData = async () => {
-    const url = `http://192.168.1.64:8001/getTimeSlot/${futsalId}`;
+    const url = SERVER_URL+`/getTimeSlot/${futsalId}`;
   
     try {
       const response = await fetch(url, {
