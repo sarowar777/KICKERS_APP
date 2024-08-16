@@ -163,7 +163,7 @@ function CustomHeader({navigation}) {
           style={styles.marker}
         />
         <Text style={{fontSize: 12, left: 2, color: 'black'}}>
-          Kupondole,Lalitpur..
+          Putalisadak,Kathmandu..
         </Text>
         <TouchableOpacity>
           <Image

@@ -18,7 +18,7 @@ const BookingScreen = () => {
   const [bookings, setBookings] = useState([
     {
       id: '1',
-      date: '2024-08-07',
+      date: '2024-08-18',
       name: 'Sarowar Malla',
       typeName: '5A Side',
       phoneNumber: '9812342123',
@@ -27,7 +27,7 @@ const BookingScreen = () => {
     },
     {
       id: '2',
-      date: '2024-08-07',
+      date: '2024-08-17',
       name: 'Nayandeep Shrestha',
       typeName: '5A Side',
       phoneNumber: '9801232123',
@@ -36,7 +36,7 @@ const BookingScreen = () => {
     },
     {
       id: '3',
-      date: '2024-08-08',
+      date: '2024-08-18',
       name: 'Asis Shrestha',
       typeName: '5A Side',
       phoneNumber: '976212534',
@@ -45,7 +45,7 @@ const BookingScreen = () => {
     },
     {
       id: '4',
-      date: '2024-08-08',
+      date: '2024-08-18',
       name: 'Rajat Shrestha',
       typeName: '5A Side',
       phoneNumber: '9871234123',
@@ -54,7 +54,7 @@ const BookingScreen = () => {
     },
     {
       id: '5',
-      date: '2024-08-08',
+      date: '2024-08-19',
       name: 'Anil Shah',
       typeName: '5A Side',
       phoneNumber: '9812341234',

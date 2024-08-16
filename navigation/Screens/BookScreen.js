@@ -8,11 +8,13 @@ import { TOP_FUTSAL } from '../data/constList';
 import FutsalListScreen from './FutsalListScreen';
 import FutsalInfo from './FutsalInfo';
 
-export default function BookScreen({navigation}) {
+export default function BookScreen(props) {
+  const {navigation,route}=props;
+  const{token}=route.params;
   return (
     <SafeAreaView style={{ flex: 1,alignItems:'center' }}>
       <BookContent />
-        <FutsalListScreen navigation={navigation}  list={TOP_FUTSAL} /> 
+        <FutsalListScreen navigation={navigation}  list={TOP_FUTSAL} token={token} /> 
       
     </SafeAreaView>
   );

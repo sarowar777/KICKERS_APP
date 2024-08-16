@@ -13,7 +13,9 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export function BookContent() {
+export function BookContent(props) {
+  const {route}=props;
+  
   const [searchText, setSearchText] = useState('');
 
   const handleClearInput = () => {
@@ -239,7 +241,7 @@ export function BookContent() {
       </View>
       <View style={{left: 30}}>
         <Text style={{color: '#F95609', fontWeight: 'bold', fontSize: 18}}>
-          Venues(128)
+          Venues(5)
         </Text>
       </View>
       <Modal

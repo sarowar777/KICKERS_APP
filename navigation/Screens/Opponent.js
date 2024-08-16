@@ -1,11 +1,41 @@
 import {View, Text, TouchableOpacity, Modal} from 'react-native';
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import OpponentList from './OpponentList';
 import {BOOKINGS, TOP_GAME} from '../data/constList';
+import {SERVER_URL} from '@env';
 
-export default function Opponent({navigation}) {
+export default function Opponent(props) {
+  const {navigation,route}=props;
+  const {token}=route.params;
+ 
+  const [matchData,setMatchData]=useState([]);
+  const getData = async () => {
+    
+    try {
+      const url = SERVER_URL+'/match-requests';
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setMatchData(data.result)
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  useEffect(() => {
+    getData();
+  }, []);
   const [searchText, setSearchText] = useState('');
 
   const handleClearInput = () => {
@@ -119,7 +149,7 @@ export default function Opponent({navigation}) {
             flexDirection: 'row',
           }}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('CreateGameScreen')}>
+            onPress={() => navigation.navigate('CreateGameScreen',token)}>
             <View
               style={{
                 flexDirection: 'row',

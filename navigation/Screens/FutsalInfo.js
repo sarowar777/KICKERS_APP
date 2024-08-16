@@ -14,7 +14,8 @@ import {
 import {SwiperFlatList} from 'react-native-swiper-flatlist';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default function FutsalInfo({navigation}) {
+export default function FutsalInfo({navigation,route}) {
+ 
   const openMap = () => {
     const query = 'Dhukhu Futsal Hub'; // Change this to your desired search query
     const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(

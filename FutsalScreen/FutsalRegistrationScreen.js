@@ -11,14 +11,12 @@ import {
 import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import {SERVER_URL} from '@env'
+import {SERVER_URL} from '@env';
 
 export default function FutsalRegistrationScreen(props) {
-  
-  const {navigation,route}=props;
-  const { token} = route.params;
-   
- 
+  const {navigation, route} = props;
+  const {token} = route.params;
+
   const [selectedRadio, setSelectedRadio] = useState(0);
 
   const [loading, setLoading] = useState(false);
@@ -32,8 +30,6 @@ export default function FutsalRegistrationScreen(props) {
   const [amenities, setAmenities] = useState('');
   const [stdPrice, setStdPrice] = useState('');
   const [pan, setPan] = useState('');
-
-
 
   //timee
   const [isStartTimePickerVisible, setIsStartTimePickerVisible] =
@@ -55,7 +51,7 @@ export default function FutsalRegistrationScreen(props) {
   const hideEndTimePicker = () => {
     setIsEndTimePickerVisible(false);
   };
-  const handleConfirmStartTime = (date) => {
+  const handleConfirmStartTime = date => {
     const hours = date.getHours();
     const minutes = date.getMinutes();
     const ampm = hours >= 12 ? 'PM' : 'AM';
@@ -66,9 +62,9 @@ export default function FutsalRegistrationScreen(props) {
     setSelectedStartTime(formattedTime);
     setStartTime(date.toISOString()); // Save full ISO string for Prisma
     hideStartTimePicker();
-};
+  };
 
-const handleConfirmEndTime = (date) => {
+  const handleConfirmEndTime = date => {
     const hours = date.getHours();
     const minutes = date.getMinutes();
     const ampm = hours >= 12 ? 'PM' : 'AM';
@@ -79,8 +75,7 @@ const handleConfirmEndTime = (date) => {
     setSelectedEndTime(formattedTime);
     setEndTime(date.toISOString()); // Save full ISO string for Prisma
     hideEndTimePicker();
-};
-
+  };
 
   //ameneties
   const [inputs, setInputs] = useState([{key: '', value: ''}]);
@@ -99,7 +94,7 @@ const handleConfirmEndTime = (date) => {
     newInputs.splice(index, 1);
     setInputs(newInputs);
   };
-  
+
   const handleSubmit = async () => {
     setLoading(true);
     // Check if any required field is empty
@@ -117,9 +112,9 @@ const handleConfirmEndTime = (date) => {
       alert('Please fill out all fields.');
       return;
     }
-  
-    const url =SERVER_URL+'/add-futsal-info';
-  
+
+    const url = SERVER_URL + '/add-futsal-info';
+
     const data = {
       name,
       phone,
@@ -131,39 +126,37 @@ const handleConfirmEndTime = (date) => {
       stdPrice,
       pan,
     };
-  
+
     try {
       const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`, // Include token here
+          Authorization: `Bearer ${token}`, // Include token here
         },
         body: JSON.stringify(data),
       });
-  
+
       const responseText = await response.text();
-   
-  
+
       if (response.ok) {
         const result = JSON.parse(responseText); // Parse if JSON is expected
-        
+
         console.log('Futsal information added successfully:', result);
-        const futsalId =result.result.id;
+        const futsalId = result.result.id;
         console.log(futsalId);
-      
-        navigation.navigate('FutsalScreens',{token,futsalId});
+
+        navigation.navigate('FutsalScreens', {token, futsalId});
       } else {
         console.error('Failed to add futsal information:', responseText);
       }
     } catch (error) {
       console.error('Error submitting form:', error);
-    }finally {
+    } finally {
       setLoading(false);
     }
   };
-  
-  
+
   return (
     <ScrollView style={styles.container}>
       <Text
@@ -183,7 +176,11 @@ const handleConfirmEndTime = (date) => {
         <View style={styles.form}>
           <View style={styles.formField}>
             <Text style={styles.formText}>Futsal Name</Text>
-            <TextInput style={styles.formTextInput} value={name} onChangeText={text => setName(text)}/>
+            <TextInput
+              style={styles.formTextInput}
+              value={name}
+              onChangeText={text => setName(text)}
+            />
           </View>
           <View style={styles.formField}>
             <Text style={styles.formText}>Pan Number</Text>
@@ -208,7 +205,11 @@ const handleConfirmEndTime = (date) => {
           </View>
           <View style={styles.formField}>
             <Text style={styles.formText}>Address</Text>
-            <TextInput style={styles.formTextInput} value={address} onChangeText={text => setAddress(text)} />
+            <TextInput
+              style={styles.formTextInput}
+              value={address}
+              onChangeText={text => setAddress(text)}
+            />
           </View>
           <View style={styles.formField}>
             <Text style={styles.formText}>Futsal Type</Text>
@@ -391,8 +392,6 @@ const handleConfirmEndTime = (date) => {
                 </TouchableOpacity>
               </View>
             ))}
-            
-            
           </View>
           <View style={[styles.addBtn]}>
             <TouchableOpacity onPress={addInput}>
@@ -400,19 +399,23 @@ const handleConfirmEndTime = (date) => {
                 <Text style={styles.buttonText}>Add</Text>
               </View>
             </TouchableOpacity>
-          </View> 
+          </View>
           <View style={styles.formField}>
             <Text style={styles.formText}>Standard Price</Text>
-            <TextInput style={styles.formTextInput} keyboardType='numeric' value={stdPrice}  onChangeText={text => setStdPrice(text)}/>
-          </View> 
+            <TextInput
+              style={styles.formTextInput}
+              keyboardType="numeric"
+              value={stdPrice}
+              onChangeText={text => setStdPrice(text)}
+            />
+          </View>
           <View style={styles.formBtn}>
-          <TouchableOpacity onPress={handleSubmit}>
-            <View style={styles.button}>
-              <Text style={styles.buttonText}>Submit</Text>
-            </View>
-          </TouchableOpacity>
-          </View> 
-         
+            <TouchableOpacity onPress={handleSubmit}>
+              <View style={styles.button}>
+                <Text style={styles.buttonText}>Submit</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </ScrollView>
@@ -444,7 +447,6 @@ const styles = StyleSheet.create({
     rowGap: 8,
     left: 20,
     marginTop: 20,
-    
   },
   formText: {
     color: '#F95609',
@@ -464,7 +466,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#F95609',
     borderRadius: 10,
-   
+
     height: 50,
     width: 120,
     alignSelf: 'center',
@@ -475,18 +477,17 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 16,
-    fontWeight:'bold'
+    fontWeight: 'bold',
   },
-  formBtn:{
-    borderWidth:0,
-    alignSelf:'center',
-    justifyContent:'center',
-    marginTop:20
+  formBtn: {
+    borderWidth: 0,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
   },
-  addBtn:{
-    borderWidth:0,
-    alignSelf:'center',
-    justifyContent:'center',
-    
-  }
+  addBtn: {
+    borderWidth: 0,
+    alignSelf: 'center',
+    justifyContent: 'center',
+  },
 });

@@ -5,7 +5,10 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-export default function EditProfileScreen({ navigation }) {
+export default function EditProfileScreen(props) {
+  const {navigation,route}=props;
+  const {token}=route.params;
+ 
   const [profileImage, setProfileImage] = useState(null);
 
   const pickImage = () => {
@@ -26,31 +29,32 @@ export default function EditProfileScreen({ navigation }) {
     email: Yup.string().email('Invalid email').required('Email is required'),
     phone: Yup.string().required('Phone number is required'),
   });
-
   const handleFormSubmit = async (values) => {
     const formData = new FormData();
     
     if (profileImage) {
-      formData.append('profileImage', {
+      formData.append('image', {
         uri: profileImage.uri,
         name: profileImage.name,
         type: profileImage.type,
       });
     }
-
+  
     formData.append('name', values.name);
     formData.append('email', values.email);
     formData.append('phone', values.phone);
-
+    formData.append('address', values.address || ''); // Include address if you have it in your form
+  
     try {
-      const response = await fetch('http://192.168.1.64:8001/profile', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+      const response = await fetch(SERVER_URL+'/profile', {
+        method: 'PUT', // Change method to PUT
         body: formData,
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          
+        },
       });
-
+  
       if (response.ok) {
         Alert.alert('Profile Updated Successfully');
       } else {
@@ -61,6 +65,7 @@ export default function EditProfileScreen({ navigation }) {
       Alert.alert('An error occurred. Please try again.');
     }
   };
+  
 
   return (
     <Formik
@@ -114,6 +119,7 @@ export default function EditProfileScreen({ navigation }) {
               onChangeText={handleChange('phone')}
               onBlur={handleBlur('phone')}
               value={values.phone}
+              maxLength={10}
               placeholder="Enter your phone number"
               keyboardType="phone-pad"
             />

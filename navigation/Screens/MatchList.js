@@ -15,6 +15,7 @@ const CARD_HEIGHT = 300;
 const CARD_WIDTH_SPACING = CARD_WIDTH + spacing.l;
 
 export default function MatchList({list}) {
+
   const handleCall = (phone) => {
     Linking.openURL(`tel:${phone}`);
   };

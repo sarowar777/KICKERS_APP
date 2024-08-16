@@ -11,7 +11,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 import {EsewaSdk} from 'rn-nepal-payment';
-export default function BookFutsal({navigation}) {
+export default function BookFutsal(props) {
+  const {navigation,route}=props;
+
   const [selectedRadio, setSelectedRadio] = useState(0);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
@@ -139,7 +141,7 @@ export default function BookFutsal({navigation}) {
     setIsConfirmationVisible(true); // Show confirmation message
     setTimeout(() => {
       setIsConfirmationVisible(false); // Hide confirmation message after certain duration
-      navigation.navigate('MainTabs'); // Navigate to BookScreen
+      // navigation.navigate('MainTabs'); // Navigate to BookScreen
     }, 3000); // 3000 milliseconds or 3 seconds
   };
 

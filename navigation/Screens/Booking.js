@@ -4,8 +4,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {TOP_BOOKING, BOOKINGS} from '../data/constList';
 import BookingList from './BookingList';
 
-export default function Booking({navigation}) {
+export default function Booking({navigation,token}) {
   const [searchText, setSearchText] = useState('');
+  
 
   const handleClearInput = () => {
     setSearchText('');

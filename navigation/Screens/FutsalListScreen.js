@@ -18,22 +18,10 @@ const CARD_WIDTH = sizes.width - 80;
 const CARD_HEIGHT = 200;
 const CARD_WIDTH_SPACING = CARD_WIDTH + spacing.l;
 
-export default function FutsalListScreen({list,navigation}) {
-  // const [futsalData, setFutsalData] = useState([]);
-
-  // useEffect(() => {
-  //   const fetchFutsalData = async () => {
-  //     const db = firebase.firestore();
-  //     const futsalCollection = db.collection('Futsal_List');
-  //     const snapshot = await futsalCollection.get();
-  //     const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-  //     setFutsalData(data);
-  //     console.log(data);
-  //   };
-
-  //   fetchFutsalData();
-  // }, []);
-
+export default function FutsalListScreen(props) {
+  const {list,navigation,route}=props;
+  
+  
 
 
   const [favorites, setFavorites] = useState([]);

@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  Alert,
 } from 'react-native';
 import React, {useState} from 'react';
 import {sizes, spacing, shadow, colors} from '../constants/theme';
@@ -15,9 +16,28 @@ const CARD_HEIGHT = 260;
 const CARD_WIDTH_SPACING = CARD_WIDTH + spacing.l;
 
 export default function OpponentList({list}) {
+  const [opponentList, setOpponentList] = useState(list);
+  const handleJoin = (itemId) => {
+    Alert.alert(
+      "Join Match",
+      `Are you sure you want to join the match?`,
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        { text: "OK", onPress: () => {
+            // Remove the item temporarily from the state
+            setOpponentList(prevList => prevList.filter(item => item.id !== itemId));
+            Alert.alert("Success", "You have joined a match. Enjoy!");
+          }
+        }
+      ]
+    );
+  };
   return (
     <FlatList
-      data={list}
+      data={opponentList}
       snapToInterval={CARD_WIDTH_SPACING}
       decelerationRate="fast"
       showsHorizontalScrollIndicator={false}
@@ -73,7 +93,7 @@ export default function OpponentList({list}) {
               </Text>
              
             </View>
-            <TouchableOpacity style={{width:100,alignSelf:'center',top:10}}>
+            <TouchableOpacity onPress={() => handleJoin(item.id)}  style={{width:100,alignSelf:'center',top:10}}>
               <View
                 style={{
                   height: 40,

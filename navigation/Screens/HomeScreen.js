@@ -20,12 +20,12 @@ export default function HomeScreen(props) {
   const {route,navigation}=props;
   const [user, setUser] = useState(null);
   const [futsalData, setFutsalData] = useState([]);
- 
+  const { token } = route.params;
   const getData = async () => {
-    const { token } = route.params; // Get the token from route params
+    
     try {
-      const url = SERVER_URL+'/getFutsals';
-      const response = await fetch(url, {
+      
+      const response = await fetch(SERVER_URL+'/getFutsals', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -81,7 +81,7 @@ export default function HomeScreen(props) {
               </Text>
             </View>
             <TouchableOpacity
-              onPress={() => navigation.navigate('CreateGameScreen')}>
+              onPress={() => navigation.navigate('CreateGameScreen',{token})}>
               <View
                 style={{
                   borderWidth: 1,
