@@ -55,7 +55,7 @@ export const TOP_GAME = [
     id: 1,
     image: require('../Screens/images/saro.jpg'),
     nameUser: 'Sarowar Malla',
-    date:' Sat 17 Aug, 8:00 AM-9:00 AM',
+    date:' Sun 18 Aug, 8:00 AM-9:00 AM',
     futsal:' Dhukhu Futsal Hub',
     location: ' Lamingtan,Kathmandu',
     description:
@@ -79,7 +79,7 @@ export const TOP_GAME = [
     id: 3,
     image: require('../Screens/images/nandu.jpg'),
     nameUser: 'Nayandeep Shrestha',
-    date:' Tue 19 Aug, 10:00 AM-11:00 AM',
+    date:' Tue 20 Aug, 10:00 AM-11:00 AM',
     futsal:' Kantipur Futsal',
     location: ' Kapan,Kathmandu',
     description:
@@ -181,7 +181,7 @@ export const MATCH =[
     id: 1,
     image: require('../Screens/images/saro.jpg'),
     nameUser: 'Sarowar Malla',
-    date:' Sat 17 Aug, 8:00 AM-9:00 AM',
+    date:' Sun 18 Aug, 8:00 AM-9:00 AM',
     futsal:' Dhukhu Futsal Hub',
     location: ' Lamingtan,Kathmandu',
     description:
@@ -193,7 +193,7 @@ export const MATCH =[
     id: 3,
     image: require('../Screens/images/nandu.jpg'),
     nameUser: 'Nayandeep Shrestha',
-    date:' Tue 19 Aug, 10:00 AM-11:00 AM',
+    date:' Tue 20 Aug, 10:00 AM-11:00 AM',
     futsal:' Kantipur Futsal',
     location: ' Kapan,Kathmandu',
     description:

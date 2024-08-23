@@ -8,6 +8,8 @@ import * as Yup from 'yup';
 export default function EditProfileScreen(props) {
   const {navigation,route}=props;
   const {token}=route.params;
+  
+  
  
   const [profileImage, setProfileImage] = useState(null);
 
@@ -46,7 +48,7 @@ export default function EditProfileScreen(props) {
     formData.append('address', values.address || ''); // Include address if you have it in your form
   
     try {
-      const response = await fetch(SERVER_URL+'/profile', {
+      const response = await fetch('http://192.168.1.68:8001/profile', {
         method: 'PUT', // Change method to PUT
         body: formData,
         headers: {
@@ -57,7 +59,9 @@ export default function EditProfileScreen(props) {
   
       if (response.ok) {
         Alert.alert('Profile Updated Successfully');
+        
       } else {
+        console.warn(response);
         Alert.alert('Failed to update profile');
       }
     } catch (error) {

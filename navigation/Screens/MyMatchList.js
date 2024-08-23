@@ -45,7 +45,7 @@ export default function MyMatchList(props) {
   // Function to delete the match
   const deleteMatch = async id => {
     try {
-      const url = `${SERVER_URL}/match-requests/${id}`;
+      const url = `http://192.168.1.68:8001/match-requests/${id}`;
       const response = await fetch(url, {
         method: 'DELETE',
         headers: {

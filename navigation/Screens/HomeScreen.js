@@ -25,7 +25,7 @@ export default function HomeScreen(props) {
     
     try {
       
-      const response = await fetch(SERVER_URL+'/getFutsals', {
+      const response = await fetch('http://192.168.1.68:8001/getFutsals', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,

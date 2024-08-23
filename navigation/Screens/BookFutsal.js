@@ -10,37 +10,26 @@ import React, {useState, useEffect} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
-import {EsewaSdk} from 'rn-nepal-payment';
+
 export default function BookFutsal(props) {
-  const {navigation,route}=props;
+  const {navigation, route} = props;
+  const token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTcyNDQwMDUyMX0.lFgeymIuPBP3GG0GlUC31s-CHL2_ixqb62zO5u6aoKg";
+  const [selectedDate, setSelectedDate] = useState('Select Date');
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const [selectedStartTime, setSelectedStartTime] = useState('Start Time');
+  const [selectedEndTime, setSelectedEndTime] = useState('End Time');
 
   const [selectedRadio, setSelectedRadio] = useState(0);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
-  const [selectedDate, setSelectedDate] = useState('Select Date');
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
-  };
 
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
-
-  const handleConfirm = date => {
-    const currentDate = new Date();
-
-    if (date < currentDate) {
-      alert('Cannot select past dates');
-      setSelectedDate('Select Date');
-      // Show date picker modal again
-      showDatePicker();
-      return;
-    }
-
-    const options = {weekday: 'long', month: 'short', day: '2-digit'};
-    const formattedDate = date.toLocaleDateString('en-US', options);
-    setSelectedDate(formattedDate);
-    checkDateAvailability(formattedDate); // Check date availability
+  const showDatePicker = () => setDatePickerVisibility(true);
+  const hideDatePicker = () => setDatePickerVisibility(false);
+  const handleConfirmDate = date => {
+    const formattedDate = date.toLocaleDateString('en-CA'); // Formats to yyyy-mm-dd
+    const finalFormattedDate = formattedDate.replace(/-/g, '/'); // Replace '-' with '/'
+    setSelectedDate(finalFormattedDate);
     hideDatePicker();
   };
 
@@ -52,47 +41,35 @@ export default function BookFutsal(props) {
   {
     /* time picker */
   }
-  const [isStartTimePickerVisible, setIsStartTimePickerVisible] =
-    useState(false);
-  const [isEndTimePickerVisible, setIsEndTimePickerVisible] = useState(false);
-  const showStartTimePicker = () => {
-    setIsStartTimePickerVisible(true);
-  };
-  const [selectedStartTime, setSelectedStartTime] = useState('Start Time');
-  const [selectedEndTime, setSelectedEndTime] = useState('End Time');
-  const hideStartTimePicker = () => {
-    setIsStartTimePickerVisible(false);
+  const [isStartPickerVisible, setStartPickerVisible] = useState(false);
+  const [isEndPickerVisible, setEndPickerVisible] = useState(false);
+  const showStartPicker = () => setStartPickerVisible(true);
+  const hideStartPicker = () => setStartPickerVisible(false);
+  const showEndPicker = () => setEndPickerVisible(true);
+  const hideEndPicker = () => setEndPickerVisible(false);
+  const formatTime = time => {
+    const hours = time.getHours();
+    const minutes = time.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12;
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    return `${formattedHours}:${formattedMinutes} ${ampm}`;
   };
 
-  const showEndTimePicker = () => {
-    setIsEndTimePickerVisible(true);
-  };
-
-  const hideEndTimePicker = () => {
-    setIsEndTimePickerVisible(false);
-  };
   const handleConfirmStartTime = date => {
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const formattedHours = hours < 10 ? '0' + hours : hours;
-    const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
-    const period = hours >= 12 ? 'PM' : 'AM';
-    const formattedTime =
-      formattedHours + ':' + formattedMinutes + ' ' + period;
+    const isoTime = date.toISOString();
+    const formattedTime = formatTime(date);
+    setStartTime(isoTime);
     setSelectedStartTime(formattedTime);
-    hideStartTimePicker();
+    hideStartPicker();
   };
 
   const handleConfirmEndTime = date => {
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const formattedHours = hours < 10 ? '0' + hours : hours;
-    const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
-    const period = hours >= 12 ? 'PM' : 'AM';
-    const formattedTime =
-      formattedHours + ':' + formattedMinutes + ' ' + period;
+    const isoTime = date.toISOString();
+    const formattedTime = formatTime(date);
+    setEndTime(isoTime);
     setSelectedEndTime(formattedTime);
-    hideEndTimePicker();
+    hideEndPicker();
   };
   // Function to calculate the duration in hours between two time strings
   const calculateHoursDifference = (startTime, endTime) => {
@@ -137,12 +114,82 @@ export default function BookFutsal(props) {
     }
   };
 
-  const handleBookPress = () => {
-    setIsConfirmationVisible(true); // Show confirmation message
-    setTimeout(() => {
-      setIsConfirmationVisible(false); // Hide confirmation message after certain duration
-      // navigation.navigate('MainTabs'); // Navigate to BookScreen
-    }, 3000); // 3000 milliseconds or 3 seconds
+  const handleBookPress =async () => {
+
+    if (
+      !selectedDate ||
+      !selectedStartTime ||
+      !selectedEndTime ||
+      !selectedRadio
+    ) {
+      alert('Please fill out all fields.');
+      return;
+    }
+  
+    const futsalType = selectedRadio === 1 ? 'FiveA' : 'SevenA';
+    const  price=1500;
+    const data = {
+      futsalId:2,
+      bookDate: selectedDate,
+      startTime: startTime,
+      endTime: endTime,
+      type: futsalType,
+      price:price
+
+      // Add any other fields required by your backend
+    };
+  
+    
+    const bookingUrl ='http://192.168.1.68:8001/bookings';
+
+    const paymentUrl ='http://192.168.1.68:8001/payments';
+
+   
+
+    try {
+      const response = await fetch(bookingUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // Include token here
+        },
+        body: JSON.stringify(data),
+      });
+
+      const responseText = await response.text();
+
+      if (response.ok) {
+        const result = JSON.parse(responseText); // Parse if JSON is expected
+        const data={
+         amount:1500,
+         bookingId:result.result.id
+        }
+        console.log(result);
+        const response2 = await fetch(paymentUrl+'/initialize-payment', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`, // Include token here
+          },
+          body: JSON.stringify(data),
+        });
+       console.log(response2)
+       
+      } else {
+        console.error('Booking Failed:', responseText);
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    } 
+    
+
+
+
+    // setIsConfirmationVisible(true); // Show confirmation message
+    // setTimeout(() => {
+    //   setIsConfirmationVisible(false); // Hide confirmation message after certain duration
+    //   // navigation.navigate('MainTabs'); // Navigate to BookScreen
+    // }, 3000); // 3000 milliseconds or 3 seconds
   };
 
   useEffect(() => {
@@ -151,16 +198,7 @@ export default function BookFutsal(props) {
     }
   }, [selectedStartTime, selectedEndTime]);
 
-  const [isVisible, setisVisible] = React.useState(false);
-  const [response, setResponse] = React.useState('');
-
-  const _onPaymentComplete = response => {
-    setResponse(response);
-    setisVisible(false);
-    return;
-  };
-
-  const [isDateAvailable, setIsDateAvailable] = useState(false);
+ 
 
   return (
     <View style={{flex: 1}}>
@@ -213,8 +251,9 @@ export default function BookFutsal(props) {
             <DateTimePickerModal
               isVisible={isDatePickerVisible}
               mode="date"
-              onConfirm={handleConfirm}
+              onConfirm={handleConfirmDate}
               onCancel={hideDatePicker}
+              minimumDate={new Date()} // This disables past dates
             />
           </TouchableOpacity>
         </View>
@@ -230,7 +269,7 @@ export default function BookFutsal(props) {
             style={{borderWidth: 0, top: 20, height: 70, flexDirection: 'row'}}>
             <TouchableOpacity
               style={{flexDirection: 'row', alignItems: 'center'}}
-              onPress={showStartTimePicker}>
+              onPress={showStartPicker}>
               <View
                 style={{
                   borderRadius: 10,
@@ -256,15 +295,15 @@ export default function BookFutsal(props) {
                   }}></Icon>
               </View>
               <DateTimePickerModal
-                isVisible={isStartTimePickerVisible}
+                isVisible={isStartPickerVisible}
                 mode="time"
                 onConfirm={handleConfirmStartTime}
-                onCancel={hideStartTimePicker}
+                onCancel={hideStartPicker}
               />
             </TouchableOpacity>
             <TouchableOpacity
               style={{flexDirection: 'row', alignItems: 'center'}}
-              onPress={showEndTimePicker}>
+              onPress={showEndPicker}>
               <View
                 style={{
                   borderRadius: 10,
@@ -290,10 +329,10 @@ export default function BookFutsal(props) {
                   }}></Icon>
               </View>
               <DateTimePickerModal
-                isVisible={isEndTimePickerVisible}
+                isVisible={isEndPickerVisible}
                 mode="time"
                 onConfirm={handleConfirmEndTime}
-                onCancel={hideEndTimePicker}
+                onCancel={hideEndPicker}
               />
             </TouchableOpacity>
           </View>

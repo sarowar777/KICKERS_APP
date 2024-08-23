@@ -52,9 +52,6 @@ export default function CreateGameScreen({navigation, route}) {
     match ? {name: match.futsalName} : null,
   );
 
-  // const [searchText, setSearchText] = useState('');
-  // const [futsals, setFutsals] = useState([]);
-  // const [selectedFutsal, setSelectedFutsal] = useState(null);
   const [selectedStartTime, setSelectedStartTime] = useState(
     startTime ? formatTime(new Date(startTime)) : 'Start Time',
   );
@@ -72,18 +69,20 @@ export default function CreateGameScreen({navigation, route}) {
 
   const fetchFutsals = async query => {
     try {
-      const response = await fetch(`${SERVER_URL}/getFutsals?name=${query}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        `http://192.168.1.68:8001/getFutsals?name=${query}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       const contentType = response.headers.get('content-type');
       const responseText = await response.text();
 
       if (contentType && contentType.includes('application/json')) {
         const result = JSON.parse(responseText);
-        console.log('Futsals fetched:', result.result);
         setFutsals(result.result || []);
       } else {
         console.error('Unexpected response format:', responseText);
@@ -167,7 +166,7 @@ export default function CreateGameScreen({navigation, route}) {
 
     try {
       const response = await fetch(
-        `${SERVER_URL}/match-requests${match ? `/${match.id}` : ''}`,
+        `http://192.168.1.68:8001/match-requests ${match ? `/${match.id}` : ''}`,
         {
           method: match ? 'PUT' : 'POST',
           headers: {

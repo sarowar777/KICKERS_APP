@@ -101,6 +101,7 @@ export default function MainContainer() {
 
         <Stack.Screen name="MainTabs" component={MainTabs} />
         <Stack.Screen name="FutsalScreens" component={FutsalScreens} />
+        <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
         
       </Stack.Navigator>
     </NavigationContainer>

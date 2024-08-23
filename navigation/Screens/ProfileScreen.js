@@ -8,11 +8,12 @@ import { SERVER_URL } from '@env';
 const ProfileScreen = (props) => {
   const { navigation, route } = props;
   const [user, setUser] = useState(null);
+  const { token } = route.params; // Get the token from route params
 
   const getProfile = async () => {
-    const { token } = route.params; // Get the token from route params
+   
     try {
-      const url = SERVER_URL+'/profile';
+      const url = 'http://192.168.1.68:8001/profile';
       const response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -26,12 +27,14 @@ const ProfileScreen = (props) => {
       }
 
       const data = await response.json();
+      console.log(data);
       setUser({
         ...data.result,
-        profilePicture: data.result.profilePicture 
-          ? { uri: data.result.profilePicture } 
+        image: data.result.image
+          ? { uri:`http://192.168.1.68:8001/assets/user-images/${data.result.image}`} 
           : require('../../assets/pictures/avatar.png'), // Set the default picture
       });
+      console.log(user);
     } catch (error) {
       console.error("Error fetching profile data:", error);
     }
@@ -64,17 +67,18 @@ const ProfileScreen = (props) => {
   return (
     <View style={styles.container}>
       <View style={styles.profileHeader}>
+      {user.image && (
         <Image 
-          source={typeof user.profilePicture === 'string' 
-            ? { uri: user.profilePicture } 
-            : user.profilePicture} 
+          source={user.image} 
           style={styles.profilePicture} 
+          onError={(error) => console.error("Error loading image:", error.nativeEvent.error)} // Log any image loading errors
         />
+      )}
         <Text style={styles.name}>{user.name}</Text>
         <Text style={styles.email}>{user.email}</Text>
         <Text style={styles.phone}>{user.phone}</Text>
       </View>
-      <TouchableOpacity onPress={() => navigation.navigate('EditProfileScreen', { user })}  
+      <TouchableOpacity onPress={() => navigation.navigate('EditProfileScreen', { user,token})}  
       style={styles.editButton}>
         <Text style={styles.editButtonText}>Edit Profile</Text>
       </TouchableOpacity>

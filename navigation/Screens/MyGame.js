@@ -23,7 +23,7 @@ export default function MyGame(props) {
   const getData = async () => {
     
     try {
-      const url = SERVER_URL+'/match-requests';
+      const url = 'http://192.168.1.68:8001/match-requests';
       const response = await fetch(url, {
         method: 'GET',
         headers: {
