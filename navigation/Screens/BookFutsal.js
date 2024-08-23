@@ -2,6 +2,7 @@ import {
   View,
   Text,
   Image,
+  Linking,
   TouchableOpacity,
   ScrollView,
   Button,
@@ -10,15 +11,21 @@ import React, {useState, useEffect} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
-
 export default function BookFutsal(props) {
   const {navigation, route} = props;
-  const token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTcyNDQwMDUyMX0.lFgeymIuPBP3GG0GlUC31s-CHL2_ixqb62zO5u6aoKg";
+  const token =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTcyNDQwMDUyMX0.lFgeymIuPBP3GG0GlUC31s-CHL2_ixqb62zO5u6aoKg';
   const [selectedDate, setSelectedDate] = useState('Select Date');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [selectedStartTime, setSelectedStartTime] = useState('Start Time');
   const [selectedEndTime, setSelectedEndTime] = useState('End Time');
+
+  const [selectedWallet, setSelectedWallet] = useState(null);
+
+  const handleWalletSelect = wallet => {
+    setSelectedWallet(wallet);
+  };
 
   const [selectedRadio, setSelectedRadio] = useState(0);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -113,9 +120,41 @@ export default function BookFutsal(props) {
       console.log('Invalid time selection');
     }
   };
+  ///booking test
 
-  const handleBookPress =async () => {
 
+  useEffect(() => {
+    console.log("Hello")
+    const handleDeepLink = async (event) => {
+      const { url } = event;
+      const route = url.split('://')[1];
+      const params = new URLSearchParams(route.split('?')[1]);
+
+      if (route.startsWith('payments/verify-payment')) {
+        console.log('Payment verification initiated');
+        
+        const paymentStatus = params.get('paymentStatus');
+        const confirmation = params.get('confirmation');
+
+        if (paymentStatus === 'Paid' && confirmation === 'Confirmed') {
+          Alert.alert('Payment Successful', 'Your booking has been confirmed.');
+          navigation.navigate('MainTabs'); // Navigate to the desired screen
+        } else {
+          Alert.alert('Payment Failed', 'Please try again.');
+          navigation.navigate('BookScreen'); // Navigate back to booking screen
+        }
+      }
+    };
+
+    const subscription = Linking.addEventListener('url', handleDeepLink);
+
+    return () => {
+      subscription.remove();
+    };
+  }, [navigation]);
+  
+
+  const handleBookPress = async () => {
     if (
       !selectedDate ||
       !selectedStartTime ||
@@ -125,26 +164,23 @@ export default function BookFutsal(props) {
       alert('Please fill out all fields.');
       return;
     }
-  
+
     const futsalType = selectedRadio === 1 ? 'FiveA' : 'SevenA';
-    const  price=1500;
+    const price = 1500;
     const data = {
-      futsalId:2,
+      futsalId: 2,
       bookDate: selectedDate,
       startTime: startTime,
       endTime: endTime,
       type: futsalType,
-      price:price
+      price: price,
 
       // Add any other fields required by your backend
     };
-  
-    
-    const bookingUrl ='http://192.168.1.68:8001/bookings';
 
-    const paymentUrl ='http://192.168.1.68:8001/payments';
+    const bookingUrl = 'http://192.168.1.68:8001/bookings';
 
-   
+    const paymentUrl = 'http://192.168.1.68:8001/payments';
 
     try {
       const response = await fetch(bookingUrl, {
@@ -160,12 +196,12 @@ export default function BookFutsal(props) {
 
       if (response.ok) {
         const result = JSON.parse(responseText); // Parse if JSON is expected
-        const data={
-         amount:1500,
-         bookingId:result.result.id
-        }
+        const data = {
+          amount: 1500,
+          bookingId: result.result.id,
+        };
         console.log(result);
-        const response2 = await fetch(paymentUrl+'/initialize-payment', {
+        const response2 = await fetch(paymentUrl + '/initialize-payment', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -173,17 +209,15 @@ export default function BookFutsal(props) {
           },
           body: JSON.stringify(data),
         });
-       console.log(response2)
-       
+        const responseText2 = await response2.text();
+        const result2 = JSON.parse(responseText2);
+        Linking.openURL(result2.payment_url);
       } else {
         console.error('Booking Failed:', responseText);
       }
     } catch (error) {
       console.error('Error submitting form:', error);
-    } 
-    
-
-
+    }
 
     // setIsConfirmationVisible(true); // Show confirmation message
     // setTimeout(() => {
@@ -197,8 +231,6 @@ export default function BookFutsal(props) {
       handleBooking();
     }
   }, [selectedStartTime, selectedEndTime]);
-
- 
 
   return (
     <View style={{flex: 1}}>
@@ -483,14 +515,21 @@ export default function BookFutsal(props) {
               gap: 20,
               marginTop: 5,
             }}>
-            <TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.walletButton,
+                selectedWallet === 'eSewa' ? styles.selected : null,
+              ]}
+              onPress={() => handleWalletSelect('eSewa')}>
               <View
                 style={{
-                  borderWidth: 1,
+                  borderWidth: 0,
                   borderColor: 'black',
                   height: 100,
                   width: 170,
                   top: 10,
+                  justifyContent:'center',
+                  gap:10
                 }}>
                 <Image
                   source={require('../Screens/images/esewa1.png')}
@@ -499,35 +538,38 @@ export default function BookFutsal(props) {
                     height: 35,
                     width: 35,
                     alignSelf: 'center',
-                    top: 10,
+                    // top: 10,
                   }}
                 />
-                <Text style={{color: 'black', alignSelf: 'center', top: 20}}>
-                  eSewa Mobile Wallet
-                </Text>
+                <Text style={styles.walletText}>eSewa Mobile Wallet</Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.walletButton,
+                selectedWallet === 'Khalti' ? styles.selected : null,
+              ]}
+              onPress={() => handleWalletSelect('Khalti')}>
               <View
                 style={{
-                  borderWidth: 1,
+                  borderWidth: 0,
                   borderColor: 'black',
                   height: 100,
                   width: 170,
-                  top: 10,
+                  top:10,
+                  
+                  justifyContent:'center'
                 }}>
                 <Image
                   source={require('../Screens/images/khalti.png')}
                   style={{
                     resizeMode: 'cover',
-                    height: 55,
-                    width: 55,
+                    height: 50,
+                    width: 50,
                     alignSelf: 'center',
                   }}
                 />
-                <Text style={{color: 'black', alignSelf: 'center', top: 0}}>
-                  Khalti Mobile Wallet
-                </Text>
+                <Text style={styles.walletText}>Khalti Mobile Wallet</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -653,5 +695,17 @@ const styles = {
   confirmationText: {
     color: 'white',
     fontSize: 16,
+  },
+  walletButton: {
+    // padding: 20,
+    borderRadius: 10,
+    backgroundColor: '#D3D3D3', // Default background color
+  },
+  selected: {
+    backgroundColor: '#ADD8E6', // Selected background color
+  },
+  walletText: {
+    color: '#fff',
+    alignSelf:'center'
   },
 };

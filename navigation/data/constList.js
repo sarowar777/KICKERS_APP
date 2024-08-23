@@ -55,7 +55,7 @@ export const TOP_GAME = [
     id: 1,
     image: require('../Screens/images/saro.jpg'),
     nameUser: 'Sarowar Malla',
-    date:' Sun 18 Aug, 8:00 AM-9:00 AM',
+    date:' Sun 24 Aug, 8:00 AM-9:00 AM',
     futsal:' Dhukhu Futsal Hub',
     location: ' Lamingtan,Kathmandu',
     description:
@@ -67,7 +67,7 @@ export const TOP_GAME = [
     id: 2,
     image: require('../Screens/images/asis.jpg'),
     nameUser: 'Asis Shrestha',
-    date:' Sun 18 Aug, 6:00 PM-7:00 PM',
+    date:' Sun 24 Aug, 6:00 PM-7:00 PM',
     futsal:' Shankhamul Futsal',
     location: ' Shankhamul,Kathmandu',
     description:
@@ -79,7 +79,7 @@ export const TOP_GAME = [
     id: 3,
     image: require('../Screens/images/nandu.jpg'),
     nameUser: 'Nayandeep Shrestha',
-    date:' Tue 20 Aug, 10:00 AM-11:00 AM',
+    date:' Tue 26 Aug, 10:00 AM-11:00 AM',
     futsal:' Kantipur Futsal',
     location: ' Kapan,Kathmandu',
     description:
@@ -94,7 +94,7 @@ export const TOP_BOOKING = [
   {
     id: 1,
     title: 'Shankhamul Futsal',
-    date: ' 18 Aug,2024',
+    date: ' 24 Aug,2024',
     time: '09:00 AM-10:00 AM',
     description:
       'Booking',
@@ -102,7 +102,7 @@ export const TOP_BOOKING = [
   {
     id: 2,
     title: 'Sunrise Futsal',
-    date: ' 21 Aug,2024',
+    date: ' 25 Aug,2024',
     time: '10:00 AM-11:00 AM',
     description:
       'Match',
@@ -111,7 +111,7 @@ export const TOP_BOOKING = [
   {
     id: 3,
     title: 'Shankhamul Futsal',
-    date: ' 22 Aug,2024',
+    date: ' 26 Aug,2024',
     time: '09:00 AM-10:00 AM',
     description:
       'Booking',
@@ -119,7 +119,7 @@ export const TOP_BOOKING = [
   {
     id: 4,
     title: 'Shankhamul Futsal',
-    date: ' 23 Aug,2024',
+    date: ' 27 Aug,2024',
     time: '09:00 AM-10:00 AM',
     description:
       'Match',
@@ -131,7 +131,7 @@ export const BOOKINGS = [
   {
     id: 1,
     title: 'Shankhamul Futsal',
-    date: ' 18 Mar,2024',
+    date: ' 24 Mar,2024',
     time: '09:00 AM-10:00 AM',
     type: '5a side',
     status:'Confirmed',
@@ -142,7 +142,7 @@ export const BOOKINGS = [
   {
     id: 2,
     title: 'Sunrise Futsal',
-    date: ' 21 Aug,2024',
+    date: ' 25 Aug,2024',
     time: '10:00 AM-11:00 AM',
     type: '5a side',
     status:'Confirmed',
@@ -154,7 +154,7 @@ export const BOOKINGS = [
   {
     id: 3,
     title: 'Shankhamul Futsal',
-    date: ' 22 Aug,2024',
+    date: ' 26 Aug,2024',
     time: '09:00 AM-10:00 AM',
     type: '7a side',
     status:'Confirmed',
@@ -165,7 +165,7 @@ export const BOOKINGS = [
   {
     id: 4,
     title: 'Shankhamul Futsal',
-    date: ' 23 Aug,2024',
+    date: ' 27 Aug,2024',
     time: '09:00 AM-10:00 AM',
     type: '5a side',
     status:'Confirmed',
@@ -181,7 +181,7 @@ export const MATCH =[
     id: 1,
     image: require('../Screens/images/saro.jpg'),
     nameUser: 'Sarowar Malla',
-    date:' Sun 18 Aug, 8:00 AM-9:00 AM',
+    date:' Sun 24 Aug, 8:00 AM-9:00 AM',
     futsal:' Dhukhu Futsal Hub',
     location: ' Lamingtan,Kathmandu',
     description:
@@ -193,7 +193,7 @@ export const MATCH =[
     id: 3,
     image: require('../Screens/images/nandu.jpg'),
     nameUser: 'Nayandeep Shrestha',
-    date:' Tue 20 Aug, 10:00 AM-11:00 AM',
+    date:' Tue 26 Aug, 10:00 AM-11:00 AM',
     futsal:' Kantipur Futsal',
     location: ' Kapan,Kathmandu',
     description:
