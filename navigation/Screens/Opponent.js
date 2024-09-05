@@ -14,7 +14,7 @@ export default function Opponent(props) {
   const getData = async () => {
     
     try {
-      const url = SERVER_URL+'/match-requests';
+      const url = 'http://192.168.43.19:8001/match-requests';
       const response = await fetch(url, {
         method: 'GET',
         headers: {

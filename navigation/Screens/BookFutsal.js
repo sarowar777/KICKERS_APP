@@ -178,9 +178,9 @@ export default function BookFutsal(props) {
       // Add any other fields required by your backend
     };
 
-    const bookingUrl = 'http://192.168.1.68:8001/bookings';
+    const bookingUrl = 'http://192.168.43.19:8001/bookings';
 
-    const paymentUrl = 'http://192.168.1.68:8001/payments';
+    const paymentUrl = 'http://192.168.43.19:8001/payments';
 
     try {
       const response = await fetch(bookingUrl, {

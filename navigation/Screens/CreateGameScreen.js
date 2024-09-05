@@ -70,7 +70,7 @@ export default function CreateGameScreen({navigation, route}) {
   const fetchFutsals = async query => {
     try {
       const response = await fetch(
-        `http://192.168.1.68:8001/getFutsals?name=${query}`,
+        `http://192.168.43.19:8001/getFutsals?name=${query}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -166,7 +166,7 @@ export default function CreateGameScreen({navigation, route}) {
 
     try {
       const response = await fetch(
-        `http://192.168.1.68:8001/match-requests ${match ? `/${match.id}` : ''}`,
+        `http://192.168.43.19:8001/match-requests ${match ? `/${match.id}` : ''}`,
         {
           method: match ? 'PUT' : 'POST',
           headers: {
@@ -222,6 +222,7 @@ export default function CreateGameScreen({navigation, route}) {
               mode="date"
               onConfirm={handleConfirmDate}
               onCancel={hideDatePicker}
+              minimumDate={new Date()}
             />
           </TouchableOpacity>
         </View>

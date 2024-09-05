@@ -48,7 +48,7 @@ export default function EditProfileScreen(props) {
     formData.append('address', values.address || ''); // Include address if you have it in your form
   
     try {
-      const response = await fetch('http://192.168.1.68:8001/profile', {
+      const response = await fetch('http://192.168.43.19:8001/profile', {
         method: 'PUT', // Change method to PUT
         body: formData,
         headers: {
