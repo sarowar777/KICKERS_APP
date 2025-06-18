@@ -1,23 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { SERVER_URL } from '@env';
+import {SERVER_URL} from '@env';
 
-const ProfileScreen = (props) => {
-  const { navigation, route } = props;
+const ProfileScreen = props => {
+  const {navigation, route} = props;
   const [user, setUser] = useState(null);
-  const { token } = route.params; // Get the token from route params
+  const {token} = route.params; // Get the token from route params
 
   const getProfile = async () => {
-   
     try {
-      const url = 'http://192.168.43.19:8001/profile';
+      const url = 'http://192.168.1.65:8001/profile';
       const response = await fetch(url, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
@@ -31,12 +30,14 @@ const ProfileScreen = (props) => {
       setUser({
         ...data.result,
         image: data.result.image
-          ? { uri:`http://192.168.43.19:8001/assets/user-images/${data.result.image}`} 
+          ? {
+              uri: `http://192.168.43.19:8001/assets/user-images/${data.result.image}`,
+            }
           : require('../../assets/pictures/avatar.png'), // Set the default picture
       });
       console.log(user);
     } catch (error) {
-      console.error("Error fetching profile data:", error);
+      console.error('Error fetching profile data:', error);
     }
   };
   const handleLogout = async () => {
@@ -44,13 +45,12 @@ const ProfileScreen = (props) => {
       await AsyncStorage.removeItem('token'); // Clear the token from AsyncStorage
       navigation.reset({
         index: 0,
-        routes: [{ name: 'LoginScreen' }], // Navigate to the login screen
+        routes: [{name: 'LoginScreen'}], // Navigate to the login screen
       });
     } catch (error) {
-      console.error("Error logging out:", error);
+      console.error('Error logging out:', error);
     }
   };
-
 
   useEffect(() => {
     getProfile();
@@ -67,22 +67,25 @@ const ProfileScreen = (props) => {
   return (
     <View style={styles.container}>
       <View style={styles.profileHeader}>
-      {user.image && (
-        <Image 
-          source={user.image} 
-          style={styles.profilePicture} 
-          onError={(error) => console.error("Error loading image:", error.nativeEvent.error)} // Log any image loading errors
-        />
-      )}
+        {user.image && (
+          <Image
+            source={user.image}
+            style={styles.profilePicture}
+            onError={error =>
+              console.error('Error loading image:', error.nativeEvent.error)
+            } // Log any image loading errors
+          />
+        )}
         <Text style={styles.name}>{user.name}</Text>
         <Text style={styles.email}>{user.email}</Text>
         <Text style={styles.phone}>{user.phone}</Text>
       </View>
-      <TouchableOpacity onPress={() => navigation.navigate('EditProfileScreen', { user,token})}  
-      style={styles.editButton}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('EditProfileScreen', {user, token})}
+        style={styles.editButton}>
         <Text style={styles.editButtonText}>Edit Profile</Text>
       </TouchableOpacity>
-      <TouchableOpacity  onPress={handleLogout} style={styles.logoutButton}>
+      <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
         <Icon name="sign-out" size={20} color="#FFFFFF" />
       </TouchableOpacity>
     </View>

@@ -28,18 +28,16 @@ const FutsalSlotScreen = props => {
   const [isEndPickerVisible, setEndPickerVisible] = useState(false);
   const [isFormVisible, setFormVisible] = useState(false);
   const [currentSlotId, setCurrentSlotId] = useState(null);
- 
 
   const showStartPicker = () => setStartPickerVisible(true);
   const hideStartPicker = () => setStartPickerVisible(false);
   const showEndPicker = () => setEndPickerVisible(true);
   const hideEndPicker = () => setEndPickerVisible(false);
 
-
-  const handleCancel=()=>{
+  const handleCancel = () => {
     resetForm();
-        setFormVisible(false);
-  }
+    setFormVisible(false);
+  };
   const {route, navigation} = props;
   const {futsalId, token} = route.params;
 
@@ -48,7 +46,7 @@ const FutsalSlotScreen = props => {
       alert('Please fill all fields');
       return;
     }
-  
+
     const slotData = {
       timeSlots: [
         {
@@ -61,11 +59,11 @@ const FutsalSlotScreen = props => {
       ],
       futsalId,
     };
-  
-    const url = currentSlotId 
-      ? `http://192.168.43.19:8001/update-time-slot/${currentSlotId}` 
-      : 'http://192.168.43.19:8001/add-time-slot';
-  
+
+    const url = currentSlotId
+      ? `http://192.168.1.65:8001/update-time-slot/${currentSlotId}`
+      : 'http://192.168.1.65:8001/add-time-slot';
+
     try {
       const response = await fetch(url, {
         method: currentSlotId ? 'PUT' : 'POST',
@@ -75,12 +73,17 @@ const FutsalSlotScreen = props => {
         },
         body: JSON.stringify(slotData),
       });
-  
+
       const responseText = await response.text();
-  
+
       if (response.ok) {
         const result = JSON.parse(responseText);
-        console.log(currentSlotId ? 'Slot updated successfully' : 'Time Slot added successfully', result);
+        console.log(
+          currentSlotId
+            ? 'Slot updated successfully'
+            : 'Time Slot added successfully',
+          result,
+        );
         resetForm();
         setFormVisible(false);
         getData(); // Refresh the slot list
@@ -91,7 +94,6 @@ const FutsalSlotScreen = props => {
       console.error('Error submitting Slot:', error);
     }
   };
-  
 
   const resetForm = () => {
     setSelectedDate('');
@@ -142,13 +144,13 @@ const FutsalSlotScreen = props => {
     hideEndPicker();
   };
 
- 
   const [filteredSlots, setFilteredSlots] = useState([]);
   const [filterModalVisible, setFilterModalVisible] = useState(false);
   const [filterDate, setFilterDate] = useState('');
   const [filterStartTime, setFilterStartTime] = useState('');
   const [filterEndTime, setFilterEndTime] = useState('');
-  const [isFilterStartPickerVisible, setFilterStartPickerVisible] = useState(false);
+  const [isFilterStartPickerVisible, setFilterStartPickerVisible] =
+    useState(false);
   const [isFilterEndPickerVisible, setFilterEndPickerVisible] = useState(false);
 
   // Filter slots
@@ -169,8 +171,6 @@ const FutsalSlotScreen = props => {
     setFilterModalVisible(false);
   };
 
-  
-
   // Handlers for Date and Time selection
   const handleConfirmFilterDate = date => {
     setFilterDate(format(date, 'yyyy/MM/dd'));
@@ -185,13 +185,13 @@ const FutsalSlotScreen = props => {
     setFilterEndTime(formatTime(date));
     setFilterEndPickerVisible(false);
   };
-  
+
   // Toggle the filter modal
   const toggleFilterModal = () => {
     setFilterModalVisible(!filterModalVisible);
   };
-   // Clear filters
-   const clearFilters = () => {
+  // Clear filters
+  const clearFilters = () => {
     setFilterDate('');
     setFilterStartTime('');
     setFilterEndTime('');
@@ -199,16 +199,16 @@ const FutsalSlotScreen = props => {
   };
 
   //conversion
-  const formatDateTime = (isoString) => {
+  const formatDateTime = isoString => {
     const date = new Date(isoString);
     return {
       date: format(date, 'yyyy/MM/dd'),
-      time: format(date, 'hh:mm a')
+      time: format(date, 'hh:mm a'),
     };
   };
   const getData = async () => {
-    const url = `http://192.168.43.19:8001/getTimeSlot/${futsalId}`;
-  
+    const url = `http://192.168.1.65:8001/getTimeSlot/${futsalId}`;
+
     try {
       const response = await fetch(url, {
         method: 'GET',
@@ -217,7 +217,7 @@ const FutsalSlotScreen = props => {
           Authorization: `Bearer ${token}`, // Include the token in the Authorization header
         },
       });
-  
+
       if (response.ok) {
         const result = await response.json();
         const filteredSlots = result.result.filter(slot => {
@@ -235,16 +235,14 @@ const FutsalSlotScreen = props => {
       console.error('Error fetching slots:', error);
     }
   };
-  
+
   useEffect(() => {
     getData();
-  },[slots]);
-  
+  }, [slots]);
 
   return (
     <View style={styles.container}>
-     
-        {/* Filter Modal */}
+      {/* Filter Modal */}
       <Modal
         visible={filterModalVisible}
         animationType="slide"
@@ -253,13 +251,15 @@ const FutsalSlotScreen = props => {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Calendar
-            minDate={format(new Date(), 'yyyy-MM-dd')}
-              onDayPress={day => handleConfirmFilterDate(new Date(day.timestamp))}
+              minDate={format(new Date(), 'yyyy-MM-dd')}
+              onDayPress={day =>
+                handleConfirmFilterDate(new Date(day.timestamp))
+              }
               markedDates={{
                 [filterDate]: {
                   selected: true,
                   marked: true,
-                  selectedColor:'#F95609',
+                  selectedColor: '#F95609',
                 },
               }}
             />
@@ -301,9 +301,7 @@ const FutsalSlotScreen = props => {
             </View>
 
             <View style={styles.modalButtons}>
-              <TouchableOpacity
-                style={styles.saveButton}
-                onPress={filterSlots}>
+              <TouchableOpacity style={styles.saveButton} onPress={filterSlots}>
                 <Text style={styles.saveButtonText}>Apply Filter</Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -315,7 +313,6 @@ const FutsalSlotScreen = props => {
           </View>
         </View>
       </Modal>
-
 
       {isFormVisible ? (
         <>
@@ -331,7 +328,7 @@ const FutsalSlotScreen = props => {
               },
             }}
           />
-  
+
           <View style={styles.pickerContainer}>
             <TouchableOpacity
               style={styles.timePicker}
@@ -342,22 +339,20 @@ const FutsalSlotScreen = props => {
                   : 'Start Time'}
               </Text>
             </TouchableOpacity>
-  
+
             <TouchableOpacity style={styles.timePicker} onPress={showEndPicker}>
               <Text style={styles.input}>
-                {selectedEndTime
-                  ? `End Time: ${selectedEndTime}`
-                  : 'End Time'}
+                {selectedEndTime ? `End Time: ${selectedEndTime}` : 'End Time'}
               </Text>
             </TouchableOpacity>
-  
+
             <DateTimePickerModal
               isVisible={isStartPickerVisible}
               mode="time"
               onConfirm={handleConfirmStartTime}
               onCancel={hideStartPicker}
             />
-  
+
             <DateTimePickerModal
               isVisible={isEndPickerVisible}
               mode="time"
@@ -365,7 +360,7 @@ const FutsalSlotScreen = props => {
               onCancel={hideEndPicker}
             />
           </View>
-  
+
           <View style={styles.picker}>
             <Text style={styles.label}>Futsal Type:</Text>
             <Button
@@ -388,7 +383,9 @@ const FutsalSlotScreen = props => {
             />
           </View>
           <View style={styles.bottomButton}>
-            <TouchableOpacity style={styles.saveButton} onPress={handleSaveSlot}>
+            <TouchableOpacity
+              style={styles.saveButton}
+              onPress={handleSaveSlot}>
               <View style={styles.saveButtonInner}>
                 <Text style={styles.saveButtonText}>Save</Text>
               </View>
@@ -413,10 +410,12 @@ const FutsalSlotScreen = props => {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.filterButton} onPress={toggleFilterModal}>
-        <Icon name="filter" size={20} color="black" />
-      </TouchableOpacity>
-  
+          <TouchableOpacity
+            style={styles.filterButton}
+            onPress={toggleFilterModal}>
+            <Icon name="filter" size={20} color="black" />
+          </TouchableOpacity>
+
           {/* FlatList component */}
           <FlatList
             data={slots}
@@ -441,7 +440,7 @@ const FutsalSlotScreen = props => {
                   <View>
                     <Text style={styles.slotText}>Price: {item.price}</Text>
                   </View>
-  
+
                   <View style={styles.buttons}>
                     <TouchableOpacity onPress={() => handleEditSlot(item)}>
                       <Icon name="edit" size={20} color="blue" />
@@ -463,7 +462,6 @@ const FutsalSlotScreen = props => {
       )}
     </View>
   );
-  
 };
 
 const styles = StyleSheet.create({
@@ -471,25 +469,24 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: '#fff',
-    
   },
-  
+
   picker: {
-    height:50,
+    height: 50,
     borderBottomWidth: 1,
-    borderColor:'#D9D9D9',
+    borderColor: '#D9D9D9',
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
     marginVertical: 10,
   },
-  amount:{
-    height:50,
+  amount: {
+    height: 50,
     borderBottomWidth: 0,
-    borderColor:'#D9D9D9',
+    borderColor: '#D9D9D9',
     flexDirection: 'row',
     gap: 3,
-    alignContent:'center'
+    alignContent: 'center',
   },
   label: {
     color: 'black',
@@ -513,9 +510,9 @@ const styles = StyleSheet.create({
     gap: 15,
   },
   pickerContainer: {
-    height:70,
+    height: 70,
     borderBottomWidth: 1,
-    borderColor:'#D9D9D9',
+    borderColor: '#D9D9D9',
     marginVertical: 10,
     flexDirection: 'row',
     gap: 10,
@@ -524,37 +521,37 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 14,
-   borderWidth:0,
+    borderWidth: 0,
     height: 50,
     borderColor: 'grey',
-     alignSelf:'center',
+    alignSelf: 'center',
     paddingVertical: 15,
-    
+
     color: 'black',
   },
-  textinput:{
+  textinput: {
     fontSize: 14,
-    alignSelf:'center',
-    borderColor:'#D9D9D9',
-    borderWidth:2,
-    height:40,
-    textAlign:'center',
-    paddingTop:10,borderRadius:10
+    alignSelf: 'center',
+    borderColor: '#D9D9D9',
+    borderWidth: 2,
+    height: 40,
+    textAlign: 'center',
+    paddingTop: 10,
+    borderRadius: 10,
   },
   timePicker: {
-    borderWidth:2,
-    borderRadius:10,
-    flex:1,
-    borderColor:'#D9D9D9',
-    alignSelf:'center',
+    borderWidth: 2,
+    borderRadius: 10,
+    flex: 1,
+    borderColor: '#D9D9D9',
+    alignSelf: 'center',
     alignItems: 'center',
-   
   },
-  bottomButton:{
-    flexDirection:'row',
-    alignSelf:'center',
-    justifyContent:'center',
-    gap:30
+  bottomButton: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    gap: 30,
   },
   saveButton: {
     marginTop: 20,
@@ -563,16 +560,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#F95609',
     borderRadius: 10,
     alignItems: 'center',
-    width:130,
-    height:50
+    width: 130,
+    height: 50,
   },
   saveButtonText: {
     color: '#fff',
     // fontSize: 14,
-    fontWeight:'bold'
+    fontWeight: 'bold',
   },
-  cancel:{
-    backgroundColor:'red'
+  cancel: {
+    backgroundColor: 'red',
   },
   saveButtonInner: {
     flexDirection: 'row',
@@ -627,7 +624,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     marginTop: 20,
   },
-  
 });
 
 export default FutsalSlotScreen;

@@ -1,5 +1,5 @@
 import {View, Text, TouchableOpacity, Modal} from 'react-native';
-import React, {useState,useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import OpponentList from './OpponentList';
@@ -7,19 +7,17 @@ import {BOOKINGS, TOP_GAME} from '../data/constList';
 import {SERVER_URL} from '@env';
 
 export default function Opponent(props) {
-  const {navigation,route}=props;
-  const {token}=route.params;
- 
-  const [matchData,setMatchData]=useState([]);
+  const {navigation, route} = props;
+  const {token} = route.params;
+
+  const [matchData, setMatchData] = useState([]);
   const getData = async () => {
-    
     try {
-      const url = 'http://192.168.43.19:8001/match-requests';
+      const url = 'http://192.168.1.65:8001/match-requests';
       const response = await fetch(url, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`,
-          
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -28,9 +26,9 @@ export default function Opponent(props) {
       }
 
       const data = await response.json();
-      setMatchData(data.result)
+      setMatchData(data.result);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error);
     }
   };
   useEffect(() => {
@@ -149,7 +147,7 @@ export default function Opponent(props) {
             flexDirection: 'row',
           }}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('CreateGameScreen',token)}>
+            onPress={() => navigation.navigate('CreateGameScreen', token)}>
             <View
               style={{
                 flexDirection: 'row',

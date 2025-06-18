@@ -13,8 +13,6 @@ import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SERVER_URL} from '@env';
- 
-
 
 export default function RegistrationScreen(props) {
   const {navigation, route} = props;
@@ -123,7 +121,7 @@ export default function RegistrationScreen(props) {
     if (hasError) return;
 
     // Proceed with registration if no errors
-    const url = 'http://192.168.43.19:8001/register';
+    const url = 'http://192.168.1.65:8001/register';
     try {
       let response = await fetch(url, {
         method: 'POST',
@@ -142,7 +140,7 @@ export default function RegistrationScreen(props) {
       let result = await response.json();
       if (result) {
         // console.warn('Data added');
-        setIsConfirmationVisible(true) // Show the success modal
+        setIsConfirmationVisible(true); // Show the success modal
       }
     } catch (error) {
       // Handle any errors that occur during the fetch
@@ -186,7 +184,6 @@ export default function RegistrationScreen(props) {
 
         {/* Social Media Login Buttons */}
         {/* (Your code for social media buttons) */}
-  
 
         {/* Full Name Input */}
         <View
@@ -404,14 +401,12 @@ export default function RegistrationScreen(props) {
         </View>
 
         {isConfirmationVisible && (
-        <View style={styles.confirmationContainer}>
-          <Text style={styles.confirmationText}>
-            Registration Completed !!
-          </Text>
-        </View>
-      )}
-
-        
+          <View style={styles.confirmationContainer}>
+            <Text style={styles.confirmationText}>
+              Registration Completed !!
+            </Text>
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

@@ -13,23 +13,19 @@ import {TOP_FUTSAL, TOP_GAME} from '../data/constList';
 import TopGameCarousel from './TopGameCarousel';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {SERVER_URL} from '@env'
-
+import {SERVER_URL} from '@env';
 
 export default function HomeScreen(props) {
-  const {route,navigation}=props;
+  const {route, navigation} = props;
   const [user, setUser] = useState(null);
   const [futsalData, setFutsalData] = useState([]);
-  const { token } = route.params;
+  const {token} = route.params;
   const getData = async () => {
-    
     try {
-      
-      const response = await fetch('http://192.168.43.19:8001/getFutsals', {
+      const response = await fetch('http://192.168.1.65:8001/getFutsals', {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`,
-          
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -38,10 +34,9 @@ export default function HomeScreen(props) {
       }
 
       const data = await response.json();
-      setFutsalData(data)
-     
+      setFutsalData(data);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error);
     }
   };
   useEffect(() => {
@@ -81,7 +76,7 @@ export default function HomeScreen(props) {
               </Text>
             </View>
             <TouchableOpacity
-              onPress={() => navigation.navigate('CreateGameScreen',{token})}>
+              onPress={() => navigation.navigate('CreateGameScreen', {token})}>
               <View
                 style={{
                   borderWidth: 1,
@@ -90,12 +85,14 @@ export default function HomeScreen(props) {
                   top: 30,
                   width: 90,
                   // alignItems: 'center',
-                  justifyContent:"center",
-                 
+                  justifyContent: 'center',
+
                   paddingVertical: 2,
                   borderRadius: 10,
                 }}>
-                <Text style={{color: 'black',alignSelf:'center'}}>Create</Text>
+                <Text style={{color: 'black', alignSelf: 'center'}}>
+                  Create
+                </Text>
               </View>
             </TouchableOpacity>
           </View>

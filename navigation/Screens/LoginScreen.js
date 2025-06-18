@@ -9,65 +9,68 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import {SERVER_URL} from '@env'
-
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {SERVER_URL} from '@env';
 
 export default function LoginScreen(props) {
-
   const [passwordVisible, setPasswordVisible] = useState(true);
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
-  const { navigation, route } = props;
-  
+  const {navigation, route} = props;
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  
-
 
   const handleLogin = async () => {
+    console.log('Login button pressed');
     setLoading(true);
 
     try {
-      const response = await fetch('http://192.168.43.19:8001/login', {
+      const response = await fetch('http://192.168.1.65:8001/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({email, password}),
       });
 
       const result = await response.json();
-      
-      
-     
 
       if (response.ok) {
         // Save the token if needed, and navigate to the main tabs
         // For example: await AsyncStorage.setItem('token', result.token);
-        const { token,dataToSend } = result;
+        const {token, dataToSend} = result;
         const futsalId = dataToSend.futsal?.id; // Extract futsalId
-        
+
         if (dataToSend.role === 'futsal admin') {
-          if(dataToSend.futsal === null){
-            navigation.navigate('FutsalRegistration', { token,...dataToSend });
-          } else{
-            navigation.navigate('FutsalScreens', { token,futsalId,...dataToSend });
+          if (dataToSend.futsal === null) {
+            navigation.navigate('FutsalRegistration', {token, ...dataToSend});
+          } else {
+            navigation.navigate('FutsalScreens', {
+              token,
+              futsalId,
+              ...dataToSend,
+            });
           }
-          
         } else if (dataToSend.role === 'user') {
-          navigation.navigate('MainTabs', { token, ...dataToSend });
+          navigation.navigate('MainTabs', {token, ...dataToSend});
         }
       } else {
-        Alert.alert('Login Failed', result.message || 'Invalid email or password');
+        Alert.alert(
+          'Login Failed',
+          result.message || 'Invalid email or password',
+        );
       }
     } catch (error) {
       console.error('Login Error:', error);
-      Alert.alert('Login Error', 'Something went wrong. Please try again later.');
+      Alert.alert(
+        'Login Error',
+        'Something went wrong. Please try again later.',
+      );
     } finally {
       setLoading(false);
     }
@@ -75,11 +78,11 @@ export default function LoginScreen(props) {
 
   return (
     <SafeAreaView style={styles.mainContainer}>
-      <View style={{ paddingHorizontal: 25 }}>
+      <View style={{paddingHorizontal: 25}}>
         <View>
           <Image
             source={require('../Screens/images/kickers.png')}
-            style={{ width: 250, height: 250, alignSelf: 'center' }}
+            style={{width: 250, height: 250, alignSelf: 'center'}}
           />
         </View>
 
@@ -103,7 +106,7 @@ export default function LoginScreen(props) {
           <Icon
             name="envelope"
             size={20}
-            style={{ marginRight: 5, padding: 5, color: 'black' }}
+            style={{marginRight: 5, padding: 5, color: 'black'}}
           />
           <GestureHandlerRootView>
             <TextInput
@@ -127,7 +130,7 @@ export default function LoginScreen(props) {
           <Icon
             name="lock"
             size={25}
-            style={{ marginRight: 5, padding: 5, color: 'black' }}
+            style={{marginRight: 5, padding: 5, color: 'black'}}
           />
           <GestureHandlerRootView>
             <TextInput
@@ -141,7 +144,7 @@ export default function LoginScreen(props) {
           </GestureHandlerRootView>
           <TouchableOpacity
             onPress={togglePasswordVisibility}
-            style={{ position: 'absolute', right: 10, alignSelf: 'center' }}>
+            style={{position: 'absolute', right: 10, alignSelf: 'center'}}>
             <Icon
               name={passwordVisible ? 'eye-slash' : 'eye'}
               size={20}
@@ -173,12 +176,12 @@ export default function LoginScreen(props) {
 
         {loading && <ActivityIndicator size="large" color="green" />}
 
-        <TouchableOpacity style={{ alignItems: 'center', marginBottom: 20 }}>
-          <Text style={{ color: 'black', bottom: 10, fontSize: 12 }}>
+        <TouchableOpacity style={{alignItems: 'center', marginBottom: 20}}>
+          <Text style={{color: 'black', bottom: 10, fontSize: 12}}>
             Forgot Password?
           </Text>
         </TouchableOpacity>
-        <Text style={{ alignSelf: 'center', color: 'black' }}>
+        <Text style={{alignSelf: 'center', color: 'black'}}>
           Or, login with..
         </Text>
 
@@ -198,7 +201,7 @@ export default function LoginScreen(props) {
             }}>
             <Image
               source={require('../Screens/images/google.png')}
-              style={{ height: 26, width: 26 }}
+              style={{height: 26, width: 26}}
             />
           </TouchableOpacity>
           <TouchableOpacity
@@ -209,10 +212,9 @@ export default function LoginScreen(props) {
             }}>
             <Image
               source={require('../Screens/images/facebook.png')}
-              style={{ height: 26, width: 26 }}
+              style={{height: 26, width: 26}}
             />
           </TouchableOpacity>
-          
         </View>
         <View
           style={{
@@ -221,10 +223,12 @@ export default function LoginScreen(props) {
             marginBottom: 80,
             top: 30,
           }}>
-          <Text style={{ color: 'black' }}>New to the app?</Text>
+          <Text style={{color: 'black'}}>New to the app?</Text>
           <TouchableOpacity
-            onPress={() => props.navigation.navigate('RegistrationScreen', { role })}>
-            <Text style={{ color: '#FF7F32' }}>Register</Text>
+            onPress={() =>
+              props.navigation.navigate('RegistrationScreen', {role})
+            }>
+            <Text style={{color: '#FF7F32'}}>Register</Text>
           </TouchableOpacity>
         </View>
       </View>

@@ -113,7 +113,7 @@ export default function FutsalRegistrationScreen(props) {
       return;
     }
 
-    const url ='http://192.168.43.19:8001/addFutsalInfo';
+    const url = 'http://192.168.1.65:8001/addFutsalInfo';
 
     const data = {
       name,
