@@ -70,7 +70,7 @@ export default function CreateGameScreen({navigation, route}) {
   const fetchFutsals = async query => {
     try {
       const response = await fetch(
-        `http://192.168.1.65:8001/getFutsals?name=${query}`,
+        `http://192.168.1.66:8001/getFutsals?name=${query}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -166,7 +166,7 @@ export default function CreateGameScreen({navigation, route}) {
 
     try {
       const response = await fetch(
-        `http://192.168.1.65:8001/match-requests ${
+        `http://192.168.1.66:8001/match-requests ${
           match ? `/${match.id}` : ''
         }`,
         {

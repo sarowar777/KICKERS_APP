@@ -2,8 +2,8 @@ import {View, Text, TouchableOpacity, Modal} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import OpponentList from './OpponentList';
-import {BOOKINGS, TOP_GAME} from '../data/constList';
+import OpponentList from '../OpponentList';
+import {BOOKINGS, TOP_GAME} from '../../data/constList';
 import {SERVER_URL} from '@env';
 
 export default function Opponent(props) {
@@ -13,7 +13,7 @@ export default function Opponent(props) {
   const [matchData, setMatchData] = useState([]);
   const getData = async () => {
     try {
-      const url = 'http://192.168.1.65:8001/match-requests';
+      const url = 'http://192.168.1.66:8001/match-requests';
       const response = await fetch(url, {
         method: 'GET',
         headers: {

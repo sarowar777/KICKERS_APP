@@ -7,9 +7,9 @@ import {
   Image,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
-import {sizes, spacing, shadow, colors} from '../constants/theme';
+import {sizes, spacing, shadow, colors} from '../../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {TOP_BOOKING} from '../data/constList';
+import {TOP_BOOKING} from '../../data/constList';
 import MyMatchList from './MyMatchList';
 import {SERVER_URL} from '@env';
 
@@ -20,7 +20,7 @@ export default function MyGame(props) {
 
   const getData = async () => {
     try {
-      const url = 'http://192.168.1.65:8001/match-requests';
+      const url = 'http://192.168.1.66:8001/match-requests';
       const response = await fetch(url, {
         method: 'GET',
         headers: {

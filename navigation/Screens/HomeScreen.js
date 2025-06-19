@@ -22,7 +22,7 @@ export default function HomeScreen(props) {
   const {token} = route.params;
   const getData = async () => {
     try {
-      const response = await fetch('http://192.168.1.65:8001/getFutsals', {
+      const response = await fetch('http://192.168.1.66:8001/getFutsals', {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,

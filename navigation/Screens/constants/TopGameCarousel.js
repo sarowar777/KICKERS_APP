@@ -7,7 +7,7 @@ import {
   Image,
 } from 'react-native';
 import React from 'react';
-import {sizes, spacing, shadow, colors} from '../constants/theme';
+import {sizes, spacing, shadow, colors} from '../../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 const CARD_WIDTH = sizes.width - 80;
 const CARD_HEIGHT = 230;

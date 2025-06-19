@@ -3,10 +3,10 @@ import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BookContent } from './BookContent';
 
-import { TOP_FUTSAL } from '../data/constList';
+import { TOP_FUTSAL } from '../../data/constList';
 
-import FutsalListScreen from './FutsalListScreen';
-import FutsalInfo from './FutsalInfo';
+import FutsalListScreen from '../FutsalListScreen';
+import FutsalInfo from '../FutsalDetailScreen/FutsalInfo';
 
 export default function BookScreen(props) {
   const {navigation,route}=props;

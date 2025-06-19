@@ -130,7 +130,7 @@ export default function FutsalProfileScreen(props) {
       return;
     }
 
-    const url = `http://192.168.1.65:8001/updateFutsalInfo/${futsalId}`;
+    const url = `http://192.168.1.66:8001/updateFutsalInfo/${futsalId}`;
 
     const formData = new FormData();
     formData.append('name', name);

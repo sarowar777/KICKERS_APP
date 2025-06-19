@@ -7,7 +7,7 @@ import {
   Image,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {sizes, spacing, shadow, colors} from '../constants/theme';
+import {sizes, spacing, shadow, colors} from '../../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {SERVER_URL} from '@env'
 

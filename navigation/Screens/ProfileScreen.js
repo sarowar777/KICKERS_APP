@@ -12,7 +12,7 @@ const ProfileScreen = props => {
 
   const getProfile = async () => {
     try {
-      const url = 'http://192.168.1.65:8001/profile';
+      const url = 'http://192.168.1.66:8001/profile';
       const response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -31,7 +31,7 @@ const ProfileScreen = props => {
         ...data.result,
         image: data.result.image
           ? {
-              uri: `http://192.168.43.19:8001/assets/user-images/${data.result.image}`,
+              uri: `http://192.168.1.66:8001/assets/user-images/${data.result.image}`,
             }
           : require('../../assets/pictures/avatar.png'), // Set the default picture
       });

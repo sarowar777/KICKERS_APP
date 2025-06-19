@@ -8,7 +8,7 @@ import {
   Image,
 } from 'react-native';
 import React, {useState} from 'react';
-import {sizes, spacing, shadow, colors} from '../constants/theme';
+import {sizes, spacing, shadow, colors} from '../../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {SERVER_URL} from '@env';
 
@@ -45,7 +45,7 @@ export default function MyMatchList(props) {
   // Function to delete the match
   const deleteMatch = async id => {
     try {
-      const url = `http://192.168.1.65:8001/match-requests/${id}`;
+      const url = `http://192.168.1.66:8001/match-requests/${id}`;
       const response = await fetch(url, {
         method: 'DELETE',
         headers: {

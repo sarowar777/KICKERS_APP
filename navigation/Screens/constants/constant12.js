@@ -1,8 +1,8 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 import FutsalListScreen from './FutsalListScreen'
-import { TOP_FUTSAL } from '../data/constList';
-import UpcomingBook from './UpcomingBook';
+import { TOP_FUTSAL } from '../../data/constList';
+import UpcomingBook from '../UpcomingBook';
 
 export default function Calendar() {
   return (

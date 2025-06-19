@@ -5,18 +5,17 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  Linking
+  Linking,
 } from 'react-native';
 import React, {useState} from 'react';
-import {sizes, spacing, shadow, colors} from '../constants/theme';
+import {sizes, spacing, shadow, colors} from '../../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 const CARD_WIDTH = sizes.width - 80;
 const CARD_HEIGHT = 300;
 const CARD_WIDTH_SPACING = CARD_WIDTH + spacing.l;
 
 export default function MatchList({list}) {
-
-  const handleCall = (phone) => {
+  const handleCall = phone => {
     Linking.openURL(`tel:${phone}`);
   };
 
@@ -33,25 +32,26 @@ export default function MatchList({list}) {
         const isBookingAccepted = item.booking === ' Accepted';
         return (
           <View style={[styles.card, shadow.dark]}>
-            <View style={{flexDirection:'row',gap:70}}>
-              <View style={{flex:6}}>
-              <Image source={item.image} style={styles.image} />
-            <Text style={styles.nameUser}>{item.nameUser}</Text>
+            <View style={{flexDirection: 'row', gap: 70}}>
+              <View style={{flex: 6}}>
+                <Image source={item.image} style={styles.image} />
+                <Text style={styles.nameUser}>{item.nameUser}</Text>
               </View>
-              {isBookingAccepted && 
-              <TouchableOpacity style={{borderWidth:0,width:50,height:50,flex:1,top:12}} onPress={() => handleCall(item.phone)}>
-                  <Icon
-                    name="phone"
-                    size={25}
-                    color={'#01B460'}
-                   
-                  /> 
-              </TouchableOpacity>
-      }
+              {isBookingAccepted && (
+                <TouchableOpacity
+                  style={{
+                    borderWidth: 0,
+                    width: 50,
+                    height: 50,
+                    flex: 1,
+                    top: 12,
+                  }}
+                  onPress={() => handleCall(item.phone)}>
+                  <Icon name="phone" size={25} color={'#01B460'} />
+                </TouchableOpacity>
+              )}
             </View>
-            
-            
-         
+
             <View
               style={{
                 borderWidth: 0,
@@ -92,25 +92,25 @@ export default function MatchList({list}) {
                 <Icon name="futbol-o" size={12} color={'orange'} style={{}} />
                 {item.description}
               </Text>
-              <Text style={{color: 'black', marginBottom: 5,left:2}}>
-              <Icon name="book" size={12} color={'orange'} style={{}} />
-                
-              <Text style={{color: 'black', marginBottom: 5,left:8}}>
+              <Text style={{color: 'black', marginBottom: 5, left: 2}}>
+                <Icon name="book" size={12} color={'orange'} style={{}} />
+
+                <Text style={{color: 'black', marginBottom: 5, left: 8}}>
                   Match:
                 </Text>
                 {item.booking}
               </Text>
-             
             </View>
-            <TouchableOpacity style={{width:90,alignSelf:'center',marginTop:20}}>
+            <TouchableOpacity
+              style={{width: 90, alignSelf: 'center', marginTop: 20}}>
               <View
                 style={{
                   height: 40,
                   width: 100,
                   borderWidth: 0,
-                  alignSelf:'center',
-                  justifyContent:'center',
-  
+                  alignSelf: 'center',
+                  justifyContent: 'center',
+
                   backgroundColor: '#DE2A2A',
                   borderRadius: 10,
                 }}>
@@ -120,7 +120,6 @@ export default function MatchList({list}) {
                     color: 'white',
                     fontSize: 14,
                     fontWeight: 'bold',
-                    
                   }}>
                   Cancel
                 </Text>
